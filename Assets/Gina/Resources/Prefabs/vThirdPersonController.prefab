@@ -1603,6 +1603,7 @@ GameObject:
   - component: {fileID: 8876216737401311204}
   - component: {fileID: 8876216737412101568}
   - component: {fileID: 8876216737403493592}
+  - component: {fileID: 3041692345363546735}
   m_Layer: 0
   m_Name: vThirdPersonController
   m_TagString: Player
@@ -1774,6 +1775,18 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &3041692345363546735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8876216737406792606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e24a01c31c85a4ea7828de1118ddcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8876216737406792808
 GameObject:
   m_ObjectHideFlags: 0

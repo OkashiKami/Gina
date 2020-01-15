@@ -1,0 +1,11 @@
+E:\Unity\Projects\Gina\Server\Gina\Gina\obj\Debug\netcoreapp3.1\Gina.csprojAssemblyReference.cache
+E:\Unity\Projects\Gina\Server\Gina\Gina\obj\Debug\netcoreapp3.1\Gina.AssemblyInfoInputs.cache
+E:\Unity\Projects\Gina\Server\Gina\Gina\obj\Debug\netcoreapp3.1\Gina.AssemblyInfo.cs
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.exe
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.deps.json
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.runtimeconfig.json
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.runtimeconfig.dev.json
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.dll
+E:\Unity\Projects\Gina\Server\Gina\Gina\bin\Debug\netcoreapp3.1\Gina.pdb
+E:\Unity\Projects\Gina\Server\Gina\Gina\obj\Debug\netcoreapp3.1\Gina.dll
+E:\Unity\Projects\Gina\Server\Gina\Gina\obj\Debug\netcoreapp3.1\Gina.pdb
