@@ -16,23 +16,23 @@ public class Player : MonoBehaviour
     private void Start()
     {
         player_data = new PlayerData();
-        Database.LoadPlayerData(player_data, action: () =>
-        {
-            player_data.StatWasChanged();
-            transform.position = player_data.stats.Get<Vector3>(Options.position);
-            transform.rotation = Quaternion.Euler(player_data.stats.Get<Vector3>(Options.rotation));
-        });
-        FunctionPeriodic.Create(() => Database.Save(player_data), 10);
+
+        player_data.onPositionChanged += (p) => transform.position = p;
+        player_data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
+
+        player_data.Load();
+
+        FunctionPeriodic.Create(() => player_data.Save(), 10);
     }
     
     private void OnApplicationQuit()
     {
-        Database.Save(player_data);
+        player_data.Save();
     }
     private void Update()
     {
-        player_data.SetStat(Options.position, transform.position);
-        player_data.SetStat(Options.rotation, transform.rotation.eulerAngles);
+        player_data.SetPotion(transform.position);
+        player_data.SetRotation(transform.rotation.eulerAngles);
     }
 
 

@@ -1,80 +1,97 @@
 ﻿{
   "name": "Player",
   "level": 1,
-  "curHealth": 1.0,
-  "curStamina": 1.0,
-  "curMana": 1.0,
-  "curExp": 0.0,
-  "maxHealth": 100.0,
-  "maxStamina": 100.0,
-  "maxMana": 100.0,
-  "maxExp": 1000.0,
-  "position": "(0.0, 0.0, 1.7)",
-  "rotation": "(0.0, 0.0, 0.0)"
+  "health": {
+    "cur": 1.0,
+    "max": 100.0,
+    "multiplier": 0.0
+  },
+  "stamina": {
+    "cur": 1.0,
+    "max": 100.0,
+    "multiplier": 0.0
+  },
+  "mana": {
+    "cur": 0.0,
+    "max": 100.0,
+    "multiplier": 0.0
+  },
+  "experiance": {
+    "cur": 0.0,
+    "max": 1000.0,
+    "multiplier": 0.0
+  },
+  "position": {
+    "x": 0.717440367,
+    "y": -5.96046448E-08,
+    "z": 2.06806684
+  },
+  "rotation": {
+    "x": 0.0,
+    "y": 204.44841,
+    "z": 0.0
+  },
+  "inventory": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "actionbar": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "character": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
 }
--
-[
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null
-]
--
-[
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null
-]
--
-[
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null
-]

@@ -27,14 +27,14 @@ public class ActionbarUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.player_data.onActionbarItemChaged += OnActionbarChaged;
+            player.player_data.onActionbarChanged += OnActionbarChaged;
     }
 
-    private void OnActionbarChaged(List<Item> items)
+    private void OnActionbarChaged(Dictionary<Options, object>[] items)
     {
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < items.Length; i++)
         {
-            slots[i].Set(items[i]);
+            slots[i].Set(new Item(items[i]));
         }
     }
 }

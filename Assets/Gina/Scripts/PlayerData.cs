@@ -1,85 +1,152 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 [Serializable]
 public class PlayerData
 {
-    public Dictionary<Options, object> _stats = DefaultStats.data;
-    public Dictionary<Options, object>[] _inventory = new Dictionary<Options, object>[30];
-    public Dictionary<Options, object>[] _actionbar = new Dictionary<Options, object>[12];
-    public Dictionary<Options, object>[] _character = new Dictionary<Options, object>[15];
+    //values
+    public string name = "Player";
+    public int level = 1;
+    public SerializableCurMax health = new SerializableCurMax(1, 100);
+    public SerializableCurMax stamina = new SerializableCurMax(1, 100);
+    public SerializableCurMax mana = new SerializableCurMax(0, 100);
+    public SerializableCurMax experiance = new SerializableCurMax(0, 1000);
+    public SerializableVector position = Vector3.zero;
+    public SerializableVector rotation = Vector3.zero;
+
+    public Dictionary<Options, object>[] inventory = new Dictionary<Options, object>[30];
+    public Dictionary<Options, object>[] actionbar = new Dictionary<Options, object>[12];
+    public Dictionary<Options, object>[] character = new Dictionary<Options, object>[15];
+    // Events
+    public delegate void OnNameChaged(string value); public event OnNameChaged onNameChaged;
+    public delegate void OnLevelChaged(int value); public event OnLevelChaged onLevelChaged;
+    public delegate void OnHealthChagned(SerializableCurMax value); public event OnHealthChagned onHealthChagned;
+    public delegate void OnStaminaChagned(SerializableCurMax value); public event OnStaminaChagned onStaminaChagned;
+    public delegate void OnManaChagned(SerializableCurMax value); public event OnManaChagned onManaChagned;
+    public delegate void OnExperianceChagned(SerializableCurMax value); public event OnExperianceChagned onExperianceChagned;
+    public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
+    public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
+    public delegate void OnInventoryChanged(Dictionary<Options, object>[] value); public event OnInventoryChanged onInventoryChanged;
+    public delegate void OnActionbarChanged(Dictionary<Options, object>[] value); public event OnActionbarChanged onActionbarChanged;
+    public delegate void OnCharacterChanged(Dictionary<Options, object>[] value); public event OnCharacterChanged onCharacterChanged;
+
 
     public PlayerData() { }
 
-    public Item stats { get => new Item(_stats); set => _stats = value.data; }
-    public Item[] inventory { get => _inventory.Select(x => new Item(x)).ToArray(); set => _inventory = value.Select(x => x.data).ToArray(); }
-    public Item[] actionbar { get => _actionbar.Select(x => new Item(x)).ToArray(); set => _actionbar = value.Select(x => x.data).ToArray(); }
-    public Item[] character { get => _character.Select(x => new Item(x)).ToArray(); set => _character = value.Select(x => x.data).ToArray(); }
-
-
-
-        
-
-
-    public static Item DefaultStats
+    public void SetName(string value)
     {
-        get
+        name = value;
+        onNameChaged?.Invoke(name);
+    }
+    public void SetLevel(int value)
+    {
+        level = value;
+        onLevelChaged?.Invoke(level);
+    }
+    public void SetHealth(float value)
+    {
+        health.cur = value;
+        onHealthChagned?.Invoke(health);
+    }
+    public void SetStamina(float value)
+    {
+        stamina.cur = value;
+        onStaminaChagned?.Invoke(stamina);
+    }
+    public void SetMana(float value)
+    {
+        mana.cur = value;
+        onManaChagned?.Invoke(mana);
+    }
+    public void SetExperiance(float value)
+    {
+        experiance.cur = value;
+        if (experiance.cur >= experiance.max)
         {
-            var stats = new Item();
-            stats.Set(Options.name, "Player");
-            stats.Set(Options.level, 1);
+            experiance.cur = 0;
+            experiance.multiplier += level * .25f;
+            SetLevel(level++);
+        }
+        onExperianceChagned?.Invoke(experiance);
 
-            stats.Set(Options.curHealth, 1f);
-            stats.Set(Options.curStamina, 1f);
-            stats.Set(Options.curMana, 1f);
-            stats.Set(Options.curExp, 0f);
+    }
+    public void SetPotion(Vector3 value)
+    {
+        position = value;
+        onPositionChanged?.Invoke(position);
+    }
+    public void SetRotation(Vector3 value)
+    {
+        rotation = value;
+        onRotationChanged?.Invoke(rotation);
+    }
+    public void SetInventory(int index = 0, Dictionary<Options, object> value = null)
+    {
+        inventory[index] = value;
+        onInventoryChanged?.Invoke(inventory);
+    }
+    public void SetActionbar(int index = 0, Dictionary<Options, object> value = null)
+    {
+        actionbar[index] = value;
+        onActionbarChanged?.Invoke(actionbar);
+    }
+    public void SetCharacter(int index = 0, Dictionary<Options, object> value = null)
+    {
+        character[index] = value;
+        onCharacterChanged?.Invoke(character);
+    }
 
-            stats.Set(Options.maxHealth, 100f);
-            stats.Set(Options.maxStamina, 100f);
-            stats.Set(Options.maxMana, 100f);
-            stats.Set(Options.maxExp, 1000f);
+    public void Save()
+    {
+        var savepath = Path.Combine(Application.streamingAssetsPath, "player_.json").Replace("\\", "/");
+        if (!string.IsNullOrEmpty(savepath) && File.Exists(savepath))
+            File.Delete(savepath);
 
-            stats.Set(Options.position, Vector3.zero);
-            stats.Set(Options.rotation, Vector3.zero);
+        File.WriteAllText(savepath, JsonConvert.SerializeObject(this, Formatting.Indented), Encoding.UTF8);
+        Debug.Log("Player Data has been Saved");
+    }
+    public void Load()
+    {
+        PlayerData data = null;
+        Directory.CreateDirectory(Application.streamingAssetsPath);
+        var loadpath = Path.Combine(Application.streamingAssetsPath, "player_.json").Replace("\\", "/");
+        if (File.Exists(loadpath))
+        {
+            var json = File.ReadAllText(loadpath, Encoding.UTF8);
+            data = JsonConvert.DeserializeObject<PlayerData>(json);
+        }
+        if(data != null)
+        {
+            this.name = data.name;
+            this.level = data.level;
+            this.health = new SerializableCurMax(data.health);
+            this.stamina = new SerializableCurMax(data.stamina);
+            this.mana = new SerializableCurMax(data.mana);
+            this.experiance = new SerializableCurMax(data.experiance);
+            this.position = new SerializableVector(data.position);
+            this.rotation = new SerializableVector(data.rotation);
+            Array.Copy(data.inventory, this.inventory, data.inventory.Length);
+            Array.Copy(data.actionbar, this.actionbar, data.actionbar.Length);
+            Array.Copy(data.character, this.character, data.character.Length);
 
-            return stats;
+            onNameChaged?.Invoke(name);
+            onLevelChaged?.Invoke(level);
+            onHealthChagned?.Invoke(health);
+            onStaminaChagned?.Invoke(stamina);
+            onManaChagned?.Invoke(mana);
+            onExperianceChagned?.Invoke(experiance);
+            onPositionChanged?.Invoke(position);
+            onRotationChanged?.Invoke(rotation);
+            onInventoryChanged?.Invoke(inventory);
+            onActionbarChanged?.Invoke(actionbar);
+            onCharacterChanged?.Invoke(character);
+            Debug.Log("Player data was loaded!");
         }
     }
-    public void SetStat(Options option, object value = null)    
-    {
-        stats.Set(option, value);
-        onStatsChanged?.Invoke(stats);
-    }
-    public void StatWasChanged() => onStatsChanged?.Invoke(stats);
-    public delegate void OnStatChanged(Item data);
-    public event OnStatChanged onStatsChanged;
 
-    public void SetInventoryItem(int slot = -1, Item value = null)
-    {
-        if (slot < 0 || slot > inventory.Length - 1) return;
-        inventory[slot] = value != null ? value.Copy : null;
-        onInventoryItemChaged?.Invoke(this.inventory.ToList());
-    }
-    public delegate void OnInventoryItemChaged(List<Item> items);
-    public event OnInventoryItemChaged onInventoryItemChaged;
-
-    public void SetActionbarItem(int slot = -1, Item value = null)
-    {
-        if (slot < 0 || slot > actionbar.Length - 1) return;
-        actionbar[slot] = value != null ? value.Copy : null;
-        onActionbarItemChaged?.Invoke(this.actionbar.ToList());
-    }
-    public delegate void OnActionbarItemChaged(List<Item> items);
-    public event OnActionbarItemChaged onActionbarItemChaged;
-
-    public void SetCharacterItem(int slot = -1, Item value = null)
-    {
-        if (slot < 0 || slot > character.Length - 1) return;
-        character[slot] = value != null ? value.Copy : null;
-        onCharacterItemChaged?.Invoke(this.character.ToList());
-    }
-    public delegate void OnCharacterItemChaged(List<Item> items);
-    public event OnCharacterItemChaged onCharacterItemChaged;
 }

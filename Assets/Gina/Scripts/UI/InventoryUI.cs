@@ -27,14 +27,14 @@ public class InventoryUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.player_data.onInventoryItemChaged += OnInventoryChaged;
+            player.player_data.onInventoryChanged += OnInventoryChaged;
     }
 
-    private void OnInventoryChaged(List<Item> items)
+    private void OnInventoryChaged(Dictionary<Options, object>[] items)
     {
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < items.Length; i++)
         {
-            slots[i].Set(items[i]);
+            slots[i].Set(new Item(items[i]));
         }
     }
 }
