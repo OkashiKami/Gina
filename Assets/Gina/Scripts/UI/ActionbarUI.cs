@@ -25,9 +25,9 @@ public class ActionbarUI : MonoBehaviour
     private void Awake()
     {
         if (slots == null || slots.Length <= 0) Reset();
-        var player_inv = FindObjectOfType<Player>();
-        if (player_inv)
-            player_inv.onActionbarItemChaged += OnActionbarChaged;
+        var player = FindObjectOfType<Player>();
+        if (player)
+            player.player_data.onActionbarItemChaged += OnActionbarChaged;
     }
 
     private void OnActionbarChaged(List<Item> items)

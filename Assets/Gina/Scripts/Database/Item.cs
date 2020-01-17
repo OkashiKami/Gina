@@ -21,7 +21,7 @@ public class Item
     public Dictionary<Options, object> data { get; private set; } = new Dictionary<Options, object>();
     public Texture2D _texture { get; internal set; } = null;
     public Sprite _sprite { get; internal set; } = null;
-    public UnityEngine.Object _object { get; internal set; } = null;
+    public Object _object { get; internal set; } = null;
     public bool IsValid
     {
         get
@@ -41,10 +41,14 @@ public class Item
             return valid;
         }
     }
+
+    public Item Copy => new Item(data, file);
+
     public Item() { }
-    public Item(Dictionary<Options, object> item_data)
+    public Item(Dictionary<Options, object> item_data, string file = default)
     {
-        this.data = item_data;
+        this.data = new Dictionary<Options, object>(item_data);
+        if (!string.IsNullOrEmpty(file)) this.file = file;
     }
 
     internal T Get<T>(Options option)

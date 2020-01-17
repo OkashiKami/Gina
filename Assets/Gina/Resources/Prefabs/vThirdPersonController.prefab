@@ -1597,7 +1597,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8876216737407131026}
-  - component: {fileID: 8876216737401304916}
   - component: {fileID: 8876216737399391936}
   - component: {fileID: 8876216737401321164}
   - component: {fileID: 8876216737401311204}
@@ -1627,23 +1626,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8876216737401304916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8876216737406792606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c789670a80b704eba4dfebed94a111, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comment: "Hi there :)\n\nThank you for downloading our Third Person Controller,
-    don't forget to leave a review if you like our work. We hope that this Free version
-    can help you start your project.\n \nBest regards, \nInvector Team\n\nvStore:
-    https://sellfy.com//invector\nvForum: http://invector.proboards.com/\r\nvWebsite:
-    http://www.invector.xyz/"
 --- !u!95 &8876216737399391936
 Animator:
   serializedVersion: 3

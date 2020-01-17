@@ -25,9 +25,9 @@ public class InventoryUI : MonoBehaviour
     private void Awake()
     {
         if (slots == null || slots.Length <= 0) Reset();
-        var player_inv = FindObjectOfType<Player>();
-        if (player_inv)
-            player_inv.onInventoryItemChaged += OnInventoryChaged;
+        var player = FindObjectOfType<Player>();
+        if (player)
+            player.player_data.onInventoryItemChaged += OnInventoryChaged;
     }
 
     private void OnInventoryChaged(List<Item> items)
