@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //WorldItem.Create(Database.GetItemByID("gina:broad_sword"));
+        WorldItem.Create(Database.GetItemByID("gina:broad_sword"));
     }
 
     // Update is called once per frame

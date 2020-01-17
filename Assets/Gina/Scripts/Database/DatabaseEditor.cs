@@ -83,7 +83,7 @@ public class DatabaseEditor : EditorWindow
                 CreateTextField(Options.name, _item);
                 CreateTextField(Options.desc, _item);
                 CreateEquiptmentField(_item);
-
+                CreateIntMinMaxField(Options.curStack, Options.maxStack, _item, 1, 64);
                 GUILayout.Box("Stats", GUILayout.ExpandWidth(true));
                 CreateSlider(Options.health, _item, 0, 10);
                 CreateSlider(Options.stamina, _item, 0, 10);
@@ -97,7 +97,7 @@ public class DatabaseEditor : EditorWindow
                 EditorGUILayout.EndScrollView();
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
                 EditorGUILayout.BeginHorizontal();
-                EditorGUI.BeginDisabledGroup(!_item.IsValid);
+                EditorGUI.BeginDisabledGroup(!_item.IsValid());
                 if (GUILayout.Button("Save"))
                 {
                     Database.Save(_item);
@@ -315,6 +315,100 @@ public class DatabaseEditor : EditorWindow
             Database.IsValidObject(_item.Get<string>(option));
         }
         
+    }
+
+    private void CreateIntMinMaxField(Options option1, Options option2, Item _item, int min, int max, bool removeable = true)
+    {
+        EditorGUILayout.BeginHorizontal();
+        var _name1 = option1.ToString();
+        _name1 = char.ToUpper(_name1[0]) + _name1.Substring(1);
+        var _name2 = option2.ToString();
+        _name2 = char.ToUpper(_name2[0]) + _name2.Substring(1);
+
+        var name = $"{_name1}/{_name2}";
+
+        if (!_item.Has(option1) || !_item.Has(option2))
+        {
+            if (GUILayout.Button($"Add {name} Field"))
+            {
+                _item.Set(option1, min);
+                _item.Set(option2, max);
+            }
+        }
+        else
+        {
+            var minref = (float)_item.Get<int>(option1);
+            var maxref = (float)_item.Get<int>(option2);
+            EditorGUILayout.BeginHorizontal();
+            minref = EditorGUILayout.IntField((int)minref, GUILayout.Width(40));
+            GUILayout.Space(5);
+            EditorGUILayout.MinMaxSlider(ref minref, ref maxref, min, max);
+            GUILayout.Space(5);
+            maxref = EditorGUILayout.IntField((int)maxref, GUILayout.Width(40));
+            EditorGUILayout.EndHorizontal();
+            _item.Set(option1, minref);
+            _item.Set(option2, maxref);
+            if (removeable)
+            {
+                GUI.color = Color.red;
+                if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                {
+                    _item.Remove(option1);
+                    _item.Remove(option2);
+                }
+                GUI.color = Color.white;
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+    private void CreateMinMaxField(Options option1, Options option2, Item _item, float min, float max, bool removeable = true)
+    {
+        EditorGUILayout.BeginHorizontal();
+        var _name1 = option1.ToString();
+        _name1 = char.ToUpper(_name1[0]) + _name1.Substring(1);
+        var _name2 = option2.ToString();
+        _name2 = char.ToUpper(_name2[0]) + _name2.Substring(1);
+
+        var name = $"{_name1}/{_name2}";
+
+
+        if (!_item.Has(option1) || !_item.Has(option2))
+        {
+            if (GUILayout.Button($"Add {name} Field"))
+            {
+                _item.Set(option1, min);
+                _item.Set(option2, max);
+            }
+        }
+        else
+        {
+            var minref = _item.Get<float>(option1);
+            var maxref = _item.Get<float>(option2);
+            EditorGUILayout.BeginHorizontal();
+            minref = EditorGUILayout.FloatField(minref, GUILayout.Width(40));
+            GUILayout.Space(5);
+            EditorGUILayout.MinMaxSlider(ref minref, ref maxref, min, max);
+            GUILayout.Space(5);
+            maxref = EditorGUILayout.FloatField(maxref, GUILayout.Width(40));
+            EditorGUILayout.EndHorizontal();
+
+            _item.Set(option1, minref);
+            _item.Set(option2, maxref);
+
+
+
+            if (removeable)
+            {
+                GUI.color = Color.red;
+                if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                {
+                    _item.Remove(option1);
+                    _item.Remove(option2);
+                }
+                GUI.color = Color.white;
+            }
+        }
+        EditorGUILayout.EndHorizontal();
     }
 }
 #endif

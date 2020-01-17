@@ -5,56 +5,51 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+[Serializable]
 public class Item
 {
-    internal string file;
-    internal string id
-    {
-        get
-        {
-            var _namespace = Application.productName.ToLower();
-            var _name = Get<string>(Options.name).Replace(" ", "_").ToLower();
-            return $"{_namespace}:{_name}";
-        }
-    }
+    public Dictionary<Options, object> data = new Dictionary<Options, object>();
 
-    public Dictionary<Options, object> data { get; private set; } = new Dictionary<Options, object>();
-    public Texture2D _texture { get; internal set; } = null;
-    public Sprite _sprite { get; internal set; } = null;
-    public Object _object { get; internal set; } = null;
-    public bool IsValid
-    {
-        get
-        {
-            bool valid = true;
-            if (data == null) return false;
-            try
-            {
-                if (!data.ContainsKey(Options.name) || string.IsNullOrEmpty(Get<string>(Options.name))) valid = false;
-                if (!data.ContainsKey(Options.desc) || string.IsNullOrEmpty(Get<string>(Options.desc))) valid = false;
-                if (!data.ContainsKey(Options.icon)) valid = false;
-            }
-            catch
-            {
-                return false;
-            }
-            return valid;
-        }
-    }
+    [NonSerialized] public string file;
+    [NonSerialized] public Texture2D _texture = null;
+    [NonSerialized] public Sprite _sprite = null;
+    [NonSerialized] public Object _object = null;
 
-    public Item Copy => new Item(data, file);
 
     public Item() { }
     public Item(Dictionary<Options, object> item_data, string file = default)
     {
-        this.data = new Dictionary<Options, object>(item_data);
+        this.data = item_data;
         if (!string.IsNullOrEmpty(file)) this.file = file;
     }
-
+    public Item Copy => new Item(data, file);
+    internal string GetID()
+    {
+        var _namespace = Application.productName.ToLower();
+        var _name = Get<string>(Options.name).Replace(" ", "_").ToLower();
+        return $"{_namespace}:{_name}";
+    }
+    public bool IsValid()
+    {
+        bool valid = true;
+        if (data == null) return false;
+        try
+        {
+            if (!data.ContainsKey(Options.name) || string.IsNullOrEmpty(Get<string>(Options.name))) valid = false;
+        }
+        catch
+        {
+            return false;
+        }
+        return valid;
+    }
     internal T Get<T>(Options option)
     {
+#if UNITY_EDITOR
+        // Skip this part
+#else
         if (!IsValid) return default;
-
+#endif
         if (typeof(T).Equals(typeof(string)))
         {
             if (data.ContainsKey(option))
@@ -132,8 +127,11 @@ public class Item
             // Load from Resource folder
             if (data.ContainsKey(option))
             {
-                var v = Get<string>(Options.icon);
-                _texture = Resources.Load<Texture2D>(v);
+                var v = Get<string>(option);
+                var r = v.Split('.')[0];
+                r = r.Replace($"{Application.productName}/", string.Empty);
+                r = r.Replace("Resources/", string.Empty);
+                _texture = Resources.Load<Texture2D>(r);
                 if (_texture != null)
                 {
                     _sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), Vector2.one * 0.5f);
@@ -181,28 +179,28 @@ public class Item
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(bool)))
+        else if (typeof(T).Equals(typeof(bool)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(int)))
+        else if (typeof(T).Equals(typeof(int)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(float)))
+        else if (typeof(T).Equals(typeof(float)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(Vector2)))
+        else if (typeof(T).Equals(typeof(Vector2)))
         {
             {
                 if (data.ContainsKey(option))
@@ -211,21 +209,21 @@ public class Item
                     data.Add(option, value.ToString());
             }
         }
-        if (typeof(T).Equals(typeof(Vector3)))
+        else if (typeof(T).Equals(typeof(Vector3)))
         {
             if (data.ContainsKey(option))
                 data[option] = value.ToString();
             else
                 data.Add(option, value.ToString());
         }
-        if (typeof(T).Equals(typeof(Quaternion)))
+        else if (typeof(T).Equals(typeof(Quaternion)))
         {
             if (data.ContainsKey(option))
                 data[option] = value.ToString();
             else
                 data.Add(option, value.ToString());
         }
-        if(typeof(T).Equals(typeof(Object)))
+        else if(typeof(T).Equals(typeof(Object)))
         {
             var assetPath = string.Empty;
             if(value != null)
@@ -234,6 +232,14 @@ public class Item
                 Set(option, assetPath);
             }
         }
+        else 
+        {
+            if (data.ContainsKey(option))
+                data[option] = value.ToString();
+            else
+                data.Add(option, value.ToString());
+        }
+        
     }
     public void Remove(Options option)
     {

@@ -1,0 +1,80 @@
+﻿{
+  "name": "Player",
+  "level": 1,
+  "curHealth": 1.0,
+  "curStamina": 1.0,
+  "curMana": 1.0,
+  "curExp": 0.0,
+  "maxHealth": 100.0,
+  "maxStamina": 100.0,
+  "maxMana": 100.0,
+  "maxExp": 1000.0,
+  "position": "(0.0, 0.0, 1.7)",
+  "rotation": "(0.0, 0.0, 0.0)"
+}
+-
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]
+-
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]
+-
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]

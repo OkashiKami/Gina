@@ -6,10 +6,22 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    public Item stats = DefaultStats;
-    public Item[] inventory = new Item[30];
-    public Item[] actionbar = new Item[12];
-    public Item[] character = new Item[15];
+    public Dictionary<Options, object> _stats = DefaultStats.data;
+    public Dictionary<Options, object>[] _inventory = new Dictionary<Options, object>[30];
+    public Dictionary<Options, object>[] _actionbar = new Dictionary<Options, object>[12];
+    public Dictionary<Options, object>[] _character = new Dictionary<Options, object>[15];
+
+    public PlayerData() { }
+
+    public Item stats { get => new Item(_stats); set => _stats = value.data; }
+    public Item[] inventory { get => _inventory.Select(x => new Item(x)).ToArray(); set => _inventory = value.Select(x => x.data).ToArray(); }
+    public Item[] actionbar { get => _actionbar.Select(x => new Item(x)).ToArray(); set => _actionbar = value.Select(x => x.data).ToArray(); }
+    public Item[] character { get => _character.Select(x => new Item(x)).ToArray(); set => _character = value.Select(x => x.data).ToArray(); }
+
+
+
+        
+
 
     public static Item DefaultStats
     {
@@ -35,8 +47,7 @@ public class PlayerData
             return stats;
         }
     }
-
-    public void SetStat(Options option, object value = null)
+    public void SetStat(Options option, object value = null)    
     {
         stats.Set(option, value);
         onStatsChanged?.Invoke(stats);
@@ -44,7 +55,6 @@ public class PlayerData
     public void StatWasChanged() => onStatsChanged?.Invoke(stats);
     public delegate void OnStatChanged(Item data);
     public event OnStatChanged onStatsChanged;
-
 
     public void SetInventoryItem(int slot = -1, Item value = null)
     {
