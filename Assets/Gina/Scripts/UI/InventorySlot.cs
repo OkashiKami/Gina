@@ -7,27 +7,30 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlot : Slot
 {
+    private Image icon;
+    private TextMeshProUGUI count;
 
-    public Image icon;
-    public TextMeshProUGUI count;
-    private Dictionary<Options, object> data = null;
-
-    public void Update()
+    public override void Awake()
     {
-        if(data != null)
+        if (!icon) icon = transform.Find("Icon").GetComponent<Image>();
+        if (!count) count = transform.Find("Count").GetComponent<TextMeshProUGUI>();
+    }
+    public override void Update()
+    {
+        if(item != null)
         {
-            if (OptionManager.Get<bool>(Options.stackable, data))
+            if (item.Get<bool>(Options.stackable))
             {
-                if (OptionManager.Get<int>(Options.curStack, data) > 1)
-                    count.text = OptionManager.Get<int>(Options.curStack, data).ToString();
+                if (item.Get<int>(Options.curStack) > 1)
+                    count.text = item.Get<int>(Options.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(OptionManager.Get<string>(Options.icon, data)))
+            if(!string.IsNullOrEmpty(item.Get<string>(Options.icon)))
             {
 
             }
@@ -46,24 +49,22 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         
     }
 
-    public void Set(Dictionary<Options, object> data = null) => this.data = data;
-
-    public void OnDrop(PointerEventData eventData)
+    public override void OnDrop(PointerEventData eventData)
     {
         
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public override void OnDrag(PointerEventData eventData)
     {
         
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public override void OnBeginDrag(PointerEventData eventData)
     {
         
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public override void OnEndDrag(PointerEventData eventData)
     {
         
     }

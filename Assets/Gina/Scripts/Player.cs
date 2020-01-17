@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -15,24 +16,24 @@ public class Player : MonoBehaviour
     private List<Action> commands = new List<Action>();
     private Dictionary<Options, object> DefaultStats()
     {
-        Dictionary<Options, object> stats = new Dictionary<Options, object>();
-        OptionManager.Set(Options.name, stats, "Player");
-        OptionManager.Set(Options.level, stats, 1);
+        var stats = new Item();
+        stats.Set(Options.name, "Player");
+        stats.Set(Options.level, 1);
 
-        OptionManager.Set(Options.curHealth, stats, 1f);
-        OptionManager.Set(Options.curStamina, stats, 1f);
-        OptionManager.Set(Options.curMana, stats, 1f);
-        OptionManager.Set(Options.curExp, stats, 0f);
+        stats.Set(Options.curHealth, 1f);
+        stats.Set(Options.curStamina, 1f);
+        stats.Set(Options.curMana, 1f);
+        stats.Set(Options.curExp, 0f);
 
-        OptionManager.Set(Options.maxHealth, stats, 100f);
-        OptionManager.Set(Options.maxStamina, stats, 100f);
-        OptionManager.Set(Options.maxMana, stats, 100f);
-        OptionManager.Set(Options.maxExp, stats, 1000f);
+        stats.Set(Options.maxHealth, 100f);
+        stats.Set(Options.maxStamina, 100f);
+        stats.Set(Options.maxMana, 100f);
+        stats.Set(Options.maxExp, 1000f);
 
-        OptionManager.Set(Options.position, stats, transform.position);
-        OptionManager.Set(Options.rotation, stats, transform.eulerAngles);
+        stats.Set(Options.position, transform.position);
+        stats.Set(Options.rotation, transform.eulerAngles);
 
-        return stats;
+        return stats.data;
     }
 
     // Start is called before the first frame update
@@ -40,8 +41,8 @@ public class Player : MonoBehaviour
     {
         onStatsChanged += (a) => 
         {
-            var pos = OptionManager.Get<Vector3>(Options.position, a);
-            var rot = OptionManager.Get<Vector3>(Options.rotation, a);
+            var pos = a.Get<Vector3>(Options.position);
+            var rot = a.Get<Vector3>(Options.rotation);
 
             commands.Add(() =>
             {
@@ -73,34 +74,38 @@ public class Player : MonoBehaviour
 
     public void SetStat(Options option, object value = null)
     {
-        OptionManager.Set(option, data.stats, value);
-        onStatsChanged?.Invoke(data.stats);
+        var stats = new Item(data.stats);
+        stats.Set(option, value);
+        onStatsChanged?.Invoke(stats);
     }
-    private delegate void OnFirstLoadComplete(Dictionary<Options, object> data);
+    private delegate void OnFirstLoadComplete(Item data);
     private event OnFirstLoadComplete onStatsChanged;
 
-    public void SetInventoryItem(int slot = -1, Dictionary<Options, object> data = null)
+    public void SetInventoryItem(int slot = -1, Item value = null)
     {
-
-        onInventoryItemChaged?.Invoke(this.data.inventory);
+        if (slot < 0 || slot > data.inventory.Length - 1) return; 
+        data.inventory[slot] = value != null ? value.data : null;
+        onInventoryItemChaged?.Invoke(this.data.inventory.Select(x => new Item(x)).ToList());
     }
-    public delegate void OnInventoryItemChaged(Dictionary<Options, object>[] items);
+    public delegate void OnInventoryItemChaged(List<Item> items);
     public event OnInventoryItemChaged onInventoryItemChaged;
 
-    public void SetActionbarItem(int slot = -1, Dictionary<Options, object> data = null)
+    public void SetActionbarItem(int slot = -1, Item value = null)
     {
-
-        onActionbarItemChaged?.Invoke(this.data.actionbar);
+        if (slot < 0 || slot > data.actionbar.Length - 1) return;
+        data.actionbar[slot] = value != null ? value.data : null;
+        onActionbarItemChaged?.Invoke(this.data.actionbar.Select(x => new Item(x)).ToList());
     }
-    public delegate void OnActionbarItemChaged(Dictionary<Options, object>[] items);
+    public delegate void OnActionbarItemChaged(List<Item> items);
     public event OnActionbarItemChaged onActionbarItemChaged;
 
-    public void SetCharacterItem(int slot = -1, Dictionary<Options, object> data = null)
+    public void SetCharacterItem(int slot = -1, Item value = null)
     {
-
-        onCharacterItemChaged?.Invoke(this.data.character);
+        if (slot < 0 || slot > data.character.Length - 1) return;
+        data.character[slot] = value != null ? value.data : null;
+        onCharacterItemChaged?.Invoke(this.data.character.Select(x => new Item(x)).ToList());
     }
-    public delegate void OnCharacterItemChaged(Dictionary<Options, object>[] items);
+    public delegate void OnCharacterItemChaged(List<Item> items);
     public event OnCharacterItemChaged onCharacterItemChaged;
 
     public void Save(bool join = false) 
@@ -148,10 +153,10 @@ public class Player : MonoBehaviour
 
             commands.Add(() =>
             {
-                onInventoryItemChaged?.Invoke(this.data.inventory);
-                onActionbarItemChaged?.Invoke(this.data.actionbar);
-                onCharacterItemChaged?.Invoke(this.data.character);
-                onStatsChanged?.Invoke(this.data.stats);
+                onInventoryItemChaged?.Invoke(this.data.inventory.Select(x => new Item(x)).ToList());
+                onActionbarItemChaged?.Invoke(this.data.actionbar.Select(x => new Item(x)).ToList());
+                onCharacterItemChaged?.Invoke(this.data.character.Select(x => new Item(x)).ToList());
+                onStatsChanged?.Invoke(new Item(this.data.stats));
             });
         }));
         loadThread.Name = "Load Thread";

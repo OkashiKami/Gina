@@ -17,6 +17,7 @@ public class InventoryUI : MonoBehaviour
         {
             slots[i].name = $"Inv Slot {i + 1}";
             slots[i].Set();
+            slots[i].Awake();
             slots[i].Update();
         }
     }
@@ -29,13 +30,9 @@ public class InventoryUI : MonoBehaviour
             player_inv.onInventoryItemChaged += OnInventoryChaged;
     }
 
-    private void Update()
+    private void OnInventoryChaged(List<Item> items)
     {
-        
-    }
-    private void OnInventoryChaged(Dictionary<Options, object>[] items)
-    {
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Count; i++)
         {
             slots[i].Set(items[i]);
         }
