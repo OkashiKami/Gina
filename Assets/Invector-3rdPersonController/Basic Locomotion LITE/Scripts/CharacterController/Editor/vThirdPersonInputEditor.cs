@@ -4,7 +4,7 @@ using System.Collections;
 using Invector;
 
 [CanEditMultipleObjects]
-[CustomEditor(typeof(Invector.CharacterController.vThirdPersonInput),true)]
+[CustomEditor(typeof(InputController),true)]
 public class vThirdPersonInputEditor : Editor
 {
     GUISkin skin;

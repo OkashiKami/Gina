@@ -85,8 +85,26 @@ public class PlayerData
         rotation = value;
         onRotationChanged?.Invoke(rotation);
     }
-    public void SetInventory(int index = 0, Dictionary<Options, object> value = null)
+    public void SetInventory(int index = -1, Dictionary<Options, object> value = null)
     {
+        if(index >= 0)
+        {
+            inventory[index] = value;
+            onInventoryChanged?.Invoke(inventory);
+        }
+        else
+        {
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if(inventory[i] == null || !new Item(inventory[i]).IsValid())
+                {
+
+                }
+            }
+        }
+
+
+
         inventory[index] = value;
         onInventoryChanged?.Invoke(inventory);
     }

@@ -2,6 +2,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using Invector.CharacterController;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -31,6 +32,19 @@ internal class WorldItem : MonoBehaviour
         {
             Destroy(this.gameObject);
         }, 300);
+
+        FindObjectOfType<InputController>().onInteract += OnInteract;
+    }
+
+    private void OnInteract(Player player)
+    {
+        var dis = Vector3.Distance(player.transform.position, transform.position);
+        if (dis < 0.6f)
+        {
+            player.player_data.SetInventory(value: item.data);
+            Destroy(gameObject);
+        }
+        Debug.Log($"Interact {dis}");
     }
 
     private void Update()

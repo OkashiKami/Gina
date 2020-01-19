@@ -1599,7 +1599,6 @@ GameObject:
   - component: {fileID: 8876216737407131026}
   - component: {fileID: 8876216737399391936}
   - component: {fileID: 8876216737401321164}
-  - component: {fileID: 8876216737401311204}
   - component: {fileID: 8876216737412101568}
   - component: {fileID: 8876216737403493592}
   - component: {fileID: 3041692345363546735}
@@ -1703,30 +1702,6 @@ MonoBehaviour:
   direction: 0
   verticalVelocity: 0
   velocity: 0
---- !u!114 &8876216737401311204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8876216737406792606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5deb9ff5611cb9d4596d397ac57ee8c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  horizontalInput: Horizontal
-  verticallInput: Vertical
-  jumpInput: 32
-  strafeInput: 9
-  sprintInput: 304
-  rotateCameraXInput: Mouse X
-  rotateCameraYInput: Mouse Y
-  customCameraState: 
-  customlookAtPoint: 
-  changeCameraState: 0
-  smoothCameraState: 0
-  keepDirection: 0
 --- !u!54 &8876216737412101568
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1769,6 +1744,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e24a01c31c85a4ea7828de1118ddcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player_data:
+    name: Player
+    level: 1
+    health:
+      cur: 1
+      max: 100
+      multiplier: 0
+    stamina:
+      cur: 1
+      max: 100
+      multiplier: 0
+    mana:
+      cur: 0
+      max: 100
+      multiplier: 0
+    experiance:
+      cur: 0
+      max: 1000
+      multiplier: 0
+    position:
+      x: 0
+      y: 0
+      z: 0
+    rotation:
+      x: 0
+      y: 0
+      z: 0
 --- !u!1 &8876216737406792808
 GameObject:
   m_ObjectHideFlags: 0

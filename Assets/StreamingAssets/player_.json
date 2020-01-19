@@ -22,17 +22,28 @@
     "multiplier": 0.0
   },
   "position": {
-    "x": 0.717440367,
-    "y": -5.96046448E-08,
-    "z": 2.06806684
+    "x": -1.93125772,
+    "y": 0.0,
+    "z": 0.924658537
   },
   "rotation": {
     "x": 0.0,
-    "y": 204.44841,
+    "y": 294.730865,
     "z": 0.0
   },
   "inventory": [
-    null,
+    {
+      "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
+      "name": "Broad Sword",
+      "desc": "This is a [name] it is really a bas sword with a little upgrades",
+      "isEquipable": true,
+      "equipmentType": 1,
+      "requireLevel": 5,
+      "prefab": "Prefabs/Weapons/BroadSword",
+      "agility": 0.26,
+      "strength": 0.13,
+      "dexterity": 0.47
+    },
     null,
     null,
     null,

@@ -93,6 +93,7 @@ public class DatabaseEditor : EditorWindow
                 CreateSlider(Options.dexterity, _item, 0, 10);
 
                 GUILayout.Box("Equipt Item", GUILayout.ExpandWidth(true));
+                CreateToggleField(Options.isEquipable, _item);
                 CreateObjectField(Options.prefab, _item);
                 EditorGUILayout.EndScrollView();
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
