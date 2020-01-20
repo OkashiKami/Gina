@@ -28,10 +28,7 @@ public class InventoryUI : MonoBehaviour
         var player = FindObjectOfType<Player>();
         if (player)
             player.player_data.onInventoryChanged += OnInventoryChaged;
-    }
-
-    private void Start()
-    {
+   
         FindObjectOfType<InputController>().onInventory += () =>
         {
             var cg = GetComponent<CanvasGroup>();
@@ -62,7 +59,7 @@ public class InventoryUI : MonoBehaviour
             goto a;
     }
 
-    private void OnInventoryChaged(Dictionary<Options, object>[] items)
+    private void OnInventoryChaged(Dictionary<paramname, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {

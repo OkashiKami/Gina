@@ -13,7 +13,7 @@ internal class Database
     internal static Item GetItemByID(string v)
     {
         if (items == null || items.Count <= 0) Refresh();
-        var item = items.Find(x => x.GetID() == v);
+        var item = items.Find(x => x.GetID == v);
         return item != null ? item : null;
     }
 
@@ -27,7 +27,7 @@ internal class Database
         loading_player_data = true;
         if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
             File.Delete(value.file);
-        var name = value.Get<string>(Options.name);
+        var name = value.Get<string>(paramname.name);
         var json = JsonConvert.SerializeObject(value.data, Formatting.Indented);
         name = name.Replace(" ", "_").ToLower();
         var savefile = Path.Combine(item_base_folder, $"{name}.json").Replace("\\", "/");
@@ -44,7 +44,7 @@ internal class Database
     public static Item Duplicate(Item value)
     {
         var temp = value.Copy;
-        temp.Set(Options.name, temp.Get<string>(Options.name) + " [COPY]");
+        temp.Set(paramname.name, temp.Get<string>(paramname.name) + " [COPY]");
         temp.file = string.Empty;
         temp._texture = null;
         temp._sprite = null;
@@ -56,7 +56,7 @@ internal class Database
         foreach (var itemfile in Directory.GetFiles(item_base_folder, "*.json", SearchOption.AllDirectories))
         {
             var json = File.ReadAllText(itemfile, Encoding.UTF8);
-            var item = JsonConvert.DeserializeObject<Dictionary<Options, object>>(json);
+            var item = JsonConvert.DeserializeObject<Dictionary<paramname, object>>(json);
             if (item != null)
             {
                 var _item = new Item(item);

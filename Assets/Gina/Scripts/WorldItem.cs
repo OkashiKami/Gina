@@ -19,7 +19,7 @@ internal class WorldItem : MonoBehaviour
         var z = position.z + UnityEngine.Random.Range(-3, 3);
 
         var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
-        wi.name = $"{item.Get<string>(Options.name)}_WI";
+        wi.name = $"{item.Get<string>(paramname.name)}_WI";
         wi.item = item;
     }
 
@@ -53,8 +53,8 @@ internal class WorldItem : MonoBehaviour
         {
             icon.transform.Rotate(Vector3.up, 3, Space.World);
 
-            if (item != null && item.IsValid())
-                icon.sprite = item.Get<Sprite>(Options.icon);
+            if (item != null && item.IsValid)
+                icon.sprite = item.Get<Sprite>(paramname.icon);
             else
                 icon.sprite = null;
             icon.enabled = icon.sprite != null;
@@ -62,8 +62,8 @@ internal class WorldItem : MonoBehaviour
         if (amount)
         {
             amount.transform.LookAt(Camera.main.transform, Vector3.up);
-            if (item != null && item.IsValid())
-                amount.text = item.Has(Options.curStack) ? item.Get<int>(Options.curStack).ToString() : string.Empty;
+            if (item != null && item.IsValid)
+                amount.text = item.Has(paramname.curStack) ? item.Get<int>(paramname.curStack).ToString() : string.Empty;
             else
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);
@@ -79,7 +79,7 @@ public class WorldItemEdtir : Editor
     {
         Repaint();
         var tar = (WorldItem)target;
-        if(tar.item.IsValid())
+        if(tar.item.IsValid)
         {
             foreach (var item in tar.item.data)
             {

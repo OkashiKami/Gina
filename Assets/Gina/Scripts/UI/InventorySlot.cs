@@ -19,20 +19,21 @@ public class InventorySlot : Slot
     }
     public override void Update()
     {
-        if(item != null)
+        if(item != null &&  item.IsValid)
         {
-            if (item.Get<bool>(Options.stackable))
+            if (item.IsStackable)
             {
-                if (item.Get<int>(Options.curStack) > 1)
-                    count.text = item.Get<int>(Options.curStack).ToString();
+                if (item.Get<int>(paramname.curStack) > 1)
+                    count.text = item.Get<int>(paramname.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(Options.icon)))
+            if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
             {
-
+                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.enabled = true;
             }
             else
             {

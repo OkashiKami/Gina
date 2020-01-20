@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public enum Options
+public enum paramname
 {
     uuid,
     name,
@@ -19,7 +19,6 @@ public enum Options
     maxExp,
     desc,
     icon,
-    stackable,
     curStack,
     maxStack,
     position,

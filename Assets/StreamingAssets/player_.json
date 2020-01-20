@@ -22,13 +22,13 @@
     "multiplier": 0.0
   },
   "position": {
-    "x": 2.06873822,
-    "y": 1.78813934E-07,
-    "z": -2.18528056
+    "x": 2.10237932,
+    "y": 5.96046448E-08,
+    "z": 0.876414657
   },
   "rotation": {
     "x": 0.0,
-    "y": 123.182449,
+    "y": 130.222061,
     "z": 0.0
   },
   "inventory": [
@@ -42,7 +42,8 @@
       "prefab": "Prefabs/Weapons/BroadSword",
       "agility": 0.26,
       "strength": 0.13,
-      "dexterity": 0.47
+      "dexterity": 0.47,
+      "worth": 30.0
     },
     null,
     null,

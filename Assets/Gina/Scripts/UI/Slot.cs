@@ -36,7 +36,7 @@ public class SlotEditor : Editor
     {
         var tar = (Slot)target;
 
-        if (tar.item == null || !tar.item.IsValid())
+        if (tar.item == null || !tar.item.IsValid)
             EditorGUILayout.HelpBox($"No Item in {tar.name}", MessageType.Warning);
         else
         {

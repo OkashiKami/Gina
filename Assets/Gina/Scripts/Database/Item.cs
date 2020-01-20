@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class Item
 {
-    public Dictionary<Options, object> data = new Dictionary<Options, object>();
+    public Dictionary<paramname, object> data = new Dictionary<paramname, object>();
 
     [NonSerialized] public string file;
     [NonSerialized] public Texture2D _texture = null;
@@ -17,39 +17,56 @@ public class Item
 
 
     public Item() { }
-    public Item(Dictionary<Options, object> item_data, string file = default)
+    public Item(Dictionary<paramname, object> item_data, string file = default)
     {
         this.data = item_data;
         if (!string.IsNullOrEmpty(file)) this.file = file;
     }
     public Item Copy => new Item(data, file);
-    internal string GetID()
+    internal string GetID
     {
-        var _namespace = Application.productName.ToLower();
-        var _name = Get<string>(Options.name).Replace(" ", "_").ToLower();
-        return $"{_namespace}:{_name}";
-    }
-    public bool IsValid()
-    {
-        bool valid = true;
-        if (data == null) return false;
-        try
+        get
         {
-            if (!data.ContainsKey(Options.name) || string.IsNullOrEmpty(Get<string>(Options.name))) valid = false;
+            var _namespace = Application.productName.ToLower();
+            var _name = Get<string>(paramname.name).Replace(" ", "_").ToLower();
+            return $"{_namespace}:{_name}";
         }
-        catch
+    }
+    public bool IsValid
+    {
+        get
         {
+            bool valid = true;
+            if (data == null) return false;
+            try
+            {
+                if (!data.ContainsKey(paramname.name) || string.IsNullOrEmpty(Get<string>(paramname.name))) valid = false;
+            }
+            catch
+            {
+                return false;
+            }
+            return valid;
+        }
+    }
+    public bool IsStackable
+    {
+        get
+        {
+            if (Has(paramname.curStack) && Has(paramname.maxStack)) return true;
             return false;
         }
-        return valid;
     }
-    internal T Get<T>(Options option)
+
+    internal T Get<T>(paramname option)
     {
 #if UNITY_EDITOR
         // Skip this part
 #else
         if (!IsValid) return default;
 #endif
+        if (data == null) return default(T);
+
         if (typeof(T).Equals(typeof(string)))
         {
             if (data.ContainsKey(option))
@@ -97,7 +114,7 @@ public class Item
                 return (T)(object)new Quaternion(parts[0], parts[1], parts[2], parts[2]);
             }
         }
-        if(typeof(T).Equals(typeof(Texture2D)))
+        if (typeof(T).Equals(typeof(Texture2D)))
         {
             if (this._texture != null) return (T)(object)this._texture;
             _texture = new Texture2D(1, 1);
@@ -122,7 +139,7 @@ public class Item
         }
         if (typeof(T).Equals(typeof(Sprite)))
         {
-            if (_sprite != null) return  (T)(object)_sprite;
+            if (_sprite != null) return (T)(object)_sprite;
             _texture = new Texture2D(1, 1);
             // Load from Resource folder
             if (data.ContainsKey(option))
@@ -170,7 +187,7 @@ public class Item
 
         return default(T);
     }
-    public void Set<T>(Options option, T value = default)
+    public void Set<T>(paramname option, T value = default)
     {
         if (typeof(T).Equals(typeof(string)))
         {
@@ -223,28 +240,32 @@ public class Item
             else
                 data.Add(option, value.ToString());
         }
-        else if(typeof(T).Equals(typeof(Object)))
+        else if (typeof(T).Equals(typeof(Object)))
         {
             var assetPath = string.Empty;
-            if(value != null)
+            if (value != null)
             {
                 assetPath = UnityEditor.AssetDatabase.GetAssetPath((Object)(object)value);
                 Set(option, assetPath);
             }
         }
-        else 
+        else
         {
             if (data.ContainsKey(option))
                 data[option] = value.ToString();
             else
                 data.Add(option, value.ToString());
         }
-        
+
     }
-    public void Remove(Options option)
+    public void Remove(paramname option)
     {
         if (data.ContainsKey(option))
             data.Remove(option);
     }
-    public bool Has(Options option) => data.ContainsKey(option);
-}   
+    public bool Has(paramname option)
+    {
+        if (data == null) return false;
+        else return data.ContainsKey(option);
+    }
+}

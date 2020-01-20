@@ -19,9 +19,16 @@ public class PlayerData
     public SerializableVector position = Vector3.zero;
     public SerializableVector rotation = Vector3.zero;
 
-    public Dictionary<Options, object>[] inventory = new Dictionary<Options, object>[30];
-    public Dictionary<Options, object>[] actionbar = new Dictionary<Options, object>[12];
-    public Dictionary<Options, object>[] character = new Dictionary<Options, object>[15];
+    internal void Init()
+    {
+        onInventoryChanged?.Invoke(inventory);
+        onActionbarChanged?.Invoke(actionbar);
+        onCharacterChanged?.Invoke(character);
+    }
+
+    public Dictionary<paramname, object>[] inventory = new Dictionary<paramname, object>[30];
+    public Dictionary<paramname, object>[] actionbar = new Dictionary<paramname, object>[12];
+    public Dictionary<paramname, object>[] character = new Dictionary<paramname, object>[15];
     // Events
     public delegate void OnNameChaged(string value); public event OnNameChaged onNameChaged;
     public delegate void OnLevelChaged(int value); public event OnLevelChaged onLevelChaged;
@@ -31,9 +38,9 @@ public class PlayerData
     public delegate void OnExperianceChagned(SerializableCurMax value); public event OnExperianceChagned onExperianceChagned;
     public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
     public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
-    public delegate void OnInventoryChanged(Dictionary<Options, object>[] value); public event OnInventoryChanged onInventoryChanged;
-    public delegate void OnActionbarChanged(Dictionary<Options, object>[] value); public event OnActionbarChanged onActionbarChanged;
-    public delegate void OnCharacterChanged(Dictionary<Options, object>[] value); public event OnCharacterChanged onCharacterChanged;
+    public delegate void OnInventoryChanged(Dictionary<paramname, object>[] value); public event OnInventoryChanged onInventoryChanged;
+    public delegate void OnActionbarChanged(Dictionary<paramname, object>[] value); public event OnActionbarChanged onActionbarChanged;
+    public delegate void OnCharacterChanged(Dictionary<paramname, object>[] value); public event OnCharacterChanged onCharacterChanged;
 
 
     public PlayerData() { }
@@ -85,7 +92,7 @@ public class PlayerData
         rotation = value;
         onRotationChanged?.Invoke(rotation);
     }
-    public void SetInventory(int index = -1, Dictionary<Options, object> value = null)
+    public void SetInventory(int index = -1, Dictionary<paramname, object> value = null)
     {
         if(index >= 0)
         {
@@ -96,33 +103,36 @@ public class PlayerData
         {
             for (int i = 0; i < inventory.Length; i++)
             {
-                if(inventory[i] == null || !new Item(inventory[i]).IsValid())
+                if(inventory[i] == null || !new Item(inventory[i]).IsValid)
                 {
                     inventory[i] = value;
                     break;
                 }
-                if(new Item(inventory[i]).GetID() == new Item(value).GetID())
+
+                var slot = new Item(inventory[i]);
+                var item = new Item(value);
+                if(item.GetID == slot.GetID)
                 {
-                    if()
-                }
-
-
-                if(inventory[i] == null || !new Item(inventory[i]).IsValid())
-                {
-                    inventory[index] = value;
-
-
+                    if (slot.IsStackable)
+                    {
+                        if (slot.Get<int>(paramname.curStack) < slot.Get<int>(paramname.maxStack))
+                        {
+                            slot.Set(paramname.curStack, slot.Get<int>(paramname.curStack) + 1);
+                            break;
+                        }
+                    }
+                    else continue;
                 }
             }
         }
         onInventoryChanged?.Invoke(inventory);
     }
-    public void SetActionbar(int index = 0, Dictionary<Options, object> value = null)
+    public void SetActionbar(int index = 0, Dictionary<paramname, object> value = null)
     {
         actionbar[index] = value;
         onActionbarChanged?.Invoke(actionbar);
     }
-    public void SetCharacter(int index = 0, Dictionary<Options, object> value = null)
+    public void SetCharacter(int index = 0, Dictionary<paramname, object> value = null)
     {
         character[index] = value;
         onCharacterChanged?.Invoke(character);

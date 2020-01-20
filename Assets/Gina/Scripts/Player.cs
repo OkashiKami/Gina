@@ -13,18 +13,23 @@ public class Player : MonoBehaviour
 {
     public PlayerData player_data;
 
-    private void Start()
+    private void Awake()
     {
         player_data = new PlayerData();
-
         player_data.onPositionChanged += (p) => transform.position = p;
         player_data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
-
         player_data.Load();
 
+
+    }
+
+    private void Start()
+    {
+        
+        player_data.Init();
         FunctionPeriodic.Create(() => player_data.Save(), 10);
     }
-    
+
     private void OnApplicationQuit()
     {
         player_data.Save();
