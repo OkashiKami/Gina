@@ -247,4 +247,4 @@ public class Item
             data.Remove(option);
     }
     public bool Has(Options option) => data.ContainsKey(option);
-}
+}   

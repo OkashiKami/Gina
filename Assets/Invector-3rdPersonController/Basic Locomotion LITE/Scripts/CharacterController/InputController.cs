@@ -9,6 +9,7 @@ public class InputController : MonoBehaviour
     [Header("General")]
     public KeyCode interact = KeyCode.F;
     public KeyCode inventory = KeyCode.I;
+    public KeyCode character = KeyCode.C;
 
     [Header("Default Inputs")]
     public string horizontalInput = "Horizontal";
@@ -39,6 +40,7 @@ public class InputController : MonoBehaviour
 
     public delegate void OnInteract(Player player); public event OnInteract onInteract;
     public delegate void OnInventory(); public event OnInventory onInventory;
+    public delegate void OnCharacter(); public event OnCharacter onCharacter;
 
     protected virtual void Start()
     {

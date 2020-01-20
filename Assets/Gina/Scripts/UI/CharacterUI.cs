@@ -28,6 +28,38 @@ public class CharacterUI : MonoBehaviour
             player.player_data.onCharacterChanged += OnCharacterChanged;
     }
 
+    private void Start()
+    {
+        FindObjectOfType<InputController>().onCharacter += () =>
+        {
+            var cg = GetComponent<CanvasGroup>();
+            if (cg.alpha >= 1)
+                StartCoroutine(Hide());
+            if (cg.alpha <= 0)
+                StartCoroutine(Show());
+
+        };
+    }
+
+    private IEnumerator Show()
+    {
+        var cg = GetComponent<CanvasGroup>();
+    a:
+        cg.alpha += 3f * Time.deltaTime;
+        yield return new WaitForSeconds(0f);
+        if (cg.alpha < 1)
+            goto a;
+    }
+    private IEnumerator Hide()
+    {
+        var cg = GetComponent<CanvasGroup>();
+    a:
+        cg.alpha -= 3f * Time.deltaTime;
+        yield return new WaitForSeconds(0f);
+        if (cg.alpha > 0)
+            goto a;
+    }
+
     private void OnCharacterChanged(Dictionary<Options, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)

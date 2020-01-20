@@ -34,4 +34,5 @@ public enum Options
     stamina,
     mana,
     dexterity,
+    worth,
 }

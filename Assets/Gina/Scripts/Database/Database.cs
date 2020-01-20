@@ -21,6 +21,35 @@ internal class Database
     public static bool loading_player_data;
     private static bool saving_player_data;
 
+    internal static void Save(Item value)
+    {
+        if (loading_player_data) return;
+        loading_player_data = true;
+        if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
+            File.Delete(value.file);
+        var name = value.Get<string>(Options.name);
+        var json = JsonConvert.SerializeObject(value.data, Formatting.Indented);
+        name = name.Replace(" ", "_").ToLower();
+        var savefile = Path.Combine(item_base_folder, $"{name}.json").Replace("\\", "/");
+        File.WriteAllText(savefile, json, Encoding.UTF8);
+        loading_player_data = false;
+        Refresh();
+    }
+    public static void Delete(Item value)
+    {
+        if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
+            File.Delete(value.file);
+        Refresh();
+    }
+    public static Item Duplicate(Item value)
+    {
+        var temp = value.Copy;
+        temp.Set(Options.name, temp.Get<string>(Options.name) + " [COPY]");
+        temp.file = string.Empty;
+        temp._texture = null;
+        temp._sprite = null;
+        return temp;
+    }
     public static void Refresh()
     {
         items = new List<Item>();
@@ -50,23 +79,6 @@ internal class Database
         }
     }
 
-    internal static void Save(Item value)
-    {
-        if (loading_player_data) return;
-        new Thread(new ThreadStart(() =>
-        {
-            loading_player_data = true;
-            if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
-                File.Delete(value.file);
-            var name = value.Get<string>(Options.name);
-            var json = JsonConvert.SerializeObject(value.data, Formatting.Indented);
-            name = name.Replace(" ", "_").ToLower();
-            var savefile = Path.Combine(item_base_folder, $"{name}.json").Replace("\\", "/");
-            File.WriteAllText(savefile, json, Encoding.UTF8);
-            GameManager.ExecuteAction(Refresh);
-            loading_player_data = false;
-        })).Start();
-    }
 
     internal static void IsValidObject(string v = null)
     {

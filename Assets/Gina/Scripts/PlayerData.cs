@@ -98,14 +98,23 @@ public class PlayerData
             {
                 if(inventory[i] == null || !new Item(inventory[i]).IsValid())
                 {
+                    inventory[i] = value;
+                    break;
+                }
+                if(new Item(inventory[i]).GetID() == new Item(value).GetID())
+                {
+                    if()
+                }
+
+
+                if(inventory[i] == null || !new Item(inventory[i]).IsValid())
+                {
+                    inventory[index] = value;
+
 
                 }
             }
         }
-
-
-
-        inventory[index] = value;
         onInventoryChanged?.Invoke(inventory);
     }
     public void SetActionbar(int index = 0, Dictionary<Options, object> value = null)

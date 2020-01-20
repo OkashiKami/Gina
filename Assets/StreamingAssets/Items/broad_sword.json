@@ -8,5 +8,6 @@
   "prefab": "Prefabs/Weapons/BroadSword",
   "agility": 0.26,
   "strength": 0.13,
-  "dexterity": 0.47
+  "dexterity": 0.47,
+  "worth": 30.0
 }
