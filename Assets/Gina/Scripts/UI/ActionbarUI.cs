@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-[RequireComponent(typeof(CanvasGroup))]
 public class ActionbarUI : MonoBehaviour
 {
     private HorizontalLayoutGroup grid;
-    private ActionbarSlot[] slots;
+    public ActionbarSlot[] slots;
+
     private void Reset()
     {
         grid = GetComponentInChildren<HorizontalLayoutGroup>();
         slots = grid.GetComponentsInChildren<ActionbarSlot>();
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i].name = $"Act Slot {i + 1}";
+            slots[i].name = $"Act Slot {i + 1} + [{slots[i].requireType}]";
             slots[i].Set();
             slots[i].Awake();
             slots[i].Update();

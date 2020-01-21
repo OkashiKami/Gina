@@ -24,7 +24,7 @@ public class InputController : MonoBehaviour
     public string rotateCameraXInput = "Mouse X";
     public string rotateCameraYInput = "Mouse Y";
 
-    private bool cursorLocked = true;
+    private bool IsCursorLocked = true;
 
     protected vThirdPersonCamera tpCamera;                // acess camera info        
     [HideInInspector]
@@ -40,7 +40,18 @@ public class InputController : MonoBehaviour
 
     protected vThirdPersonController cc;                // access the ThirdPersonController component                
 
+
     #endregion
+    public bool IsWindowOpen 
+    { 
+        get 
+        {
+            var uiInventory = FindObjectOfType<InventoryUI>() ? FindObjectOfType<InventoryUI>().GetComponent<CanvasGroup>().alpha == 1 : false;
+            var uicharacter = FindObjectOfType<CharacterUI>() ? FindObjectOfType<CharacterUI>().GetComponent<CanvasGroup>().alpha == 1 : false;
+
+            return uiInventory || uicharacter;
+        }
+    }
 
     public delegate void OnInteract(Player player); public event OnInteract onInteract;
     public delegate void OnInventory(); public event OnInventory onInventory;
@@ -68,16 +79,17 @@ public class InputController : MonoBehaviour
             onInteract?.Invoke(cc.GetComponent<Player>());
         if (Input.GetKeyDown(inventory))
             onInventory?.Invoke();
-
+        if (Input.GetKeyDown(character))
+            onCharacter?.Invoke();
 
         if (Input.GetKeyDown(KeyCode.LeftAlt))
-            cursorLocked = !cursorLocked;
+            IsCursorLocked = !IsCursorLocked;
 
-        Cursor.visible = !cursorLocked;
-        Cursor.lockState = cursorLocked? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !IsCursorLocked || IsWindowOpen;
+        Cursor.lockState = !IsCursorLocked || IsWindowOpen? CursorLockMode.None : CursorLockMode.Locked;
 
         ExitGameInput();
-        if (cursorLocked)
+        if (IsCursorLocked && !IsWindowOpen)
         {
             InputHandle();                      // update input methods
             UpdateCameraStates();               // update camera states
@@ -87,7 +99,7 @@ public class InputController : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         cc.AirControl();
-        if (cursorLocked)
+        if (IsCursorLocked && !IsWindowOpen)
             CameraInput();
     }
 
@@ -99,8 +111,7 @@ public class InputController : MonoBehaviour
 
     protected virtual void InputHandle()
     {
-        if (cursorLocked)
-            CameraInput();
+        CameraInput();
         if (!cc.lockMovement)
         {
             MoveCharacter();

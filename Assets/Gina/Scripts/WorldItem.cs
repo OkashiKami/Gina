@@ -39,7 +39,7 @@ internal class WorldItem : MonoBehaviour
     private void OnInteract(Player player)
     {
         var dis = Vector3.Distance(player.transform.position, transform.position);
-        if (dis < 0.6f)
+        if (dis < 1.06f)
         {
             player.player_data.SetInventory(value: item.data);
             Destroy(gameObject);

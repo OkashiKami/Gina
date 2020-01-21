@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-[RequireComponent(typeof(CanvasGroup))]
 public class InventoryUI : MonoBehaviour
 {
     private GridLayoutGroup grid;
-    private InventorySlot[] slots;
+    public InventorySlot[] slots;
     private void Reset()
     {
         grid = GetComponentInChildren<GridLayoutGroup>();
