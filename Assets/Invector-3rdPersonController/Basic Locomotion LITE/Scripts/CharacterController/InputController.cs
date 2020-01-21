@@ -7,6 +7,8 @@ public class InputController : MonoBehaviour
 {
     #region variables
     [Header("General")]
+    public InputButton toggleCursor = new InputButton(KeyCode.Tilde);
+
     public KeyCode interact = KeyCode.F;
     public KeyCode inventory = KeyCode.I;
     public KeyCode character = KeyCode.C;
@@ -21,6 +23,8 @@ public class InputController : MonoBehaviour
     [Header("Camera Settings")]
     public string rotateCameraXInput = "Mouse X";
     public string rotateCameraYInput = "Mouse Y";
+
+    private bool cursorLocked = true;
 
     protected vThirdPersonCamera tpCamera;                // acess camera info        
     [HideInInspector]
@@ -55,9 +59,6 @@ public class InputController : MonoBehaviour
 
         tpCamera = FindObjectOfType<vThirdPersonCamera>();
         if (tpCamera) tpCamera.SetMainTarget(cc.transform);
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected virtual void LateUpdate()
@@ -67,14 +68,27 @@ public class InputController : MonoBehaviour
             onInteract?.Invoke(cc.GetComponent<Player>());
         if (Input.GetKeyDown(inventory))
             onInventory?.Invoke();
-        InputHandle();                      // update input methods
-        UpdateCameraStates();               // update camera states
+
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+            cursorLocked = !cursorLocked;
+
+        Cursor.visible = !cursorLocked;
+        Cursor.lockState = cursorLocked? CursorLockMode.Locked : CursorLockMode.None;
+
+        ExitGameInput();
+        if (cursorLocked)
+        {
+            InputHandle();                      // update input methods
+            UpdateCameraStates();               // update camera states
+        }
     }
 
     protected virtual void FixedUpdate()
     {
         cc.AirControl();
-        CameraInput();
+        if (cursorLocked)
+            CameraInput();
     }
 
     protected virtual void Update()
@@ -85,9 +99,8 @@ public class InputController : MonoBehaviour
 
     protected virtual void InputHandle()
     {
-        ExitGameInput();
-
-        CameraInput();
+        if (cursorLocked)
+            CameraInput();
         if (!cc.lockMovement)
         {
             MoveCharacter();
@@ -182,4 +195,26 @@ public class InputController : MonoBehaviour
     }
 
     #endregion
+}
+
+public class InputButton
+{
+    public KeyCode key;
+    public KeyCode modifier;
+
+    public InputButton(KeyCode key = KeyCode.None, KeyCode modifier = KeyCode.None)
+    {
+        this.key = key;
+        this.modifier = modifier;
+    }
+
+    public static implicit operator bool (InputButton value)
+    {
+        if (value.key != KeyCode.None && value.modifier == KeyCode.None)
+            return Input.GetKeyDown(value.key);
+        else if (value.key != KeyCode.None && value.modifier != KeyCode.None)
+            return Input.GetKeyDown(value.key) && Input.GetKey(value.modifier);
+        else
+            return false;
+    }
 }

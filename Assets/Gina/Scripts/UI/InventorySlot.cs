@@ -50,6 +50,9 @@ public class InventorySlot : Slot
         
     }
 
+
+    RectTransform _rt;
+    Canvas _c;
     public override void OnDrop(PointerEventData eventData)
     {
         
@@ -57,16 +60,24 @@ public class InventorySlot : Slot
 
     public override void OnDrag(PointerEventData eventData)
     {
-        
+        Debug.Log("OnDrag");
+
     }
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
-        
+
+        Debug.Log("OnBeginDrag");
+        GetComponent<CanvasGroup>().alpha = 0.6f;
+        _rt = Instantiate(this.gameObject).GetComponent<RectTransform>();
+        _rt.GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     public override void OnEndDrag(PointerEventData eventData)
     {
-        
+        Debug.Log("OnEndDrag");
+        GetComponent<CanvasGroup>().alpha = 1;
+
+        Destroy(_rt.gameObject);
     }
 }
