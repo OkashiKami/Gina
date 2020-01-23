@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Object = UnityEngine.Object;
 using System.IO;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 public class DatabaseEditor : EditorWindow
@@ -21,8 +22,10 @@ public class DatabaseEditor : EditorWindow
     }
 
 
-    enum MenuItems { Items, Editor }
-    public int menu_item = (int)MenuItems.Items;
+    public enum MenuItems { Items, LootTables }
+    public bool _edit = false;
+
+    public MenuItems menu_item;
     private Item _item = null;
     private bool _itemErrors;
     private GUIContent _itemContent = new GUIContent();
@@ -33,26 +36,44 @@ public class DatabaseEditor : EditorWindow
     {
         if (!win) Open();
         Repaint();
+        OnGUIHeader();
+        switch (menu_item)
+        {
+            case MenuItems.Items: OnGUIItems(_edit); break;
+            case MenuItems.LootTables: OnGUILoot(_edit); break;
+        }
+        OnGUIFooter(_edit);
+    }
 
-        //menu_item = GUILayout.Toolbar(menu_item, Enum.GetNames(typeof(MenuItems)));
+    private void OnGUIHeader()
+    {
+        EditorGUI.BeginDisabledGroup(_edit);
+        menu_item = (MenuItems)GUILayout.Toolbar((int)menu_item, Enum.GetNames(typeof(MenuItems)));
+        EditorGUI.EndDisabledGroup();
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Box(((MenuItems)menu_item).ToString(), GUILayout.ExpandWidth(true));
-        EditorGUI.BeginDisabledGroup(((MenuItems)menu_item) != MenuItems.Items);
+        GUILayout.Box(menu_item.ToString(), GUILayout.ExpandWidth(true));
+        EditorGUI.BeginDisabledGroup(_edit != false);
         if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
         {
             _item = new Item();
             _itemContent = new GUIContent();
-            menu_item = (int)MenuItems.Editor;
+            _edit = true;
         }
         EditorGUI.EndDisabledGroup();
+        EditorGUI.BeginDisabledGroup(Database.refreshing);
         if (GUILayout.Button("R", GUILayout.ExpandWidth(false)))
         {
             Database.Refresh();
         }
+        EditorGUI.EndDisabledGroup();
         EditorGUILayout.EndHorizontal();
-        if (MenuItems.Items == (MenuItems)menu_item)
+    }
+
+    private void OnGUIItems(bool edit = false)
+    {
+        if (!edit)
         {
-            sv = EditorGUILayout.BeginScrollView(sv);
+            sv = EditorGUILayout.BeginScrollView(sv, GUILayout.Height(position.height - 60));
             foreach (var item in Database.GetItems)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -60,20 +81,20 @@ public class DatabaseEditor : EditorWindow
                 context.image = item.Get<Texture2D>(paramname.icon);
                 context.text = item.Get<string>(paramname.name);
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
-                GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 180));
+                GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
                 GUI.skin.box.alignment = TextAnchor.MiddleCenter;
-                if(GUILayout.Button("Edit", GUILayout.Height(40), GUILayout.Width(40))) 
+                if (GUILayout.Button("Edit", GUILayout.Height(40), GUILayout.Width(40)))
                 {
                     _item = item;
                     _itemContent = new GUIContent();
-                    menu_item = (int)MenuItems.Editor;
+                    _edit = true;
                 }
                 GUI.color = Color.yellow;
                 if (GUILayout.Button("Duplicate", GUILayout.Height(40), GUILayout.Width(70)))
                 {
                     _item = Database.Duplicate(item);
                     _itemContent = new GUIContent();
-                    menu_item = (int)MenuItems.Editor;
+                    _edit = true;
                 }
                 GUI.color = Color.red;
                 if (GUILayout.Button("Delete", GUILayout.Height(40), GUILayout.Width(50)))
@@ -85,58 +106,194 @@ public class DatabaseEditor : EditorWindow
         }
         else
         {
-            if(_item != null)
+            esv = EditorGUILayout.BeginScrollView(esv, GUILayout.Height(position.height - 80));
+            try
             {
-                GUILayout.Space(5);
-                esv = EditorGUILayout.BeginScrollView(esv, GUILayout.Height(position.height - 60));
-                try
+                CreateIconField(paramname.icon, _item);
+                CreateTextField(paramname.name, _item);
+                CreateTextField(paramname.desc, _item);
+                CreateEquiptmentField(_item);
+                CreateIntMinMaxField(paramname.curStack, paramname.maxStack, _item, 1, 64);
+                GUILayout.Box("Stats", GUILayout.ExpandWidth(true));
+                CreateSlider(paramname.health, _item, 0, 10);
+                CreateSlider(paramname.stamina, _item, 0, 10);
+                CreateSlider(paramname.mana, _item, 0, 10);
+                CreateSlider(paramname.strength, _item, 0, 10);
+                CreateSlider(paramname.agility, _item, 0, 10);
+                CreateSlider(paramname.dexterity, _item, 0, 10);
+
+                GUILayout.Box("Equipt Item", GUILayout.ExpandWidth(true));
+                CreateToggleField(paramname.isEquipable, _item);
+                CreateObjectField(paramname.prefab, _item);
+
+                CreateFloatField(paramname.worth, _item);
+
+                _itemErrors = false;
+            }
+            catch { _itemErrors = true; }
+            EditorGUILayout.EndScrollView();
+        }
+    }
+    private void OnGUILoot(bool edit = false)
+    {
+        if(!edit)
+        {
+            sv = EditorGUILayout.BeginScrollView(sv, GUILayout.Height(position.height - 60));
+            foreach (var item in Database.GetLootTables)
+            {
+                EditorGUILayout.BeginHorizontal();
+                var context = new GUIContent();
+                context.image = item.Get<Texture2D>(paramname.icon);
+                context.text = item.Get<string>(paramname.name);
+                GUI.skin.box.alignment = TextAnchor.MiddleLeft;
+                GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
+                GUI.skin.box.alignment = TextAnchor.MiddleCenter;
+                if (GUILayout.Button("Edit", GUILayout.Height(40), GUILayout.Width(40)))
                 {
-                    CreateIconField(paramname.icon, _item);
-                    CreateTextField(paramname.name, _item);
-                    CreateTextField(paramname.desc, _item);
-                    CreateEquiptmentField(_item);
-                    CreateIntMinMaxField(paramname.curStack, paramname.maxStack, _item, 1, 64);
-                    GUILayout.Box("Stats", GUILayout.ExpandWidth(true));
-                    CreateSlider(paramname.health, _item, 0, 10);
-                    CreateSlider(paramname.stamina, _item, 0, 10);
-                    CreateSlider(paramname.mana, _item, 0, 10);
-                    CreateSlider(paramname.strength, _item, 0, 10);
-                    CreateSlider(paramname.agility, _item, 0, 10);
-                    CreateSlider(paramname.dexterity, _item, 0, 10);
-
-                    GUILayout.Box("Equipt Item", GUILayout.ExpandWidth(true));
-                    CreateToggleField(paramname.isEquipable, _item);
-                    CreateObjectField(paramname.prefab, _item);
-
-                    CreateFloatField(paramname.worth, _item);
-
-                    _itemErrors = false;
+                    _item = item;
+                    _itemContent = new GUIContent();
+                    _edit = true;
                 }
-                catch { _itemErrors = true; }
-                EditorGUILayout.EndScrollView();
+                GUI.color = Color.yellow;
+                if (GUILayout.Button("Duplicate", GUILayout.Height(40), GUILayout.Width(70)))
+                {
+                    _item = Database.Duplicate(item);
+                    _itemContent = new GUIContent();
+                    _edit = true;
+                }
+                GUI.color = Color.red;
+                if (GUILayout.Button("Delete", GUILayout.Height(40), GUILayout.Width(50)))
+                    Database.Delete(item);
+                GUI.color = Color.white;
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.EndScrollView();
+        }
+        else
+        {
+            esv = EditorGUILayout.BeginScrollView(esv, GUILayout.Height(position.height - 80));
+            try
+            {
+                CreateIconField(paramname.icon, _item);
+                CreateTextField(paramname.name, _item);
+                CreateTextField(paramname.desc, _item);
+                GUILayout.Space(5);
+
+                _item.usedPercengage = 0;
+                CreateLootField(paramname.loot, _item);
+
+
+                EditorGUILayout.HelpBox($"{_item.usedPercengage} of {_item.basePercentage}", MessageType.Info);
+                _itemErrors = false;
+            }
+            catch (Exception ex) { _itemErrors = true; Debug.LogError(ex.StackTrace); }
+            EditorGUILayout.EndScrollView();
+        }
+    }
+
+    private void OnGUIFooter(bool edit = false)
+    {
+        if (!edit) return;
+
+        switch((MenuItems)menu_item)
+        {
+            case MenuItems.Items:
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
                 EditorGUILayout.BeginHorizontal();
                 EditorGUI.BeginDisabledGroup(!_item.IsValid || _itemErrors);
                 if (GUILayout.Button("Save"))
                 {
-                    Database.Save(_item);
+                    _edit = false;
+                    Database.SaveItem(_item);
                     _item = null;
-                    menu_item = 0;
                 }
                 EditorGUI.EndDisabledGroup();
                 GUI.color = Color.red;
-                if (GUILayout.Button("Cancel")) 
+                if (GUILayout.Button("Cancel"))
                 {
-                    menu_item = 0;
+                    _edit = false;
                     _item = null;
                 }
                 GUI.color = Color.white;
                 EditorGUILayout.EndHorizontal();
                 GUILayout.EndArea();
-            }
+                break;
+            case MenuItems.LootTables:
+                GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.BeginDisabledGroup(!_item.IsValid || _itemErrors);
+                if (GUILayout.Button("Save"))
+                {
+                    _edit = false;
+                    Database.SaveLoot(_item);
+                    _item = null;
+                }
+                EditorGUI.EndDisabledGroup();
+                GUI.color = Color.red;
+                if (GUILayout.Button("Cancel"))
+                {
+                    _edit = false;
+                    _item = null;
+                }
+                GUI.color = Color.white;
+                EditorGUILayout.EndHorizontal();
+                GUILayout.EndArea();
+                break;
         }
     }
 
+
+    private void CreateLootField(paramname option, Item _item, bool removeable = true)
+    {
+        var name = option.ToString();
+        name = char.ToUpper(name[0]) + name.Substring(1);
+
+        if (!_item.Has(option))
+        {
+            if (GUILayout.Button($"Add {name} Field"))
+                _item.Set(option, new string[] { $"{string.Empty},{0}" });
+        }
+        else
+        {
+            try
+            {
+                var array = _item.Get<string[]>(option);
+                var list = array != null ? array.ToList() : new List<string>();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Box("Loot Table", GUILayout.ExpandWidth(true));
+                if (removeable)
+                {
+                    GUI.color = Color.red;
+                    if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                        _item.Remove(option);
+                    GUI.color = Color.white;
+                    return;
+                }
+                if (GUILayout.Button("+")) list.Add($"{string.Empty},{0}");
+                EditorGUILayout.EndHorizontal();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var pair = list[i].Split(',');
+                    GUI.color = Database.GetItemByID(pair[0]) != null ? Color.green : Color.white;
+                    pair[0] = EditorGUILayout.TextField(pair[0]);
+                    GUI.color = Color.white;
+                    _item.usedPercengage += int.Parse(pair[1]);
+                    GUI.color = _item.usedPercengage > _item.basePercentage ? Color.red : Color.green;
+                    pair[1] = EditorGUILayout.IntField(int.Parse(pair[1]), GUILayout.Width(50)).ToString();
+                    GUI.color = Color.white;
+
+                    list[i] = $"{pair[0]},{pair[1]}";
+                }
+                _item.Set(option, list.ToArray());
+                _itemErrors = false;
+            }
+            catch( Exception ex)
+            {
+                _itemErrors = true;
+                Debug.LogError(ex);
+            }
+        }
+    }
     private void CreateTextField(paramname option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
@@ -233,7 +390,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateIconField(paramname option, Item container, bool removeable = true)
+    private void CreateIconField(paramname option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -295,7 +452,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateEquiptmentField(Item container, bool removeable = true)
+    private void CreateEquiptmentField(Item _item, bool removeable = true)
     {
         var name = "Equipment";
         name = char.ToUpper(name[0]) + name.Substring(1);
@@ -330,7 +487,7 @@ public class DatabaseEditor : EditorWindow
             if(_item.Has(paramname.isEquipable))
                 _item.Set(paramname.equipmentType, (int)(EquiptmentType)EditorGUILayout.EnumPopup(new GUIContent(string.Empty, "Is Equipable"), (EquiptmentType)_item.Get<int>(paramname.equipmentType)));
             if (_item.Has(paramname.equipmentType))
-                _item.Set(paramname.isEquipable, EditorGUILayout.Toggle(new GUIContent(string.Empty, "Equipment Type"),_item.Get<bool>(paramname.isEquipable), GUILayout.Width(20)));
+                _item.Set(paramname.isEquipable, EditorGUILayout.Toggle(new GUIContent(string.Empty, "Equipment Type"), _item.Get<bool>(paramname.isEquipable), GUILayout.Width(20)));
             EditorGUILayout.EndHorizontal();
             if (_item.Has(paramname.requireLevel))
                 _item.Set(paramname.requireLevel, EditorGUILayout.IntSlider("Require Level", _item.Get<int>(paramname.requireLevel), 1, GameManager.maxLevel));
@@ -456,5 +613,6 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
+
 }
 #endif

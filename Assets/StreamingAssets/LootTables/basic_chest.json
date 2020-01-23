@@ -1,0 +1,12 @@
+﻿{
+  "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Scrolls/Scroll_Close_Blue.png",
+  "name": "basic chest",
+  "desc": "This is the loot table for a basic chest",
+  "loot": [
+    "gina:gold_coin,1",
+	"gina:broad_sword,30",
+	"gina:bread, 60",
+	"gina:cake, 5",
+	"gina:silver_coin,4"
+  ]
+}

@@ -1,5 +1,7 @@
 ﻿{
   "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Coins/Coins_Tiny_Gold.png",
   "name": "Gold Coin",
-  "worth": 100.0
+  "worth": 100.0,
+  "curStack": 1,
+  "maxStack": 64
 }

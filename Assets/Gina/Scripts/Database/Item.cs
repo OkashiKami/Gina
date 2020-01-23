@@ -14,6 +14,7 @@ public class Item
     [NonSerialized] public Texture2D _texture = null;
     [NonSerialized] public Sprite _sprite = null;
     [NonSerialized] public Object _object = null;
+    [NonSerialized] public int basePercentage = 100, usedPercengage = 100;
 
 
     public Item() { }
@@ -53,8 +54,13 @@ public class Item
     {
         get
         {
-            if (Has(paramname.curStack) && Has(paramname.maxStack)) return true;
-            return false;
+            if (data == null || data.Count <= 0) 
+                return false;
+
+            var curstack = Has(paramname.curStack);
+            var maxstack = Has(paramname.maxStack);
+
+            return curstack && maxstack;
         }
     }
 
@@ -72,22 +78,22 @@ public class Item
             if (data.ContainsKey(option))
                 return (T)data[option];
         }
-        if (typeof(T).Equals(typeof(bool)))
+        else if (typeof(T).Equals(typeof(bool)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)bool.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(int)))
+        else if (typeof(T).Equals(typeof(int)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)int.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(float)))
+        else if (typeof(T).Equals(typeof(float)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)float.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(Vector2)))
+        else if (typeof(T).Equals(typeof(Vector2)))
         {
             if (data.ContainsKey(option))
             {
@@ -96,7 +102,7 @@ public class Item
                 return (T)(object)new Vector2(parts[0], parts[1]);
             }
         }
-        if (typeof(T).Equals(typeof(Vector3)))
+        else if (typeof(T).Equals(typeof(Vector3)))
         {
             if (data.ContainsKey(option))
             {
@@ -105,7 +111,7 @@ public class Item
                 return (T)(object)new Vector3(parts[0], parts[1], parts[2]);
             }
         }
-        if (typeof(T).Equals(typeof(Quaternion)))
+        else if (typeof(T).Equals(typeof(Quaternion)))
         {
             if (data.ContainsKey(option))
             {
@@ -114,7 +120,7 @@ public class Item
                 return (T)(object)new Quaternion(parts[0], parts[1], parts[2], parts[2]);
             }
         }
-        if (typeof(T).Equals(typeof(Texture2D)))
+        else if (typeof(T).Equals(typeof(Texture2D)))
         {
             if (this._texture != null) return (T)(object)this._texture;
             _texture = new Texture2D(1, 1);
@@ -137,7 +143,7 @@ public class Item
                 }
             }
         }
-        if (typeof(T).Equals(typeof(Sprite)))
+        else if (typeof(T).Equals(typeof(Sprite)))
         {
             if (_sprite != null) return (T)(object)_sprite;
             _texture = new Texture2D(1, 1);
@@ -164,7 +170,7 @@ public class Item
                 }
             }
         }
-        if (typeof(T).Equals(typeof(Object)))
+        else if (typeof(T).Equals(typeof(Object)))
         {
             if (this._object != null) return (T)(object)this._object;
             // Load from Resource folder
@@ -184,7 +190,26 @@ public class Item
                 }
             }
         }
+        else if(typeof(T).Equals(typeof(string[])))
+        {
+            var value = new string[0];
+            var d = data[option];
 
+
+            return (T)(object)value;
+        }
+        else if (typeof(T).Equals(typeof(List<string>)))
+        {
+            var value = new List<string>();
+            var d = data[option];
+
+
+            return (T)(object)value;
+        }
+        else
+        {
+            return (T)data[option];
+        }
         return default(T);
     }
     public void Set<T>(paramname option, T value = default)
@@ -248,6 +273,20 @@ public class Item
                 assetPath = UnityEditor.AssetDatabase.GetAssetPath((Object)(object)value);
                 Set(option, assetPath);
             }
+        }
+        else if(typeof(T).Equals(typeof(string[])))
+        {
+            if (data.ContainsKey(option))
+                data[option] = value;
+            else
+                data.Add(option, value);
+        }
+        else if (typeof(T).Equals(typeof(List<string>)))
+        {
+            if (data.ContainsKey(option))
+                data[option] = value;
+            else
+                data.Add(option, value);
         }
         else
         {

@@ -34,4 +34,10 @@ public enum paramname
     mana,
     dexterity,
     worth,
+
+    entry1, entry2, entry3, entry4, entry5,
+    entry6, entry7, entry8, entry9, entry10,
+    entry11, entry12, entry13, entry14, entry15,
+    entry16, entry17, entry18, entry19, entry20,
+    loot,
 }

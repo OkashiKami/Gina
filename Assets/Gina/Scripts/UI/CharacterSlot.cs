@@ -104,7 +104,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
                 if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<ActionbarSlot>().item.Get<int>(paramname.equipmentType))
                 {
                     Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
-                    eventData.pointerDrag.GetComponent<CharacterSlot>().Set();
+                    eventData.pointerDrag.GetComponent<ActionbarSlot>().Set();
                 }
             }
             else if (eventData.pointerDrag.GetComponent<CharacterSlot>())

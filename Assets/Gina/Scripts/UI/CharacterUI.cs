@@ -74,7 +74,7 @@ public class CharacterUI : MonoBehaviour
     {
         for (int i = 0; i < items.Length; i++)
         {
-            slots[i].Set(new Item(items[i]));
+            slots[i].item = new Item(items[i]);
         }
     }
 }

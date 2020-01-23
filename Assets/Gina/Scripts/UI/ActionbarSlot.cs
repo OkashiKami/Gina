@@ -42,7 +42,8 @@ public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
 
             if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
             {
-
+                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.enabled = true;
             }
             else
             {
@@ -81,7 +82,7 @@ public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
                 if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<ActionbarSlot>().item.Get<int>(paramname.equipmentType))
                 {
                     Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
-                    eventData.pointerDrag.GetComponent<CharacterSlot>().Set();
+                    eventData.pointerDrag.GetComponent<ActionbarSlot>().Set();
                 }
             }
             else if (eventData.pointerDrag.GetComponent<CharacterSlot>())

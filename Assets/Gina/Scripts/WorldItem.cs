@@ -12,15 +12,27 @@ internal class WorldItem : MonoBehaviour
     private TextMeshPro amount;
     public  Item item = null;
 
-    internal static void Create(Item item, Vector3 position = default)
+    internal static void Create(Item item, Vector3 position = default, int amount = 1, float despawn = 300, bool point = false, bool table = false)
     {
         var wip = Resources.Load("Prefabs/World_Item") as GameObject;
-        var x = position.x + UnityEngine.Random.Range(-3, 3);
-        var z = position.z + UnityEngine.Random.Range(-3, 3);
+        if(!table)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                var x = position.x + (point ? 0 : UnityEngine.Random.Range(-3, 3));
+                var z = position.z + (point ? 0 : UnityEngine.Random.Range(-3, 3));
 
-        var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
-        wi.name = $"{item.Get<string>(paramname.name)}_WI";
-        wi.item = item;
+                var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
+                wi.name = $"[WORLD ITEM]: {item.Get<string>(paramname.name)}";
+                wi.item = item;
+                if (despawn > 0)
+                    Destroy(wi.gameObject, despawn);
+            }
+        }
+        else
+        {
+
+        }
     }
 
     private void Awake()
@@ -68,6 +80,7 @@ internal class WorldItem : MonoBehaviour
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);
         }        
+
     }
 }
 

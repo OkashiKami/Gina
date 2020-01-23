@@ -94,14 +94,37 @@ public class PlayerData
     }
     public void SetInventory(int index = -1, Dictionary<paramname, object> value = null)
     {
-        if(index >= 0)
-        {
-            inventory[index] = value;
-            onInventoryChanged?.Invoke(inventory);
-        }
+
+        if (index >= 0) inventory[index] = value;
         else
         {
+            bool alreadyAdded = false;
+            // Check every slot to see if item is already there then add onto it if the item is stakable
             for (int i = 0; i < inventory.Length; i++)
+            {
+                if (value == null) break;
+                var _itemdata = inventory[i];
+                if (_itemdata != null)
+                {
+                    var _item = new Item(_itemdata);
+                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    {
+                        if(_item.IsStackable && _item.Get<int>(paramname.curStack) < _item.Get<int>(paramname.maxStack))
+                        {
+                            _item.Set(paramname.curStack, _item.Get<int>(paramname.curStack) + new Item(value).Get<int>(paramname.curStack));
+                            inventory[i] = _item.data;
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if(!alreadyAdded)
+            {
+                // Add the item to the first empty slot
+                for (int i = 0; i < inventory.Length; i++)
             {
                 if(inventory[i] == null || !new Item(inventory[i]).IsValid)
                 {
@@ -124,6 +147,12 @@ public class PlayerData
                     else continue;
                 }
             }
+            }
+
+
+
+
+
         }
         onInventoryChanged?.Invoke(inventory);
     }
