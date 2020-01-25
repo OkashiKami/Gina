@@ -11,11 +11,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public PlayerData player_data;
+    public Data player_data;
 
     private void Awake()
     {
-        player_data = new PlayerData();
+        player_data = new Data();
         player_data.onPositionChanged += (p) => transform.position = p;
         player_data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
         player_data.Load();
@@ -36,12 +36,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        player_data.SetPotion(transform.position);
-        player_data.SetRotation(transform.rotation.eulerAngles);
+        player_data.CurPosition = transform.position;
+        player_data.CurRotation = transform.rotation.eulerAngles;
     }
-
-
-    
-
-
 }

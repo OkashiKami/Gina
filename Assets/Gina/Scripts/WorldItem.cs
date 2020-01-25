@@ -3,6 +3,8 @@ using System;
 using TMPro;
 using UnityEngine;
 using Invector.CharacterController;
+using System.Collections.Generic;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,19 +21,39 @@ internal class WorldItem : MonoBehaviour
         {
             for (int i = 0; i < amount; i++)
             {
-                var x = position.x + (point ? 0 : UnityEngine.Random.Range(-3, 3));
-                var z = position.z + (point ? 0 : UnityEngine.Random.Range(-3, 3));
+                var x = position.x + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
+                var z = position.z + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
 
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
                 wi.name = $"[WORLD ITEM]: {item.Get<string>(paramname.name)}";
                 wi.item = item;
                 if (despawn > 0)
                     Destroy(wi.gameObject, despawn);
+                wi.transform.SetAsLastSibling();
             }
         }
         else
         {
+            Dictionary<int, Item> tabledata = new Dictionary<int, Item>();
+            var curentry = item.data.Keys.ToList().FindAll(x => x.StartsWith("loot_entry"));
+            for (int i = 0; i < curentry.Count; i++)
+            {
+                var entry = curentry[i];
 
+                var e = item.Get<string>(entry).Split(',')[0];
+                var d = item.Get<string>(entry).Split(',')[1];
+                tabledata.Add(int.Parse(d), Database.GetItemByID(e));
+            }
+
+            foreach (var key in tabledata.Keys)
+            {
+                var roll = UnityEngine.Random.Range(0, 100);
+                if(roll <= key)
+                {
+                    WorldItem.Create(tabledata[key], position, point: true);
+                }
+
+            }
         }
     }
 
@@ -54,6 +76,7 @@ internal class WorldItem : MonoBehaviour
         if (dis < 1.06f)
         {
             player.player_data.SetInventory(value: item.data);
+            FindObjectOfType<InputController>().onInteract -= OnInteract;
             Destroy(gameObject);
         }
         Debug.Log($"Interact {dis}");
@@ -75,7 +98,7 @@ internal class WorldItem : MonoBehaviour
         {
             amount.transform.LookAt(Camera.main.transform, Vector3.up);
             if (item != null && item.IsValid)
-                amount.text = item.Has(paramname.curStack) ? item.Get<int>(paramname.curStack).ToString() : string.Empty;
+                amount.text = item.Has(paramname.curStack) ? item.Get<int>(paramname.curStack) > 1 ? item.Get<int>(paramname.curStack).ToString() : string.Empty : string.Empty;
             else
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);

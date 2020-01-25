@@ -47,6 +47,7 @@ public class InventoryUI : MonoBehaviour
         yield return new WaitForSeconds(0f);
         if (cg.alpha < 1)
             goto a;
+        cg.blocksRaycasts = true;
     }
     private IEnumerator Hide()
     {
@@ -56,9 +57,10 @@ public class InventoryUI : MonoBehaviour
         yield return new WaitForSeconds(0f);
         if (cg.alpha > 0)
             goto a;
+        cg.blocksRaycasts = false;
     }
 
-    private void OnInventoryChaged(Dictionary<paramname, object>[] items)
+    private void OnInventoryChaged(Dictionary<string, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {

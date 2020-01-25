@@ -92,7 +92,7 @@ internal class Database
         foreach (var itemfile in Directory.GetFiles(item_base_folder, "*.json", SearchOption.AllDirectories))
         {
             var json = File.ReadAllText(itemfile, Encoding.UTF8);
-            var item = JsonConvert.DeserializeObject<Dictionary<paramname, object>>(json);
+            var item = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (item != null)
             {
                 var _item = new Item(item);
@@ -103,7 +103,7 @@ internal class Database
         foreach (var lootfile in Directory.GetFiles(loot_base_folder, "*.json", SearchOption.AllDirectories))
         {
             var json = File.ReadAllText(lootfile, Encoding.UTF8);
-            var loot = JsonConvert.DeserializeObject<Dictionary<paramname, object>>(json);
+            var loot = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (loot != null)
             {
                 var _loot = new Item(loot);

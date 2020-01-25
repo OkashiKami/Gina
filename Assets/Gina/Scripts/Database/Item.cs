@@ -8,17 +8,16 @@ using Object = UnityEngine.Object;
 [Serializable]
 public class Item
 {
-    public Dictionary<paramname, object> data = new Dictionary<paramname, object>();
+    public Dictionary<string, object> data = new Dictionary<string, object>();
 
     [NonSerialized] public string file;
     [NonSerialized] public Texture2D _texture = null;
     [NonSerialized] public Sprite _sprite = null;
     [NonSerialized] public Object _object = null;
-    [NonSerialized] public int basePercentage = 100, usedPercengage = 100;
 
 
     public Item() { }
-    public Item(Dictionary<paramname, object> item_data, string file = default)
+    public Item(Dictionary<string, object> item_data, string file = default)
     {
         this.data = item_data;
         if (!string.IsNullOrEmpty(file)) this.file = file;
@@ -64,14 +63,16 @@ public class Item
         }
     }
 
-    internal T Get<T>(paramname option)
+    internal T Get<T>(string option)
     {
 #if UNITY_EDITOR
         // Skip this part
 #else
-        if (!IsValid) return default;
+        if (!IsValid)
+        return default;
 #endif
-        if (data == null) return default(T);
+        if (data == null || !data.ContainsKey(option))
+            return default(T);
 
         if (typeof(T).Equals(typeof(string)))
         {
@@ -190,29 +191,14 @@ public class Item
                 }
             }
         }
-        else if(typeof(T).Equals(typeof(string[])))
-        {
-            var value = new string[0];
-            var d = data[option];
-
-
-            return (T)(object)value;
-        }
-        else if (typeof(T).Equals(typeof(List<string>)))
-        {
-            var value = new List<string>();
-            var d = data[option];
-
-
-            return (T)(object)value;
-        }
         else
         {
             return (T)data[option];
         }
+
         return default(T);
     }
-    public void Set<T>(paramname option, T value = default)
+    public void Set<T>(string option, T value = default)
     {
         if (typeof(T).Equals(typeof(string)))
         {
@@ -274,35 +260,21 @@ public class Item
                 Set(option, assetPath);
             }
         }
-        else if(typeof(T).Equals(typeof(string[])))
-        {
-            if (data.ContainsKey(option))
-                data[option] = value;
-            else
-                data.Add(option, value);
-        }
-        else if (typeof(T).Equals(typeof(List<string>)))
-        {
-            if (data.ContainsKey(option))
-                data[option] = value;
-            else
-                data.Add(option, value);
-        }
         else
         {
             if (data.ContainsKey(option))
-                data[option] = value.ToString();
+                data[option] = value;
             else
-                data.Add(option, value.ToString());
+                data.Add(option, value);
         }
 
     }
-    public void Remove(paramname option)
+    public void Remove(string option)
     {
         if (data.ContainsKey(option))
             data.Remove(option);
     }
-    public bool Has(paramname option)
+    public bool Has(string option)
     {
         if (data == null) return false;
         else return data.ContainsKey(option);

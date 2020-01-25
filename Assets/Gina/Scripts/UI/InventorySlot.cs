@@ -57,23 +57,24 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {
         Debug.Log("OnDrop");
         var player = FindObjectOfType<Player>().player_data;
+        var _item = item == null || !item.IsValid ? null : item.Copy;
 
         if (eventData.pointerDrag != null)
         {
             if (eventData.pointerDrag.GetComponent<InventorySlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<InventorySlot>().item);
-                eventData.pointerDrag.GetComponent<InventorySlot>().Set();
+                eventData.pointerDrag.GetComponent<InventorySlot>().Set(_item);
             }
             else if (eventData.pointerDrag.GetComponent<ActionbarSlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
-                eventData.pointerDrag.GetComponent<ActionbarSlot>().Set();
+                eventData.pointerDrag.GetComponent<ActionbarSlot>().Set(_item);
             }
             else if (eventData.pointerDrag.GetComponent<CharacterSlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<CharacterSlot>().item);
-                eventData.pointerDrag.GetComponent<CharacterSlot>().Set();
+                eventData.pointerDrag.GetComponent<CharacterSlot>().Set(_item);
             }
         }
     }
@@ -116,7 +117,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-
+        Debug.Log("OnPointerClick");
     }
 
     public void Set(Item value = null)

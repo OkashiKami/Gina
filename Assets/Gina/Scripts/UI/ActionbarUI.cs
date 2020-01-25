@@ -30,7 +30,7 @@ public class ActionbarUI : MonoBehaviour
             player.player_data.onActionbarChanged += OnActionbarChaged;
     }
 
-    private void OnActionbarChaged(Dictionary<paramname, object>[] items)
+    private void OnActionbarChaged(Dictionary<string, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {

@@ -65,6 +65,11 @@ public class InputController : MonoBehaviour
     protected virtual void CharacterInit()
     {
         cc = FindObjectOfType<vThirdPersonController>();
+        if (cc == null)
+        {
+            return;
+        }
+
         if (cc != null)
             cc.Init();
 
@@ -74,7 +79,6 @@ public class InputController : MonoBehaviour
 
     protected virtual void LateUpdate()
     {
-        if (cc == null) return;             // returns if didn't find the controller	
         if (Input.GetKeyDown(interact))
             onInteract?.Invoke(cc.GetComponent<Player>());
         if (Input.GetKeyDown(inventory))
@@ -98,6 +102,7 @@ public class InputController : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (!cc) return;
         cc.AirControl();
         if (IsCursorLocked && !IsWindowOpen)
             CameraInput();
@@ -105,6 +110,7 @@ public class InputController : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (!cc) return;
         cc.UpdateMotor();                   // call ThirdPersonMotor methods               
         cc.UpdateAnimator();                // call ThirdPersonAnimator methods		               
     }
@@ -112,6 +118,7 @@ public class InputController : MonoBehaviour
     protected virtual void InputHandle()
     {
         CameraInput();
+        if (!cc) return;
         if (!cc.lockMovement)
         {
             MoveCharacter();
@@ -175,7 +182,7 @@ public class InputController : MonoBehaviour
         tpCamera.RotateCamera(X, Y);
 
         // tranform Character direction from camera if not KeepDirection
-        if (!keepDirection)
+        if (!keepDirection && cc)
             cc.UpdateTargetDirection(tpCamera != null ? tpCamera.transform : null);
         // rotate the character with the camera while strafing        
         RotateWithCamera(tpCamera != null ? tpCamera.transform : null);
@@ -199,6 +206,7 @@ public class InputController : MonoBehaviour
 
     protected virtual void RotateWithCamera(Transform cameraTransform)
     {
+        if (!cc) return;
         if (cc.isStrafing && !cc.lockMovement && !cc.lockMovement)
         {
             cc.RotateWithAnotherTransform(cameraTransform);

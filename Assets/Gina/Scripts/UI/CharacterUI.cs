@@ -59,6 +59,7 @@ public class CharacterUI : MonoBehaviour
         yield return new WaitForSeconds(0f);
         if (cg.alpha < 1)
             goto a;
+        cg.blocksRaycasts = true;
     }
     private IEnumerator Hide()
     {
@@ -68,9 +69,10 @@ public class CharacterUI : MonoBehaviour
         yield return new WaitForSeconds(0f);
         if (cg.alpha > 0)
             goto a;
+        cg.blocksRaycasts = false;
     }
 
-    private void OnCharacterChanged(Dictionary<paramname, object>[] items)
+    private void OnCharacterChanged(Dictionary<string, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {

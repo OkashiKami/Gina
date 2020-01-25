@@ -107,6 +107,7 @@ public class DatabaseEditor : EditorWindow
         else
         {
             esv = EditorGUILayout.BeginScrollView(esv, GUILayout.Height(position.height - 80));
+            EditorGUILayout.BeginVertical(GUILayout.Width(position.width - 20));
             try
             {
                 CreateIconField(paramname.icon, _item);
@@ -131,6 +132,7 @@ public class DatabaseEditor : EditorWindow
                 _itemErrors = false;
             }
             catch { _itemErrors = true; }
+            EditorGUILayout.EndVertical();
             EditorGUILayout.EndScrollView();
         }
     }
@@ -172,21 +174,18 @@ public class DatabaseEditor : EditorWindow
         else
         {
             esv = EditorGUILayout.BeginScrollView(esv, GUILayout.Height(position.height - 80));
+            EditorGUILayout.BeginVertical(GUILayout.Width(position.width - 20));
             try
             {
                 CreateIconField(paramname.icon, _item);
                 CreateTextField(paramname.name, _item);
                 CreateTextField(paramname.desc, _item);
                 GUILayout.Space(5);
-
-                _item.usedPercengage = 0;
                 CreateLootField(paramname.loot, _item);
-
-
-                EditorGUILayout.HelpBox($"{_item.usedPercengage} of {_item.basePercentage}", MessageType.Info);
                 _itemErrors = false;
             }
             catch (Exception ex) { _itemErrors = true; Debug.LogError(ex.StackTrace); }
+            EditorGUILayout.EndVertical();
             EditorGUILayout.EndScrollView();
         }
     }
@@ -243,7 +242,7 @@ public class DatabaseEditor : EditorWindow
     }
 
 
-    private void CreateLootField(paramname option, Item _item, bool removeable = true)
+    private void CreateLootField(string option, Item _item, bool removeable = true)
     {
         var name = option.ToString();
         name = char.ToUpper(name[0]) + name.Substring(1);
@@ -251,40 +250,58 @@ public class DatabaseEditor : EditorWindow
         if (!_item.Has(option))
         {
             if (GUILayout.Button($"Add {name} Field"))
-                _item.Set(option, new string[] { $"{string.Empty},{0}" });
+                _item.Set(option.ToString(), "<INDICATES THAT THIS IS A LOOT TABLE>");
         }
         else
         {
             try
             {
-                var array = _item.Get<string[]>(option);
-                var list = array != null ? array.ToList() : new List<string>();
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Box("Loot Table", GUILayout.ExpandWidth(true));
+                var curentry = _item.data.Keys.ToList().FindAll(x => x.StartsWith("loot_entry"));
+                if (GUILayout.Button("+",GUILayout.ExpandWidth(false)))
+                {
+                    _item.Set($"loot_entry{curentry.Count}", $"{string.Empty},{0}");
+
+                }
                 if (removeable)
                 {
                     GUI.color = Color.red;
                     if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                    {
                         _item.Remove(option);
+                        foreach (var entry in curentry)
+                        {
+                            _item.Remove(entry);
+                        }
+                        return;
+                    }
                     GUI.color = Color.white;
-                    return;
                 }
-                if (GUILayout.Button("+")) list.Add($"{string.Empty},{0}");
                 EditorGUILayout.EndHorizontal();
-                for (int i = 0; i < list.Count; i++)
+                for (int i = 0; i < curentry.Count; i++)
                 {
-                    var pair = list[i].Split(',');
+                    var entry = curentry[i];
+
+                    var pair = _item.Get<string>(entry).Split(',');
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.PrefixLabel($"loot entry {i + 1}");
                     GUI.color = Database.GetItemByID(pair[0]) != null ? Color.green : Color.white;
                     pair[0] = EditorGUILayout.TextField(pair[0]);
+                    if (!pair[0].Contains(":"))
+                        pair[0] = $"{Application.productName.ToLower()}:{pair[0]}";
                     GUI.color = Color.white;
-                    _item.usedPercengage += int.Parse(pair[1]);
-                    GUI.color = _item.usedPercengage > _item.basePercentage ? Color.red : Color.green;
                     pair[1] = EditorGUILayout.IntField(int.Parse(pair[1]), GUILayout.Width(50)).ToString();
+                    GUI.color = Color.red;
+                    if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                    {
+                        _item.Remove(entry);
+                        continue;
+                    }
                     GUI.color = Color.white;
-
-                    list[i] = $"{pair[0]},{pair[1]}";
+                    EditorGUILayout.EndHorizontal();
+                    _item.Set(entry, $"{pair[0]},{pair[1]}");
                 }
-                _item.Set(option, list.ToArray());
                 _itemErrors = false;
             }
             catch( Exception ex)
@@ -294,7 +311,7 @@ public class DatabaseEditor : EditorWindow
             }
         }
     }
-    private void CreateTextField(paramname option, Item _item, bool removeable = true)
+    private void CreateTextField(string option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
             var name = option.ToString();
@@ -318,7 +335,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateFloatField(paramname option, Item _item, bool removeable = true)
+    private void CreateFloatField(string option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -342,7 +359,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateIntSlider(paramname option, Item _item, int min = 0, int max = 9999,  bool removeable = true)
+    private void CreateIntSlider(string option, Item _item, int min = 0, int max = 9999,  bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -366,7 +383,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateSlider(paramname option, Item _item, float min = 0f, float max = 9999f, bool removeable = true)
+    private void CreateSlider(string option, Item _item, float min = 0f, float max = 9999f, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -390,7 +407,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateIconField(paramname option, Item _item, bool removeable = true)
+    private void CreateIconField(string option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -428,7 +445,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateToggleField(paramname option, Item _item, bool removeable = true)
+    private void CreateToggleField(string option, Item _item, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var name = option.ToString();
@@ -493,7 +510,7 @@ public class DatabaseEditor : EditorWindow
                 _item.Set(paramname.requireLevel, EditorGUILayout.IntSlider("Require Level", _item.Get<int>(paramname.requireLevel), 1, GameManager.maxLevel));
         }
     }
-    private void CreateObjectField(paramname option, Item _item, bool removeable = true)
+    private void CreateObjectField(string option, Item _item, bool removeable = true)
     {
         var name = option.ToString();
         name = char.ToUpper(name[0]) + name.Substring(1);
@@ -520,7 +537,7 @@ public class DatabaseEditor : EditorWindow
         
     }
 
-    private void CreateIntMinMaxField(paramname option1, paramname option2, Item _item, int min, int max, bool removeable = true)
+    private void CreateIntMinMaxField(string option1, string option2, Item _item, int min, int max, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var _name1 = option1.ToString();
@@ -564,7 +581,7 @@ public class DatabaseEditor : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
     }
-    private void CreateMinMaxField(paramname option1, paramname option2, Item _item, float min, float max, bool removeable = true)
+    private void CreateMinMaxField(string option1, string option2, Item _item, float min, float max, bool removeable = true)
     {
         EditorGUILayout.BeginHorizontal();
         var _name1 = option1.ToString();
