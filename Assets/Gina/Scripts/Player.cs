@@ -25,8 +25,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        
-        player_data.Init();
         FunctionPeriodic.Create(() => player_data.Save(), 10);
     }
 
@@ -36,7 +34,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        player_data.CurPosition = transform.position;
-        player_data.CurRotation = transform.rotation.eulerAngles;
+        player_data.Position = transform.position;
+        player_data.Rotation = transform.rotation.eulerAngles;
     }
 }

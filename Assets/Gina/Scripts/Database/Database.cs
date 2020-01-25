@@ -39,7 +39,7 @@ internal class Database
         saving_item_data = true;
         if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
             File.Delete(value.file);
-        var name = value.Get<string>(paramname.name);
+        var name = value.Get<string>(pname.name);
         var json = JsonConvert.SerializeObject(value.data, Formatting.Indented);
         name = name.Replace(" ", "_").ToLower();
         var savefile = Path.Combine(item_base_folder, $"{name}.json").Replace("\\", "/");
@@ -54,7 +54,7 @@ internal class Database
         saving_loot_data = true;
         if (!string.IsNullOrEmpty(value.file) && File.Exists(value.file))
             File.Delete(value.file);
-        var name = value.Get<string>(paramname.name);
+        var name = value.Get<string>(pname.name);
         var json = JsonConvert.SerializeObject(value.data, Formatting.Indented);
         name = name.Replace(" ", "_").ToLower();
         var savefile = Path.Combine(loot_base_folder, $"{name}.json").Replace("\\", "/");
@@ -74,7 +74,7 @@ internal class Database
     public static Item Duplicate(Item value)
     {
         var temp = value.Copy;
-        temp.Set(paramname.name, temp.Get<string>(paramname.name) + " [COPY]");
+        temp.Set(pname.name, temp.Get<string>(pname.name) + " [COPY]");
         temp.file = string.Empty;
         temp._texture = null;
         temp._sprite = null;

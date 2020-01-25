@@ -78,8 +78,8 @@ public class DatabaseEditor : EditorWindow
             {
                 EditorGUILayout.BeginHorizontal();
                 var context = new GUIContent();
-                context.image = item.Get<Texture2D>(paramname.icon);
-                context.text = item.Get<string>(paramname.name);
+                context.image = item.Get<Texture2D>(pname.icon);
+                context.text = item.Get<string>(pname.name);
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
                 GUI.skin.box.alignment = TextAnchor.MiddleCenter;
@@ -110,24 +110,24 @@ public class DatabaseEditor : EditorWindow
             EditorGUILayout.BeginVertical(GUILayout.Width(position.width - 20));
             try
             {
-                CreateIconField(paramname.icon, _item);
-                CreateTextField(paramname.name, _item);
-                CreateTextField(paramname.desc, _item);
+                CreateIconField(pname.icon, _item);
+                CreateTextField(pname.name, _item);
+                CreateTextField(pname.desc, _item);
                 CreateEquiptmentField(_item);
-                CreateIntMinMaxField(paramname.curStack, paramname.maxStack, _item, 1, 64);
+                CreateIntMinMaxField(pname.curStack, pname.maxStack, _item, 1, 64);
                 GUILayout.Box("Stats", GUILayout.ExpandWidth(true));
-                CreateSlider(paramname.health, _item, 0, 10);
-                CreateSlider(paramname.stamina, _item, 0, 10);
-                CreateSlider(paramname.mana, _item, 0, 10);
-                CreateSlider(paramname.strength, _item, 0, 10);
-                CreateSlider(paramname.agility, _item, 0, 10);
-                CreateSlider(paramname.dexterity, _item, 0, 10);
+                CreateSlider(pname.health, _item, 0, 10);
+                CreateSlider(pname.stamina, _item, 0, 10);
+                CreateSlider(pname.mana, _item, 0, 10);
+                CreateSlider(pname.strength, _item, 0, 10);
+                CreateSlider(pname.agility, _item, 0, 10);
+                CreateSlider(pname.dexterity, _item, 0, 10);
 
                 GUILayout.Box("Equipt Item", GUILayout.ExpandWidth(true));
-                CreateToggleField(paramname.isEquipable, _item);
-                CreateObjectField(paramname.prefab, _item);
+                CreateToggleField(pname.isEquipable, _item);
+                CreateObjectField(pname.prefab, _item);
 
-                CreateFloatField(paramname.worth, _item);
+                CreateFloatField(pname.worth, _item);
 
                 _itemErrors = false;
             }
@@ -145,8 +145,8 @@ public class DatabaseEditor : EditorWindow
             {
                 EditorGUILayout.BeginHorizontal();
                 var context = new GUIContent();
-                context.image = item.Get<Texture2D>(paramname.icon);
-                context.text = item.Get<string>(paramname.name);
+                context.image = item.Get<Texture2D>(pname.icon);
+                context.text = item.Get<string>(pname.name);
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
                 GUI.skin.box.alignment = TextAnchor.MiddleCenter;
@@ -177,11 +177,11 @@ public class DatabaseEditor : EditorWindow
             EditorGUILayout.BeginVertical(GUILayout.Width(position.width - 20));
             try
             {
-                CreateIconField(paramname.icon, _item);
-                CreateTextField(paramname.name, _item);
-                CreateTextField(paramname.desc, _item);
+                CreateIconField(pname.icon, _item);
+                CreateTextField(pname.name, _item);
+                CreateTextField(pname.desc, _item);
                 GUILayout.Space(5);
-                CreateLootField(paramname.loot, _item);
+                CreateLootField(pname.loot, _item);
                 _itemErrors = false;
             }
             catch (Exception ex) { _itemErrors = true; Debug.LogError(ex.StackTrace); }
@@ -474,13 +474,13 @@ public class DatabaseEditor : EditorWindow
         var name = "Equipment";
         name = char.ToUpper(name[0]) + name.Substring(1);
 
-        if (!_item.Has(paramname.isEquipable) || !_item.Has(paramname.equipmentType) || !_item.Has(paramname.requireLevel))
+        if (!_item.Has(pname.isEquipable) || !_item.Has(pname.equipmentType) || !_item.Has(pname.requireLevel))
         {
             if (GUILayout.Button($"Add {name} Field"))
             {
-                _item.Set(paramname.isEquipable, false);
-                _item.Set(paramname.equipmentType, (int)EquiptmentType.None);
-                _item.Set(paramname.requireLevel, 1);
+                _item.Set(pname.isEquipable, false);
+                _item.Set(pname.equipmentType, (int)EquiptmentType.None);
+                _item.Set(pname.requireLevel, 1);
             }
         }
         else
@@ -492,22 +492,22 @@ public class DatabaseEditor : EditorWindow
                 GUI.color = Color.red;
                 if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
                 {
-                    _item.Remove(paramname.isEquipable);
-                    _item.Remove(paramname.equipmentType);
-                    _item.Remove(paramname.requireLevel);
+                    _item.Remove(pname.isEquipable);
+                    _item.Remove(pname.equipmentType);
+                    _item.Remove(pname.requireLevel);
                 }
                 GUI.color = Color.white;
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Type / Equipable");
-            if(_item.Has(paramname.isEquipable))
-                _item.Set(paramname.equipmentType, (int)(EquiptmentType)EditorGUILayout.EnumPopup(new GUIContent(string.Empty, "Is Equipable"), (EquiptmentType)_item.Get<int>(paramname.equipmentType)));
-            if (_item.Has(paramname.equipmentType))
-                _item.Set(paramname.isEquipable, EditorGUILayout.Toggle(new GUIContent(string.Empty, "Equipment Type"), _item.Get<bool>(paramname.isEquipable), GUILayout.Width(20)));
+            if(_item.Has(pname.isEquipable))
+                _item.Set(pname.equipmentType, (int)(EquiptmentType)EditorGUILayout.EnumPopup(new GUIContent(string.Empty, "Is Equipable"), (EquiptmentType)_item.Get<int>(pname.equipmentType)));
+            if (_item.Has(pname.equipmentType))
+                _item.Set(pname.isEquipable, EditorGUILayout.Toggle(new GUIContent(string.Empty, "Equipment Type"), _item.Get<bool>(pname.isEquipable), GUILayout.Width(20)));
             EditorGUILayout.EndHorizontal();
-            if (_item.Has(paramname.requireLevel))
-                _item.Set(paramname.requireLevel, EditorGUILayout.IntSlider("Require Level", _item.Get<int>(paramname.requireLevel), 1, GameManager.maxLevel));
+            if (_item.Has(pname.requireLevel))
+                _item.Set(pname.requireLevel, EditorGUILayout.IntSlider("Require Level", _item.Get<int>(pname.requireLevel), 1, GameManager.maxLevel));
         }
     }
     private void CreateObjectField(string option, Item _item, bool removeable = true)

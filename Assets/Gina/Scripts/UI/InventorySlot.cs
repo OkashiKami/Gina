@@ -23,16 +23,16 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         {
             if (item.IsStackable)
             {
-                if (item.Get<int>(paramname.curStack) > 1)
-                    count.text = item.Get<int>(paramname.curStack).ToString();
+                if (item.Get<int>(pname.curStack) > 1)
+                    count.text = item.Get<int>(pname.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
+            if(!string.IsNullOrEmpty(item.Get<string>(pname.icon)))
             {
-                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.sprite = item.Get<Sprite>(pname.icon);
                 icon.enabled = true;
             }
             else

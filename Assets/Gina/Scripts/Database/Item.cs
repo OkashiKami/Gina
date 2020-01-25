@@ -28,7 +28,7 @@ public class Item
         get
         {
             var _namespace = Application.productName.ToLower();
-            var _name = Get<string>(paramname.name).Replace(" ", "_").ToLower();
+            var _name = Get<string>(pname.name).Replace(" ", "_").ToLower();
             return $"{_namespace}:{_name}";
         }
     }
@@ -40,7 +40,7 @@ public class Item
             if (data == null) return false;
             try
             {
-                if (!data.ContainsKey(paramname.name) || string.IsNullOrEmpty(Get<string>(paramname.name))) valid = false;
+                if (!data.ContainsKey(pname.name) || string.IsNullOrEmpty(Get<string>(pname.name))) valid = false;
             }
             catch
             {
@@ -56,8 +56,8 @@ public class Item
             if (data == null || data.Count <= 0) 
                 return false;
 
-            var curstack = Has(paramname.curStack);
-            var maxstack = Has(paramname.maxStack);
+            var curstack = Has(pname.curStack);
+            var maxstack = Has(pname.maxStack);
 
             return curstack && maxstack;
         }

@@ -25,7 +25,7 @@ internal class WorldItem : MonoBehaviour
                 var z = position.z + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
 
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
-                wi.name = $"[WORLD ITEM]: {item.Get<string>(paramname.name)}";
+                wi.name = $"[WORLD ITEM]: {item.Get<string>(pname.name)}";
                 wi.item = item;
                 if (despawn > 0)
                     Destroy(wi.gameObject, despawn);
@@ -89,7 +89,7 @@ internal class WorldItem : MonoBehaviour
             icon.transform.Rotate(Vector3.up, 3, Space.World);
 
             if (item != null && item.IsValid)
-                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.sprite = item.Get<Sprite>(pname.icon);
             else
                 icon.sprite = null;
             icon.enabled = icon.sprite != null;
@@ -98,7 +98,7 @@ internal class WorldItem : MonoBehaviour
         {
             amount.transform.LookAt(Camera.main.transform, Vector3.up);
             if (item != null && item.IsValid)
-                amount.text = item.Has(paramname.curStack) ? item.Get<int>(paramname.curStack) > 1 ? item.Get<int>(paramname.curStack).ToString() : string.Empty : string.Empty;
+                amount.text = item.Has(pname.curStack) ? item.Get<int>(pname.curStack) > 1 ? item.Get<int>(pname.curStack).ToString() : string.Empty : string.Empty;
             else
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);

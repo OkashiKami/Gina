@@ -9,7 +9,11 @@ public class NPCWindowUI : MonoBehaviour
     [SerializeField] private NPC npc;
     private TextMeshProUGUI title;
 
-    public void SHOW(NPC npc) { this.npc = npc;  StartCoroutine(Show()); }
+    public void SHOW(NPC npc) 
+    { 
+
+        this.npc = npc;  StartCoroutine(Show());
+    }
     public void HIDE() { StartCoroutine(Hide()); this.npc = null; }
 
     private IEnumerator Show()
