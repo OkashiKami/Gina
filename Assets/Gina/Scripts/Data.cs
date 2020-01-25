@@ -66,6 +66,11 @@ public class Data
             return default(T);
         try
         {
+            if (typeof(T).Equals(typeof(float)))
+                return (T)(object)float.Parse(data[name].ToString());
+            else if (typeof(T).Equals(typeof(int)))
+                return (T)(object)int.Parse(data[name].ToString());
+
             return (T)data[name];
         } 
         catch(Exception ex)
@@ -89,9 +94,9 @@ public class Data
 
         onLootTableChanged?.Invoke(LootTable);
 
-        onInventoryChanged?.Invoke(Inventory);
-        onActionbarChanged?.Invoke(Actionbar);
-        onCharacterChanged?.Invoke(Character);
+        onInventoryChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.inventory));
+        onActionbarChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.actionbar));
+        onCharacterChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.character));
     }
 
     // Events
@@ -411,64 +416,19 @@ public class Data
             onLootTableChanged?.Invoke(value);
         }
     }
-    public Dictionary<string, object>[] Inventory
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.inventory))
-                return default;
-            return Get<Dictionary<string, object>[]>(pname.inventory);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.inventory, value);
-            onInventoryChanged?.Invoke(value);
-        }
-    }
-    public Dictionary<string, object>[] Actionbar
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.actionbar))
-                return default;
-            return Get<Dictionary<string, object>[]>(pname.actionbar);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.actionbar, value);
-            onActionbarChanged?.Invoke(value);
-        }
-    }
-    public Dictionary<string, object>[] Character
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.character))
-                return default;
-            return Get<Dictionary<string, object>[]>(pname.character);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.character, value);
-            onActionbarChanged?.Invoke(value);
-        }
-    }
 
     public void SetInventory(int index = -1, Dictionary<string, object> value = null)
     {
-        var inventory = this.Inventory;
-        if (index >= 0) inventory[index] = value;
+        
+        if (index >= 0) Get<Dictionary<string, object>[]>(pname.inventory)[index] = value;
         else
         {
             bool alreadyAdded = false;
             // Check every slot to see if item is already there then add onto it if the item is stakable
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Get<Dictionary<string, object>[]>(pname.inventory).Length; i++)
             {
                 if (value == null) break;
-                var _itemdata = inventory[i];
+                var _itemdata = Get<Dictionary<string, object>[]>(pname.inventory)[i];
                 if (_itemdata != null)
                 {
                     var _item = new Item(_itemdata);
@@ -477,7 +437,7 @@ public class Data
                         if(_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
                         {
                             _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
-                            inventory[i] = _item.data;
+                            Get<Dictionary<string, object>[]>(pname.inventory)[i] = _item.data;
                             alreadyAdded = true;
                             break;
                         }
@@ -489,15 +449,15 @@ public class Data
             if(!alreadyAdded)
             {
                 // Add the item to the first empty slot
-                for (int i = 0; i < inventory.Length; i++)
+                for (int i = 0; i < Get<Dictionary<string, object>[]>(pname.inventory).Length; i++)
                 {
-                    if(inventory[i] == null || !new Item(inventory[i]).IsValid)
+                    if(Get<Dictionary<string, object>[]>(pname.inventory)[i] == null || !new Item(Get<Dictionary<string, object>[]>(pname.inventory)[i]).IsValid)
                     {
-                        inventory[i] = value;
+                        Get<Dictionary<string, object>[]>(pname.inventory)[i] = value;
                         break;
                     }
 
-                    var slot = new Item(inventory[i]);
+                    var slot = new Item(Get<Dictionary<string, object>[]>(pname.inventory)[i]);
                     var item = new Item(value);
                     if(item.GetID == slot.GetID)
                     {
@@ -513,25 +473,19 @@ public class Data
                     }
                 }
             }
-
-
-
-
-
         }
-        this.Inventory = inventory;
+        onInventoryChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.inventory));
     }
     public void SetActionbar(int index = 0, Dictionary<string, object> value = null)
     {
-        var actionbar = this.Actionbar;
-        actionbar[index] = value;
-        this.Actionbar = actionbar;
+
+        Get<Dictionary<string, object>[]>(pname.actionbar)[index] = value;
+        onActionbarChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.actionbar));
     }
     public void SetCharacter(int index = 0, Dictionary<string, object> value = null)
     {
-        var character = this.Character;
-        character[index] = value;
-        this.Character = character;
+        Get<Dictionary<string, object>[]>(pname.character)[index] = value;
+        onCharacterChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.character));
     }
 
     public void Save(string savename = default)

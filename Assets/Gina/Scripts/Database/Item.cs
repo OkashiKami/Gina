@@ -14,7 +14,7 @@ public class Item
     [NonSerialized] public Texture2D _texture = null;
     [NonSerialized] public Sprite _sprite = null;
     [NonSerialized] public Object _object = null;
-
+    [NonSerialized] public bool loottable;
 
     public Item() { }
     public Item(Dictionary<string, object> item_data, string file = default)

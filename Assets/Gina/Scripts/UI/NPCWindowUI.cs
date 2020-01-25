@@ -12,9 +12,15 @@ public class NPCWindowUI : MonoBehaviour
     public void SHOW(NPC npc) 
     { 
 
-        this.npc = npc;  StartCoroutine(Show());
+        this.npc = npc;  
+        StartCoroutine(Show());
     }
-    public void HIDE() { StartCoroutine(Hide()); this.npc = null; }
+    public void HIDE(NPC npc) 
+    {
+        if(this.npc == npc)
+            StartCoroutine(Hide()); 
+        this.npc = null;
+    }
 
     private IEnumerator Show()
     {

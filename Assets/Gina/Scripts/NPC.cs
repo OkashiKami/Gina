@@ -33,7 +33,7 @@ public class NPC : MonoBehaviour
 
     private void OnInteract(Player player)
     {
-        if (!player) return;
+        if (!this.player) return;
 
         FindObjectOfType<NPCWindowUI>().SHOW(this);
     }
@@ -42,6 +42,7 @@ public class NPC : MonoBehaviour
     {
         if (other.GetComponent<Player>())
             player = null;
+        FindObjectOfType<NPCWindowUI>().HIDE(this);
     }
     private void OnTriggerStay(Collider other)
     {

@@ -14,15 +14,24 @@ internal class WorldItem : MonoBehaviour
     private TextMeshPro amount;
     public  Item item = null;
 
-    internal static void Create(Item item, Vector3 position = default, int amount = 1, float despawn = 300, bool point = false, bool table = false)
+    /// <summary>
+    /// Create a item in the world that can be picked up.
+    /// </summary>
+    /// <param name="item">The item that can be droped</param>
+    /// <param name="position">The position where to drop the item</param>
+    /// <param name="amount">The amout of the item to be dropped</param>
+    /// <param name="despawn">How long it will take to despan the item</param>
+    /// <param name="atPoint">Indicate to spane item at the position or a radious aroun the position</param>
+    internal static void Create(Item item = null, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
     {
+        if (item == null) return;
         var wip = Resources.Load("Prefabs/World_Item") as GameObject;
-        if(!table)
+        if(!item.loottable)
         {
             for (int i = 0; i < amount; i++)
             {
-                var x = position.x + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
-                var z = position.z + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
+                var x = position.x + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
+                var z = position.z + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
 
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
                 wi.name = $"[WORLD ITEM]: {item.Get<string>(pname.name)}";
@@ -50,7 +59,7 @@ internal class WorldItem : MonoBehaviour
                 var roll = UnityEngine.Random.Range(0, 100);
                 if(roll <= key)
                 {
-                    WorldItem.Create(tabledata[key], position, point: true);
+                    WorldItem.Create(tabledata[key], position, atPoint: true);
                 }
 
             }
@@ -75,7 +84,7 @@ internal class WorldItem : MonoBehaviour
         var dis = Vector3.Distance(player.transform.position, transform.position);
         if (dis < 1.06f)
         {
-            player.player_data.SetInventory(value: item.data);
+            player.data.SetInventory(value: item.data);
             FindObjectOfType<InputController>().onInteract -= OnInteract;
             Destroy(gameObject);
         }

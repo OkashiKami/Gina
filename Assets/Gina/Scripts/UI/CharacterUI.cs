@@ -25,7 +25,7 @@ public class CharacterUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.player_data.onCharacterChanged += OnCharacterChanged;
+            player.data.onCharacterChanged += OnCharacterChanged;
 
         FindObjectOfType<InputController>().onCharacter += () =>
         {

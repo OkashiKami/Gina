@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public Item item = null;
+    public bool locked = false;
 
     private Image icon;
     private TextMeshProUGUI count;
@@ -56,8 +57,9 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().player_data;
-        var _item = item == null || !item.IsValid ? null : item.Copy;
+        if (locked) return;
+        var player = FindObjectOfType<Player>().data;
+        var _item = item == null || !item.IsValid ? null : item. Copy;
 
         if (eventData.pointerDrag != null)
         {
@@ -123,7 +125,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void Set(Item value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<InventorySlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         player.SetInventory(myindex, value != null ? value.data : null);
     }
 }

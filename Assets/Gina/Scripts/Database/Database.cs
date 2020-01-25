@@ -23,12 +23,14 @@ internal class Database
     {
         if (items == null || items.Count <= 0) Refresh();
         var item = items.Find(x => x.GetID == value);
+        item.loottable = false;
         return item != null ? item : null;
     }
     internal static Item GetLootTableByID(string value)
     {
         if (lootTables == null || lootTables.Count <= 0) Refresh();
         var item = lootTables.Find(x => x.GetID == value);
+        item.loottable = true;
         return item != null ? item : null;
     }
 

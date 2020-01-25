@@ -87,7 +87,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         var _item = item == null || !item.IsValid ? null : item.Copy;
 
         if (eventData.pointerDrag != null)
@@ -164,7 +164,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void Set(Item value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<CharacterSlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         player.SetCharacter(myindex, value != null ? value.data : null);
     }
 }

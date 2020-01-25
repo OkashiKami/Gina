@@ -26,7 +26,7 @@ public class InventoryUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.player_data.onInventoryChanged += OnInventoryChaged;
+            player.data.onInventoryChanged += OnInventoryChaged;
    
         FindObjectOfType<InputController>().onInventory += () =>
         {
