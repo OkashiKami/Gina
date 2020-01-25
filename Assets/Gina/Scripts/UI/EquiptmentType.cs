@@ -1,6 +1,7 @@
 ﻿public enum EquiptmentType
 {
     None,
+    // Equiptment Types
     Helmet,
     Chestplate,
     Leggings,
@@ -8,4 +9,6 @@
     Glovs,
     Ring,
     Necklace,
+    Weapon,
+
 }

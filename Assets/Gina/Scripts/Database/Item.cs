@@ -5,23 +5,33 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+[Serializable]
 public class Item
 {
-    internal string file;
-    internal string id
+    public Dictionary<string, object> data = new Dictionary<string, object>();
+
+    [NonSerialized] public string file;
+    [NonSerialized] public Texture2D _texture = null;
+    [NonSerialized] public Sprite _sprite = null;
+    [NonSerialized] public Object _object = null;
+
+
+    public Item() { }
+    public Item(Dictionary<string, object> item_data, string file = default)
+    {
+        this.data = item_data;
+        if (!string.IsNullOrEmpty(file)) this.file = file;
+    }
+    public Item Copy => new Item(data, file);
+    internal string GetID
     {
         get
         {
             var _namespace = Application.productName.ToLower();
-            var _name = Get<string>(Options.name).Replace(" ", "_").ToLower();
+            var _name = Get<string>(paramname.name).Replace(" ", "_").ToLower();
             return $"{_namespace}:{_name}";
         }
     }
-
-    public Dictionary<Options, object> data { get; private set; } = new Dictionary<Options, object>();
-    public Texture2D _texture { get; internal set; } = null;
-    public Sprite _sprite { get; internal set; } = null;
-    public UnityEngine.Object _object { get; internal set; } = null;
     public bool IsValid
     {
         get
@@ -30,9 +40,7 @@ public class Item
             if (data == null) return false;
             try
             {
-                if (!data.ContainsKey(Options.name) || string.IsNullOrEmpty(Get<string>(Options.name))) valid = false;
-                if (!data.ContainsKey(Options.desc) || string.IsNullOrEmpty(Get<string>(Options.desc))) valid = false;
-                if (!data.ContainsKey(Options.icon)) valid = false;
+                if (!data.ContainsKey(paramname.name) || string.IsNullOrEmpty(Get<string>(paramname.name))) valid = false;
             }
             catch
             {
@@ -41,37 +49,52 @@ public class Item
             return valid;
         }
     }
-    public Item() { }
-    public Item(Dictionary<Options, object> item_data)
+    public bool IsStackable
     {
-        this.data = item_data;
+        get
+        {
+            if (data == null || data.Count <= 0) 
+                return false;
+
+            var curstack = Has(paramname.curStack);
+            var maxstack = Has(paramname.maxStack);
+
+            return curstack && maxstack;
+        }
     }
 
-    internal T Get<T>(Options option)
+    internal T Get<T>(string option)
     {
-        if (!IsValid) return default;
+#if UNITY_EDITOR
+        // Skip this part
+#else
+        if (!IsValid)
+        return default;
+#endif
+        if (data == null || !data.ContainsKey(option))
+            return default(T);
 
         if (typeof(T).Equals(typeof(string)))
         {
             if (data.ContainsKey(option))
                 return (T)data[option];
         }
-        if (typeof(T).Equals(typeof(bool)))
+        else if (typeof(T).Equals(typeof(bool)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)bool.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(int)))
+        else if (typeof(T).Equals(typeof(int)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)int.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(float)))
+        else if (typeof(T).Equals(typeof(float)))
         {
             if (data.ContainsKey(option))
                 return (T)(object)float.Parse(data[option].ToString());
         }
-        if (typeof(T).Equals(typeof(Vector2)))
+        else if (typeof(T).Equals(typeof(Vector2)))
         {
             if (data.ContainsKey(option))
             {
@@ -80,7 +103,7 @@ public class Item
                 return (T)(object)new Vector2(parts[0], parts[1]);
             }
         }
-        if (typeof(T).Equals(typeof(Vector3)))
+        else if (typeof(T).Equals(typeof(Vector3)))
         {
             if (data.ContainsKey(option))
             {
@@ -89,7 +112,7 @@ public class Item
                 return (T)(object)new Vector3(parts[0], parts[1], parts[2]);
             }
         }
-        if (typeof(T).Equals(typeof(Quaternion)))
+        else if (typeof(T).Equals(typeof(Quaternion)))
         {
             if (data.ContainsKey(option))
             {
@@ -98,7 +121,7 @@ public class Item
                 return (T)(object)new Quaternion(parts[0], parts[1], parts[2], parts[2]);
             }
         }
-        if(typeof(T).Equals(typeof(Texture2D)))
+        else if (typeof(T).Equals(typeof(Texture2D)))
         {
             if (this._texture != null) return (T)(object)this._texture;
             _texture = new Texture2D(1, 1);
@@ -121,15 +144,18 @@ public class Item
                 }
             }
         }
-        if (typeof(T).Equals(typeof(Sprite)))
+        else if (typeof(T).Equals(typeof(Sprite)))
         {
-            if (_sprite != null) return  (T)(object)_sprite;
+            if (_sprite != null) return (T)(object)_sprite;
             _texture = new Texture2D(1, 1);
             // Load from Resource folder
             if (data.ContainsKey(option))
             {
-                var v = Get<string>(Options.icon);
-                _texture = Resources.Load<Texture2D>(v);
+                var v = Get<string>(option);
+                var r = v.Split('.')[0];
+                r = r.Replace($"{Application.productName}/", string.Empty);
+                r = r.Replace("Resources/", string.Empty);
+                _texture = Resources.Load<Texture2D>(r);
                 if (_texture != null)
                 {
                     _sprite = Sprite.Create(_texture, new Rect(0, 0, _texture.width, _texture.height), Vector2.one * 0.5f);
@@ -145,7 +171,7 @@ public class Item
                 }
             }
         }
-        if (typeof(T).Equals(typeof(Object)))
+        else if (typeof(T).Equals(typeof(Object)))
         {
             if (this._object != null) return (T)(object)this._object;
             // Load from Resource folder
@@ -165,10 +191,14 @@ public class Item
                 }
             }
         }
+        else
+        {
+            return (T)data[option];
+        }
 
         return default(T);
     }
-    public void Set<T>(Options option, T value = default)
+    public void Set<T>(string option, T value = default)
     {
         if (typeof(T).Equals(typeof(string)))
         {
@@ -177,28 +207,28 @@ public class Item
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(bool)))
+        else if (typeof(T).Equals(typeof(bool)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(int)))
+        else if (typeof(T).Equals(typeof(int)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(float)))
+        else if (typeof(T).Equals(typeof(float)))
         {
             if (data.ContainsKey(option))
                 data[option] = value;
             else
                 data.Add(option, value);
         }
-        if (typeof(T).Equals(typeof(Vector2)))
+        else if (typeof(T).Equals(typeof(Vector2)))
         {
             {
                 if (data.ContainsKey(option))
@@ -207,34 +237,46 @@ public class Item
                     data.Add(option, value.ToString());
             }
         }
-        if (typeof(T).Equals(typeof(Vector3)))
+        else if (typeof(T).Equals(typeof(Vector3)))
         {
             if (data.ContainsKey(option))
                 data[option] = value.ToString();
             else
                 data.Add(option, value.ToString());
         }
-        if (typeof(T).Equals(typeof(Quaternion)))
+        else if (typeof(T).Equals(typeof(Quaternion)))
         {
             if (data.ContainsKey(option))
                 data[option] = value.ToString();
             else
                 data.Add(option, value.ToString());
         }
-        if(typeof(T).Equals(typeof(Object)))
+        else if (typeof(T).Equals(typeof(Object)))
         {
             var assetPath = string.Empty;
-            if(value != null)
+            if (value != null)
             {
                 assetPath = UnityEditor.AssetDatabase.GetAssetPath((Object)(object)value);
                 Set(option, assetPath);
             }
         }
+        else
+        {
+            if (data.ContainsKey(option))
+                data[option] = value;
+            else
+                data.Add(option, value);
+        }
+
     }
-    public void Remove(Options option)
+    public void Remove(string option)
     {
         if (data.ContainsKey(option))
             data.Remove(option);
     }
-    public bool Has(Options option) => data.ContainsKey(option);
+    public bool Has(string option)
+    {
+        if (data == null) return false;
+        else return data.ContainsKey(option);
+    }
 }

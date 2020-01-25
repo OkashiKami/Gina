@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-[RequireComponent(typeof(CanvasGroup))]
 public class ActionbarUI : MonoBehaviour
 {
     private HorizontalLayoutGroup grid;
-    private ActionbarSlot[] slots;
+    public ActionbarSlot[] slots;
+
     private void Reset()
     {
         grid = GetComponentInChildren<HorizontalLayoutGroup>();
         slots = grid.GetComponentsInChildren<ActionbarSlot>();
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i].name = $"Act Slot {i + 1}";
+            slots[i].name = $"Act Slot {i + 1} + [{slots[i].requireType}]";
             slots[i].Set();
             slots[i].Awake();
             slots[i].Update();
@@ -25,16 +25,16 @@ public class ActionbarUI : MonoBehaviour
     private void Awake()
     {
         if (slots == null || slots.Length <= 0) Reset();
-        var player_inv = FindObjectOfType<Player>();
-        if (player_inv)
-            player_inv.onActionbarItemChaged += OnActionbarChaged;
+        var player = FindObjectOfType<Player>();
+        if (player)
+            player.player_data.onActionbarChanged += OnActionbarChaged;
     }
 
-    private void OnActionbarChaged(List<Item> items)
+    private void OnActionbarChaged(Dictionary<string, object>[] items)
     {
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < items.Length; i++)
         {
-            slots[i].Set(items[i]);
+            slots[i].item = new Item(items[i]);
         }
     }
 }

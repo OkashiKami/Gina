@@ -7,15 +7,19 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class ActionbarSlot : Slot
+public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
-    private Image icon;
+    
+    public EquiptmentType requireType;
+    public Item item = null;
+
+    public Image icon;
     private Image cooldown;
     private TextMeshProUGUI cooldowntext;
     private Image castup;
     private TextMeshProUGUI count;
 
-    public override void Awake()
+    public void Awake()
     {
         if (!icon) icon = transform.Find("Icon").GetComponent<Image>();
         if (!cooldown) cooldown = transform.Find("Cooldown").GetComponent<Image>();
@@ -23,22 +27,23 @@ public class ActionbarSlot : Slot
         if (!cooldowntext) cooldowntext = transform.Find("CooldownText").GetComponent<TextMeshProUGUI>();
         if (!count) count = transform.Find("Count").GetComponent<TextMeshProUGUI>();
     }
-    public override void Update()
+    public void Update()
     {
         if(item != null)
         {
-            if (item.Get<bool>(Options.stackable))
+            if (item.IsStackable)
             {
-                if (item.Get<int>(Options.curStack) > 1)
-                    count.text = item.Get<int>(Options.curStack).ToString();
+                if (item.Get<int>(paramname.curStack) > 1)
+                    count.text = item.Get<int>(paramname.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(Options.icon)))
+            if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
             {
-
+                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.enabled = true;
             }
             else
             {
@@ -55,23 +60,88 @@ public class ActionbarSlot : Slot
         
     }
 
-    public override void OnDrop(PointerEventData eventData)
+    RectTransform _rt;
+    Canvas _c;
+    public void OnDrop(PointerEventData eventData)
     {
+        Debug.Log("OnDrop");
+        var player = FindObjectOfType<Player>().player_data;
+        var _item = item == null || !item.IsValid ? null : item.Copy;
+
+        if (eventData.pointerDrag != null)
+        {
+            if (eventData.pointerDrag.GetComponent<InventorySlot>())
+            {
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<InventorySlot>().item.Get<int>(paramname.equipmentType))
+                {
+                    Set(eventData.pointerDrag.GetComponent<InventorySlot>().item);
+                    eventData.pointerDrag.GetComponent<InventorySlot>().Set(_item);
+                }
+            }
+            else if (eventData.pointerDrag.GetComponent<ActionbarSlot>())
+            {
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<ActionbarSlot>().item.Get<int>(paramname.equipmentType))
+                {
+                    Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
+                    eventData.pointerDrag.GetComponent<ActionbarSlot>().Set(_item);
+                }
+            }
+            else if (eventData.pointerDrag.GetComponent<CharacterSlot>())
+            {
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<CharacterSlot>().item.Get<int>(paramname.equipmentType))
+                {
+                    Set(eventData.pointerDrag.GetComponent<CharacterSlot>().item);
+                    eventData.pointerDrag.GetComponent<CharacterSlot>().Set(_item);
+                }
+            }
+        }
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (_rt == null) return;
+        Debug.Log("OnDrag");
+        _rt.anchoredPosition += eventData.delta / _c.scaleFactor;
+
+    }
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (item == null || !item.IsValid) return;
+        _c = GetComponentInParent<Canvas>();
+        Debug.Log("OnBeginDrag");
+        _rt = Instantiate(this.gameObject, _c.transform).GetComponent<RectTransform>();
+        _rt.gameObject.name = "Slot [PLACEHOLDER]";
+        _rt.SetAsLastSibling();
+        _rt.position = GetComponent<RectTransform>().position;
+        _rt.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        _rt.sizeDelta = Vector2.one * 45f;
         
+        if (_rt.GetComponent<InventorySlot>())
+            Destroy(_rt.GetComponent<InventorySlot>());
+        if (_rt.GetComponent<ActionbarSlot>())
+            Destroy(_rt.GetComponent<ActionbarSlot>());
+        if (_rt.GetComponent<CharacterSlot>())
+            Destroy(_rt.GetComponent<CharacterSlot>());
+
+        _rt.gameObject.AddComponent<PlaceholderSlot>().item = item;
+        GetComponent<CanvasGroup>().alpha = 0.6f;
+    }
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (_rt == null) return;
+        Debug.Log("OnEndDrag");
+        GetComponent<CanvasGroup>().alpha = 1;
+        if (_rt != null)
+            Destroy(_rt.gameObject);
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+
     }
 
-    public override void OnDrag(PointerEventData eventData)
+    public void Set(Item value = null)
     {
-        
-    }
-
-    public override void OnBeginDrag(PointerEventData eventData)
-    {
-        
-    }
-
-    public override void OnEndDrag(PointerEventData eventData)
-    {
-        
+        var myindex = transform.parent.GetComponentsInChildren<ActionbarSlot>().ToList().IndexOf(this);
+        var player = FindObjectOfType<Player>().player_data;
+        player.SetActionbar(myindex, value != null ? value.data : null);
     }
 }

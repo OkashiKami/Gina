@@ -1,0 +1,10 @@
+﻿{
+  "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Cake_A.png",
+  "name": "Cake",
+  "curStack": 1,
+  "maxStack": 64,
+  "desc": "This is cake",
+  "health": 1.3,
+  "strength": 0.4,
+  "worth": 5.0
+}
