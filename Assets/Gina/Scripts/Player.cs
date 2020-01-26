@@ -12,19 +12,19 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public string player_name;
-    public Data data;
+    public Data data = new Data();
 
     private void Awake()
     {
-        data = new Data(inven: true, stats: true, posrot: true);
         data.Name = player_name;
+        data.onNameChaged += (n) => { player_name = n; gameObject.name = n; };
         data.onPositionChanged += (p) => transform.position = p;
         data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
-        data.Load();
     }
 
     private void Start()
     {
+        data.Load();
         FunctionPeriodic.Create(() => data.Save(), 10);
     }
 

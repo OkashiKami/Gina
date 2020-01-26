@@ -26,7 +26,7 @@ public class InventoryUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.data.onInventoryChanged += OnInventoryChaged;
+            player.data.inventory.onChanged += Inventory_onChanged;
    
         FindObjectOfType<InputController>().onInventory += () =>
         {
@@ -60,7 +60,7 @@ public class InventoryUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void OnInventoryChaged(Dictionary<string, object>[] items)
+    private void Inventory_onChanged(Dictionary<string, object>[] items)
     {
         for (int i = 0; i < items.Length; i++)
         {

@@ -30,7 +30,8 @@ internal class Database
     {
         if (lootTables == null || lootTables.Count <= 0) Refresh();
         var item = lootTables.Find(x => x.GetID == value);
-        item.loottable = true;
+        if (item != null)
+            item.loottable = true;
         return item != null ? item : null;
     }
 

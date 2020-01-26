@@ -13,6 +13,7 @@ internal class WorldItem : MonoBehaviour
     private SpriteRenderer icon;
     private TextMeshPro amount;
     public  Item item = null;
+    private float despan;
 
     /// <summary>
     /// Create a item in the world that can be picked up.
@@ -36,8 +37,7 @@ internal class WorldItem : MonoBehaviour
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
                 wi.name = $"[WORLD ITEM]: {item.Get<string>(pname.name)}";
                 wi.item = item;
-                if (despawn > 0)
-                    Destroy(wi.gameObject, despawn);
+                wi.despan = despawn;
                 wi.transform.SetAsLastSibling();
             }
         }
@@ -79,10 +79,13 @@ internal class WorldItem : MonoBehaviour
         FindObjectOfType<InputController>().onInteract += OnInteract;
     }
 
+    
+
     private void OnInteract(Player player)
     {
+        if (player == null) return;
         var dis = Vector3.Distance(player.transform.position, transform.position);
-        if (dis < 1.06f)
+        if (dis < 1.03f)
         {
             player.data.SetInventory(value: item.data);
             FindObjectOfType<InputController>().onInteract -= OnInteract;
@@ -91,8 +94,23 @@ internal class WorldItem : MonoBehaviour
         Debug.Log($"Interact {dis}");
     }
 
+    private void Start()
+    {
+    }
+
     private void Update()
     {
+        if(despan > 0)
+        {
+
+            despan -= 1 * Time.deltaTime;
+            if(despan <= 0)
+            {
+                Destroy(gameObject);
+            }
+            name = $"[WI][{despan.ToString("n0")}s]: {item.Get<string>(pname.name)}";
+        }
+
         if(icon)
         {
             icon.transform.Rotate(Vector3.up, 3, Space.World);
@@ -112,6 +130,7 @@ internal class WorldItem : MonoBehaviour
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);
         }        
+
 
     }
 }

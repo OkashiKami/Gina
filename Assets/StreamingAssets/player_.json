@@ -1,109 +1,161 @@
 ﻿{
   "name": "Player",
-  "level": 1,
-  "curHealth": 1.0,
-  "maxHealth": 100.0,
-  "mulHealth": 0.0,
-  "curStamina": 1.0,
-  "maxStamina": 100.0,
-  "mulStamina": 0.0,
-  "curMana": 1.0,
-  "maxMana": 100.0,
-  "mulMana": 0.0,
-  "curExp": 0.0,
-  "maxExp": 1000.0,
-  "mulExp": 0.0,
-  "positionx": -1.12722886,
-  "positiony": -5.96046448E-08,
-  "positionz": -0.903816462,
-  "rotationx": 0.0,
-  "rotationy": 194.883545,
-  "rotationz": 0.0,
-  "inventory": [
-    null,
-    {
-      "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Bread.png",
-      "name": "Bread",
-      "curStack": 1,
-      "maxStack": 64,
-      "desc": "This is bread",
-      "health": 1.26,
-      "strength": 0.35,
-      "worth": 3.0
-    },
-    {
-      "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Cake_A.png",
-      "name": "Cake",
-      "curStack": 1,
-      "maxStack": 64,
-      "desc": "This is cake",
-      "health": 1.3,
-      "strength": 0.4,
-      "worth": 5.0
-    },
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+  "level": 80,
+  "health": [
+    100.0,
+    100.0
   ],
-  "actionbar": [
-    {
-      "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Coins/Coins_Tiny_Copper.png",
-      "name": "Copper Coin",
-      "worth": 1.0,
-      "curStack": 1,
-      "maxStack": 64
-    },
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+  "stamina": [
+    100.0,
+    100.0
   ],
-  "character": [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-  ]
+  "mana": [
+    100.0,
+    100.0
+  ],
+  "exp": [
+    0.0,
+    1000.0
+  ],
+  "position": [
+    1.85565221,
+    -0.00499993563,
+    5.348302
+  ],
+  "rotation": [
+    0.0,
+    188.882675,
+    0.0
+  ],
+  "loottable": null,
+  "inventory": {
+    "data": [
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Coins/Coins_Tiny_Copper.png",
+        "name": "Copper Coin",
+        "worth": 1.0,
+        "curStack": 3,
+        "maxStack": 64
+      },
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Bread.png",
+        "name": "Bread",
+        "curStack": 1,
+        "maxStack": 64,
+        "desc": "This is bread",
+        "health": 1.26,
+        "strength": 0.35,
+        "worth": 3.0
+      },
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Coins/Coins_Tiny_Gold.png",
+        "name": "Gold Coin",
+        "worth": 100.0,
+        "curStack": 1,
+        "maxStack": 64
+      },
+      {
+        "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
+        "name": "Broad Sword",
+        "desc": "This is a [name] it is really a bas sword with a little upgrades",
+        "isEquipable": true,
+        "equipmentType": 8,
+        "requireLevel": 5,
+        "prefab": "Prefabs/Weapons/BroadSword",
+        "agility": 0.26,
+        "strength": 0.13,
+        "dexterity": 0.47,
+        "worth": 30.0
+      },
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Cake_A.png",
+        "name": "Cake",
+        "curStack": 2,
+        "maxStack": 64,
+        "desc": "This is cake",
+        "health": 1.3,
+        "strength": 0.4,
+        "worth": 5.0
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "isFull": false
+  },
+  "actionbar": {
+    "data": [
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Cake_A.png",
+        "name": "Cake",
+        "curStack": 1,
+        "maxStack": 64,
+        "desc": "This is cake",
+        "health": 1.3,
+        "strength": 0.4,
+        "worth": 5.0
+      },
+      {
+        "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Food/Food_Bread.png",
+        "name": "Bread",
+        "curStack": 1,
+        "maxStack": 64,
+        "desc": "This is bread",
+        "health": 1.26,
+        "strength": 0.35,
+        "worth": 3.0
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "character": {
+    "data": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
 }

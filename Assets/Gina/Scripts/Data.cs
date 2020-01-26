@@ -6,429 +6,133 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+
 [Serializable]
 public class Data
 {
-    private Dictionary<string, object> data;
+    public string name;
+    public int level = 1;
+    public float[] health = new float[] { 100, 100f };
+    public float[] stamina = new float[] { 100f, 100f };
+    public float[] mana = new float[] { 100f, 100f };
+    public float[] exp = new float[] { 0f, 1000f };
+    public float[] position = new float[3] { 0f, 0f, 0f };
+    public float[] rotation = new float[3] { 0f, 0f, 0f };
+    public string loottable = null;
+    public Inventory inventory = new Inventory();
+    public Actionbar actionbar = new Actionbar();
+    public Character character = new Character();
 
-    public Data(bool inven = false, bool stats = false, bool posrot = false, bool npc = false)
-    {
-        data = new Dictionary<string, object>();
-        data.Add(pname.name, "Entity");
-        if(stats)
-        {
-            data.Add(pname.level, 1);
-            data.Add(pname.curHealth, 1f);
-            data.Add(pname.maxHealth, 100f);
-            data.Add(pname.mulHealth, 0f);
-            data.Add(pname.curStamina, 1f);
-            data.Add(pname.maxStamina, 100f);
-            data.Add(pname.mulStamina, 0f);
-            data.Add(pname.curMana, 1f);
-            data.Add(pname.maxMana, 100f);
-            data.Add(pname.mulMana, 0f);
-            data.Add(pname.curExp, 0f);
-            data.Add(pname.maxExp, 1000f);
-            data.Add(pname.mulExp, 0f);
-        }
-        if(posrot)
-        {
-            data.Add(pname.positionx, 0f);
-            data.Add(pname.positiony, 0f);
-            data.Add(pname.positionz, 0f);
-            data.Add(pname.rotationx, 0f); 
-            data.Add(pname.rotationy, 0f);
-            data.Add(pname.rotationz, 0f);
-        }
-        if(inven)
-        {
-            data.Add(pname.inventory, new Dictionary<string, object>[30]);
-            data.Add(pname.actionbar, new Dictionary<string, object>[12]);
-            data.Add(pname.character, new Dictionary<string, object>[15]);
-        }
-        if(npc)
-        {
-            data.Add(pname.loot, string.Empty);
-        }
-    }
-
-
-    public void Set<T>(string name, T value)
-    {
-        if (data.ContainsKey(name))
-            data[name] = value;
-        else if (!data.ContainsKey(name))
-            data.Add(name, value);
-    }
-    public T Get<T>(string name)
-    {
-        if (data == null || data.Count <= 0 || !data.ContainsKey(name))
-            return default(T);
-        try
-        {
-            if (typeof(T).Equals(typeof(float)))
-                return (T)(object)float.Parse(data[name].ToString());
-            else if (typeof(T).Equals(typeof(int)))
-                return (T)(object)int.Parse(data[name].ToString());
-
-            return (T)data[name];
-        } 
-        catch(Exception ex)
-        {
-            Debug.Log(name);
-            Debug.LogError(ex);
-            return default(T);
-        }
-    }
     //values
     internal void Init()
     {
         onNameChaged?.Invoke(Name);
         onLevelChaged?.Invoke(Level);
-        onHealthChagned?.Invoke(CurHealth, MaxHealth, MulHeaht);
-        onStaminaChagned?.Invoke(CurStamina, MaxStamina, MulStamina);
-        onManaChagned?.Invoke(CurMana, MaxMana, MulMana);
-        onExperianceChagned?.Invoke(CurExp, MaxExp, MulExp);
+        onHealthChagned?.Invoke(Health);
+        onStaminaChagned?.Invoke(Stamina);
+        onManaChagned?.Invoke(Mana);
+        onExperianceChagned?.Invoke(Exp);
         onPositionChanged?.Invoke(Position);
         onRotationChanged?.Invoke(Rotation);
-
         onLootTableChanged?.Invoke(LootTable);
-
-        onInventoryChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.inventory));
-        onActionbarChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.actionbar));
-        onCharacterChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.character));
+        inventory.Init();
+        actionbar.Init();
+        character.Init();
     }
 
     // Events
     public delegate void OnNameChaged(string value); public event OnNameChaged onNameChaged;
-    public delegate void OnLevelChaged(int value); public event OnLevelChaged onLevelChaged;
-    public delegate void OnHealthChagned(float cur, float max, float mul); public event OnHealthChagned onHealthChagned;
-    public delegate void OnStaminaChagned(float cur, float max, float mul); public event OnStaminaChagned onStaminaChagned;
-    public delegate void OnManaChagned(float cur, float max, float mul); public event OnManaChagned onManaChagned;
-    public delegate void OnExperianceChagned(float cur, float max, float mul); public event OnExperianceChagned onExperianceChagned;
+    public delegate void OnLevelChaged(int value);  public event OnLevelChaged onLevelChaged;
+    public delegate void OnHealthChagned(float[] value); public event OnHealthChagned onHealthChagned;
+    public delegate void OnStaminaChagned(float[] value); public event OnStaminaChagned onStaminaChagned;
+    public delegate void OnManaChagned(float[] value); public event OnManaChagned onManaChagned;
+    public delegate void OnExperianceChagned(float[] value); public event OnExperianceChagned onExperianceChagned;
     public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
     public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
     public delegate void OnLootTableChanged(Item vlue); public event OnLootTableChanged onLootTableChanged;
-    public delegate void OnInventoryChanged(Dictionary<string, object>[] value); public event OnInventoryChanged onInventoryChanged;
-    public delegate void OnActionbarChanged(Dictionary<string, object>[] value); public event OnActionbarChanged onActionbarChanged;
-    public delegate void OnCharacterChanged(Dictionary<string, object>[] value); public event OnCharacterChanged onCharacterChanged;
-
 
     public Data() { }
-    
-    public void SetAll(Dictionary<string, object> data)
-    {
-        this.data = new Dictionary<string, object>(data);
-        Init();
-    }
-
-    public string Name
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.name))
-                return default;
-            return Get<string>(pname.name);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.name, value);
-            onNameChaged?.Invoke(value);
-        }
-    }
-    public int Level
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.level))
-                return default;
-            return Get<int>(pname.level);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.level, value);
-            onLevelChaged?.Invoke(value);
-        }
-    }
-
-    public float CurHealth
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.curHealth))
-                return default;
-            return Get<float>(pname.curHealth);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.curHealth, value);
-            onHealthChagned?.Invoke(value, MaxHealth, MulHeaht);
-        }
-    }
-    public float MaxHealth
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.maxHealth))
-                return default;
-            return Get<float>(pname.maxHealth);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.maxHealth, value);
-            onHealthChagned?.Invoke(CurHealth, value, MulHeaht);
-        }
-    }
-    public float MulHeaht
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.mulHealth))
-                return default;
-            return Get<float>(pname.mulHealth);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.mulHealth, value);
-            onHealthChagned?.Invoke(CurHealth, MaxHealth, value);
-        }
-    }
 
     
-    public float CurStamina
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.curStamina))
-                return default;
-            return Get<float>(pname.curStamina);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.curStamina, value);
-            onStaminaChagned?.Invoke(value, MaxStamina, MulStamina);
-        }
-    }
-    public float MaxStamina
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.maxStamina))
-                return default;
-            return Get<float>(pname.maxStamina);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.maxStamina, value);
-            onStaminaChagned?.Invoke(CurStamina, value, MulStamina);
-        }
-    }
-    public float MulStamina
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.mulStamina))
-                return default;
-            return Get<float>(pname.mulStamina);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.mulStamina, value);
-            onStaminaChagned?.Invoke(CurStamina, MaxStamina, value);
-        }
-    }
+    [JsonIgnore] public string Name { get { return name; } set { name = value; onNameChaged?.Invoke(value); } }
+    [JsonIgnore] public int Level { get { return level; } set { level = value; onLevelChaged?.Invoke(value); } }
+    [JsonIgnore] public float[] Health { get { return health; } set { health = value; onHealthChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Stamina { get { return stamina; } set { stamina = value; onStaminaChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Mana { get { return mana; } set { mana = value; onManaChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Exp { get { return exp; } set { exp = value; onExperianceChagned?.Invoke(value); } }
+    [JsonIgnore] public Vector3 Position { get { return new Vector3(position[0], position[1], position[2]); } set { position = new float[] { value.x, value.y, value.z }; onPositionChanged?.Invoke(value); } }
+    [JsonIgnore] public Vector3 Rotation { get { return new Vector3(rotation[0], rotation[1], rotation[2]); } set { rotation = new float[] { value.x, value.y, value.z }; onRotationChanged?.Invoke(value); } }
+    [JsonIgnore] public Item LootTable { get { return Database.GetLootTableByID(loottable);  } set { loottable = value != null ? value.GetID : null; onLootTableChanged?.Invoke(value); } }
+    public void SetInventory(int index = -1, Dictionary<string, object> value = null) => inventory.Set(index, value);
+    public void SetActionbar(int index = -1, Dictionary<string, object> value = null) => actionbar.Set(index, value);
+    public void SetCharacter(int index = -1, Dictionary<string, object> value = null) => character.Set(index, value);
 
-    public float CurMana
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.curMana))
-                return default;
-            return Get<float>(pname.curMana);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.curMana, value);
-            onManaChagned?.Invoke(value, MaxMana, MulMana);
-        }
-    }
-    public float MaxMana
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.maxMana))
-                return default;
-            return Get<float>(pname.maxMana);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.maxMana, value);
-            onManaChagned?.Invoke(CurMana, value, MulMana);
-        }
-    }
-    public float MulMana
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.mulMana))
-                return default;
-            return Get<float>(pname.mulMana);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.mulMana, value);
-            onManaChagned?.Invoke(CurMana, MaxMana, value);
-        }
-    }
 
-    public float CurExp
+    public void Save(string savename = default)
     {
-        get
+        var savepath = Path.Combine(Application.streamingAssetsPath, $"{(string.IsNullOrEmpty(savename) ? "player" : savename)}_.json").Replace("\\", "/");
+        if (!string.IsNullOrEmpty(savepath) && File.Exists(savepath))
+            File.Delete(savepath);
+
+        File.WriteAllText(savepath, JsonConvert.SerializeObject(this, Formatting.Indented), Encoding.UTF8);
+        Debug.Log("Data has been Saved");
+    }
+    public void Load(string loadname = default)
+    {
+        Directory.CreateDirectory(Application.streamingAssetsPath);
+        var loadpath = Path.Combine(Application.streamingAssetsPath, $"{(string.IsNullOrEmpty(loadname) ? "player" : loadname)}_.json").Replace("\\", "/");
+        if (File.Exists(loadpath))
         {
-            if (data == null || !data.ContainsKey(pname.curExp))
-                return default;
-            return Get<float>(pname.curExp);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.curExp, value);
-            if (CurExp >= MaxExp)
+            var json = File.ReadAllText(loadpath, Encoding.UTF8);
+            var d  = JsonConvert.DeserializeObject<Data>(json);
+            if(d != null)
             {
-                Set(pname.curExp, 0);
-                Level = Level + 1;
-                MulExp = MulExp + Level * .25f;
+                Name = d.Name;
+                Level = d.Level;
+                Health = d.Health;
+                Stamina = d.Stamina;
+                Mana = d.Mana;
+                Exp = d.Exp;
+                Position = d.Position;
+                Rotation = d.Rotation;
+                LootTable = d.LootTable;
+                inventory.Set(d.inventory);
+                actionbar.Set(d.actionbar);
+                character.Set(d.character);
+
+                Debug.Log("data was loaded!");
             }
-            onExperianceChagned?.Invoke(value, MaxExp, MulExp);
         }
     }
-    public float MaxExp
+}
+
+[Serializable]
+public class Inventory
+{
+    public Dictionary<string, object>[] data = new Dictionary<string, object>[30];
+    public bool isFull
     {
         get
         {
-            if (data == null || !data.ContainsKey(pname.maxExp))
-                return default;
-            return Get<float>(pname.maxExp);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.maxExp, value);
-            onExperianceChagned?.Invoke(CurExp, value, MulExp);
+            var used = data.Select(x => new Item(x)).ToList().FindAll(x => x != null && x.IsValid);
+            return used.ToArray().Length >= data.Length;
         }
     }
-    public float MulExp
-    {
-        get
-        {
-            if (data == null || !data.ContainsKey(pname.mulExp))
-                return default;
-            return Get<float>(pname.mulExp);
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.mulExp, value);
-            onExperianceChagned?.Invoke(CurExp, MaxExp, value);
-        }
-    }
-
-    public Vector3 Position
-    {
-        get
-        {
-            if(data == null ||
-                !data.ContainsKey(pname.positionx) &&
-                !data.ContainsKey(pname.positiony) && 
-                !data.ContainsKey(pname.positionz))
-                return default;
-
-            var x = Get<float>(pname.positionx);
-            var y = Get<float>(pname.positiony);
-            var z = Get<float>(pname.positionz);
-
-            return new Vector3(x, y, z);
-
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.positionx, value.x);
-            Set(pname.positiony, value.y);
-            Set(pname.positionz, value.z);
-
-            onPositionChanged?.Invoke(value);
-        }
-    }
-    public Vector3 Rotation
-    {
-        get
-        {
-            if (data == null ||
-                !data.ContainsKey(pname.rotationx) && 
-                !data.ContainsKey(pname.rotationy) && 
-                !data.ContainsKey(pname.rotationz))
-                return default;
-
-            var x = Get<float>(pname.rotationx);
-            var y = Get<float>(pname.rotationy);
-            var z = Get<float>(pname.rotationz);
-
-            return new Vector3(x, y, z);
-
-        }
-        set
-        {
-            if (data == null) return;
-            Set(pname.rotationx, value.x);
-            Set(pname.rotationy, value.y);
-            Set(pname.rotationz, value.z);
-
-            onRotationChanged?.Invoke(value);
-        }
-    }
-
-    public Item LootTable
-    {
-        get
-        {
-
-            if (data == null || !data.ContainsKey(pname.loot))
-                return null;
-            return Database.GetLootTableByID(Get<string>(pname.loot));
-        }
-        set
-        {
-            if (data == null) return;
-            if (value == null) return;
-            Set(pname.loot, value.GetID);
-            onLootTableChanged?.Invoke(value);
-        }
-    }
-
-    public void SetInventory(int index = -1, Dictionary<string, object> value = null)
+    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public event OnChanged onChanged;
+    public Inventory() { }
+    public void Set(int index = -1, Dictionary<string, object> value = null)
     {
         
-        if (index >= 0) Get<Dictionary<string, object>[]>(pname.inventory)[index] = value;
+        if (index >= 0) data[index] = value;
         else
         {
             bool alreadyAdded = false;
             // Check every slot to see if item is already there then add onto it if the item is stakable
-            for (int i = 0; i < Get<Dictionary<string, object>[]>(pname.inventory).Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 if (value == null) break;
-                var _itemdata = Get<Dictionary<string, object>[]>(pname.inventory)[i];
+                var _itemdata = data[i];
                 if (_itemdata != null)
                 {
                     var _item = new Item(_itemdata);
@@ -437,7 +141,7 @@ public class Data
                         if(_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
                         {
                             _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
-                            Get<Dictionary<string, object>[]>(pname.inventory)[i] = _item.data;
+                            data[i] = _item.data;
                             alreadyAdded = true;
                             break;
                         }
@@ -449,15 +153,15 @@ public class Data
             if(!alreadyAdded)
             {
                 // Add the item to the first empty slot
-                for (int i = 0; i < Get<Dictionary<string, object>[]>(pname.inventory).Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    if(Get<Dictionary<string, object>[]>(pname.inventory)[i] == null || !new Item(Get<Dictionary<string, object>[]>(pname.inventory)[i]).IsValid)
+                    if(data[i] == null || !new Item(data[i]).IsValid)
                     {
-                        Get<Dictionary<string, object>[]>(pname.inventory)[i] = value;
+                        data[i] = value;
                         break;
                     }
 
-                    var slot = new Item(Get<Dictionary<string, object>[]>(pname.inventory)[i]);
+                    var slot = new Item(data[i]);
                     var item = new Item(value);
                     if(item.GetID == slot.GetID)
                     {
@@ -474,43 +178,160 @@ public class Data
                 }
             }
         }
-        onInventoryChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.inventory));
+        onChanged?.Invoke(data);
     }
-    public void SetActionbar(int index = 0, Dictionary<string, object> value = null)
+    public void Set(Inventory value)
     {
-
-        Get<Dictionary<string, object>[]>(pname.actionbar)[index] = value;
-        onActionbarChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.actionbar));
-    }
-    public void SetCharacter(int index = 0, Dictionary<string, object> value = null)
-    {
-        Get<Dictionary<string, object>[]>(pname.character)[index] = value;
-        onCharacterChanged?.Invoke(Get<Dictionary<string, object>[]>(pname.character));
+        Array.Copy(value.data, 0, data, 0, value.data.Length);
+        onChanged?.Invoke(data);
     }
 
-    public void Save(string savename = default)
-    {
-        var savepath = Path.Combine(Application.streamingAssetsPath, $"{(string.IsNullOrEmpty(savename) ? "player" : savename)}_.json").Replace("\\", "/");
-        if (!string.IsNullOrEmpty(savepath) && File.Exists(savepath))
-            File.Delete(savepath);
+    public void Init() => onChanged?.Invoke(data);
+}
+[Serializable]
+public class Actionbar
+{
+    public Dictionary<string, object>[] data = new Dictionary<string, object>[12];
+    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public event OnChanged onChanged;
 
-        File.WriteAllText(savepath, JsonConvert.SerializeObject(this.data, Formatting.Indented), Encoding.UTF8);
-        Debug.Log("Data has been Saved");
-    }
-    public void Load(string loadname = default)
+    public Actionbar() { }
+    public void Set(int index = -1, Dictionary<string, object> value = null)
     {
-        Directory.CreateDirectory(Application.streamingAssetsPath);
-        var loadpath = Path.Combine(Application.streamingAssetsPath, $"{(string.IsNullOrEmpty(loadname) ? "player" : loadname)}_.json").Replace("\\", "/");
-        if (File.Exists(loadpath))
+
+        if (index >= 0) data[index] = value;
+        else
         {
-            var json = File.ReadAllText(loadpath, Encoding.UTF8);
-            var d  = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-            if(d != null)
+            bool alreadyAdded = false;
+            // Check every slot to see if item is already there then add onto it if the item is stakable
+            for (int i = 0; i < data.Length; i++)
             {
-                SetAll(d);
-                Debug.Log("data was loaded!");
+                if (value == null) break;
+                var _itemdata = data[i];
+                if (_itemdata != null)
+                {
+                    var _item = new Item(_itemdata);
+                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    {
+                        if (_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
+                        {
+                            _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
+                            data[i] = _item.data;
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if (!alreadyAdded)
+            {
+                // Add the item to the first empty slot
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (data[i] == null || !new Item(data[i]).IsValid)
+                    {
+                        data[i] = value;
+                        break;
+                    }
+
+                    var slot = new Item(data[i]);
+                    var item = new Item(value);
+                    if (item.GetID == slot.GetID)
+                    {
+                        if (slot.IsStackable)
+                        {
+                            if (slot.Get<int>(pname.curStack) < slot.Get<int>(pname.maxStack))
+                            {
+                                slot.Set(pname.curStack, slot.Get<int>(pname.curStack) + 1);
+                                break;
+                            }
+                        }
+                        else continue;
+                    }
+                }
             }
         }
+        onChanged?.Invoke(data);
     }
+    public void Set(Actionbar value)
+    {
+        Array.Copy(value.data, 0, data, 0, value.data.Length);
+        onChanged?.Invoke(data);
+    }
+    public void Init() => onChanged?.Invoke(data);
+}
+[Serializable]
+public class Character
+{
+    public Dictionary<string, object>[] data = new Dictionary<string, object>[15];
+    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public event OnChanged onChanged;
+    public Character() { }
+    public void Set(int index = -1, Dictionary<string, object> value = null)
+    {
 
+        if (index >= 0) data[index] = value;
+        else
+        {
+            bool alreadyAdded = false;
+            // Check every slot to see if item is already there then add onto it if the item is stakable
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (value == null) break;
+                var _itemdata = data[i];
+                if (_itemdata != null)
+                {
+                    var _item = new Item(_itemdata);
+                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    {
+                        if (_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
+                        {
+                            _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
+                            data[i] = _item.data;
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if (!alreadyAdded)
+            {
+                // Add the item to the first empty slot
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (data[i] == null || !new Item(data[i]).IsValid)
+                    {
+                        data[i] = value;
+                        break;
+                    }
+
+                    var slot = new Item(data[i]);
+                    var item = new Item(value);
+                    if (item.GetID == slot.GetID)
+                    {
+                        if (slot.IsStackable)
+                        {
+                            if (slot.Get<int>(pname.curStack) < slot.Get<int>(pname.maxStack))
+                            {
+                                slot.Set(pname.curStack, slot.Get<int>(pname.curStack) + 1);
+                                break;
+                            }
+                        }
+                        else continue;
+                    }
+                }
+            }
+        }
+        onChanged?.Invoke(data);
+    }
+    public void Set(Character value)
+    {
+        Array.Copy(value.data, 0, data, 0, value.data.Length);
+        onChanged?.Invoke(data);
+    }
+    public void Init() => onChanged?.Invoke(data);
 }
