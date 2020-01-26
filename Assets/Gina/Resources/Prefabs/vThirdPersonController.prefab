@@ -1744,33 +1744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e24a01c31c85a4ea7828de1118ddcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player_data:
-    name: Player
-    level: 1
-    health:
-      cur: 1
-      max: 100
-      multiplier: 0
-    stamina:
-      cur: 1
-      max: 100
-      multiplier: 0
-    mana:
-      cur: 0
-      max: 100
-      multiplier: 0
-    experiance:
-      cur: 0
-      max: 1000
-      multiplier: 0
-    position:
-      x: 0
-      y: 0
-      z: 0
-    rotation:
-      x: 0
-      y: 0
-      z: 0
+  player_name: Player
 --- !u!1 &8876216737406792808
 GameObject:
   m_ObjectHideFlags: 0

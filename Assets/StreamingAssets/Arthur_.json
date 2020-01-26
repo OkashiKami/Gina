@@ -1,0 +1,101 @@
+﻿{
+  "name": "Arthur",
+  "level": 85,
+  "health": [
+    100.0,
+    100.0
+  ],
+  "stamina": [
+    100.0,
+    100.0
+  ],
+  "mana": [
+    100.0,
+    100.0
+  ],
+  "exp": [
+    0.0,
+    1000.0
+  ],
+  "position": [
+    -0.1698538,
+    -0.004999995,
+    10.4081707
+  ],
+  "rotation": [
+    0.0,
+    45.0000038,
+    0.0
+  ],
+  "loottable": "gina:arthur",
+  "inventory": {
+    "data": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "isFull": false
+  },
+  "actionbar": {
+    "data": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "character": {
+    "data": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
+}

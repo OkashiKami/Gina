@@ -1,6 +1,6 @@
 ﻿{
   "icon": "Gina/Resources/Textures/Tiny Fantasy Icons/Scrolls/Scroll_Close_Blue.png",
-  "name": "auther",
+  "name": "arthur",
   "desc": "This is the loot table for a arthur npc",
   "loot": "<INDICATES THAT THIS IS A LOOT TABLE>",
   "loot_entry0": "gina:copper_coin,85",

@@ -13,22 +13,31 @@ internal class WorldItem : MonoBehaviour
     private SpriteRenderer icon;
     private TextMeshPro amount;
     public  Item item = null;
+    private float despan;
 
-    internal static void Create(Item item, Vector3 position = default, int amount = 1, float despawn = 300, bool point = false, bool table = false)
+    /// <summary>
+    /// Create a item in the world that can be picked up.
+    /// </summary>
+    /// <param name="item">The item that can be droped</param>
+    /// <param name="position">The position where to drop the item</param>
+    /// <param name="amount">The amout of the item to be dropped</param>
+    /// <param name="despawn">How long it will take to despan the item</param>
+    /// <param name="atPoint">Indicate to spane item at the position or a radious aroun the position</param>
+    internal static void Create(Item item = null, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
     {
+        if (item == null) return;
         var wip = Resources.Load("Prefabs/World_Item") as GameObject;
-        if(!table)
+        if(!item.loottable)
         {
             for (int i = 0; i < amount; i++)
             {
-                var x = position.x + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
-                var z = position.z + (point ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
+                var x = position.x + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
+                var z = position.z + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
 
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
-                wi.name = $"[WORLD ITEM]: {item.Get<string>(paramname.name)}";
+                wi.name = $"[WORLD ITEM]: {item.Get<string>(pname.name)}";
                 wi.item = item;
-                if (despawn > 0)
-                    Destroy(wi.gameObject, despawn);
+                wi.despan = despawn;
                 wi.transform.SetAsLastSibling();
             }
         }
@@ -50,7 +59,7 @@ internal class WorldItem : MonoBehaviour
                 var roll = UnityEngine.Random.Range(0, 100);
                 if(roll <= key)
                 {
-                    WorldItem.Create(tabledata[key], position, point: true);
+                    WorldItem.Create(tabledata[key], position, atPoint: true);
                 }
 
             }
@@ -70,26 +79,44 @@ internal class WorldItem : MonoBehaviour
         FindObjectOfType<InputController>().onInteract += OnInteract;
     }
 
+    
+
     private void OnInteract(Player player)
     {
+        if (player == null) return;
         var dis = Vector3.Distance(player.transform.position, transform.position);
-        if (dis < 1.06f)
+        if (dis < 1.03f)
         {
-            player.player_data.SetInventory(value: item.data);
+            player.data.SetInventory(value: item.data);
             FindObjectOfType<InputController>().onInteract -= OnInteract;
             Destroy(gameObject);
         }
         Debug.Log($"Interact {dis}");
     }
 
+    private void Start()
+    {
+    }
+
     private void Update()
     {
+        if(despan > 0)
+        {
+
+            despan -= 1 * Time.deltaTime;
+            if(despan <= 0)
+            {
+                Destroy(gameObject);
+            }
+            name = $"[WI][{despan.ToString("n0")}s]: {item.Get<string>(pname.name)}";
+        }
+
         if(icon)
         {
             icon.transform.Rotate(Vector3.up, 3, Space.World);
 
             if (item != null && item.IsValid)
-                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.sprite = item.Get<Sprite>(pname.icon);
             else
                 icon.sprite = null;
             icon.enabled = icon.sprite != null;
@@ -98,11 +125,12 @@ internal class WorldItem : MonoBehaviour
         {
             amount.transform.LookAt(Camera.main.transform, Vector3.up);
             if (item != null && item.IsValid)
-                amount.text = item.Has(paramname.curStack) ? item.Get<int>(paramname.curStack) > 1 ? item.Get<int>(paramname.curStack).ToString() : string.Empty : string.Empty;
+                amount.text = item.Has(pname.curStack) ? item.Get<int>(pname.curStack) > 1 ? item.Get<int>(pname.curStack).ToString() : string.Empty : string.Empty;
             else
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);
         }        
+
 
     }
 }

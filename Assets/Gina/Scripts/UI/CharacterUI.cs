@@ -25,7 +25,7 @@ public class CharacterUI : MonoBehaviour
         if (slots == null || slots.Length <= 0) Reset();
         var player = FindObjectOfType<Player>();
         if (player)
-            player.player_data.onCharacterChanged += OnCharacterChanged;
+            player.data.character.onChanged += Character_onChanged;
 
         FindObjectOfType<InputController>().onCharacter += () =>
         {
@@ -72,11 +72,11 @@ public class CharacterUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void OnCharacterChanged(Dictionary<string, object>[] items)
+    private void Character_onChanged(Dictionary<string, object>[] value)
     {
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < value.Length; i++)
         {
-            slots[i].item = new Item(items[i]);
+            slots[i].item = new Item(value[i]);
         }
     }
 }

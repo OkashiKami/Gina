@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public Item item = null;
+    public bool locked = false;
 
     private Image icon;
     private TextMeshProUGUI count;
@@ -23,16 +24,16 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         {
             if (item.IsStackable)
             {
-                if (item.Get<int>(paramname.curStack) > 1)
-                    count.text = item.Get<int>(paramname.curStack).ToString();
+                if (item.Get<int>(pname.curStack) > 1)
+                    count.text = item.Get<int>(pname.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
+            if(!string.IsNullOrEmpty(item.Get<string>(pname.icon)))
             {
-                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.sprite = item.Get<Sprite>(pname.icon);
                 icon.enabled = true;
             }
             else
@@ -56,8 +57,9 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().player_data;
-        var _item = item == null || !item.IsValid ? null : item.Copy;
+        if (locked) return;
+        var player = FindObjectOfType<Player>().data;
+        var _item = item == null || !item.IsValid ? null : item. Copy;
 
         if (eventData.pointerDrag != null)
         {
@@ -123,7 +125,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void Set(Item value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<InventorySlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         player.SetInventory(myindex, value != null ? value.data : null);
     }
 }

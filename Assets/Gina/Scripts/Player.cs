@@ -11,32 +11,30 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Data player_data;
+    public string player_name;
+    public Data data = new Data();
 
     private void Awake()
     {
-        player_data = new Data();
-        player_data.onPositionChanged += (p) => transform.position = p;
-        player_data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
-        player_data.Load();
-
-
+        data.Name = player_name;
+        data.onNameChaged += (n) => { player_name = n; gameObject.name = n; };
+        data.onPositionChanged += (p) => transform.position = p;
+        data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
     }
 
     private void Start()
     {
-        
-        player_data.Init();
-        FunctionPeriodic.Create(() => player_data.Save(), 10);
+        data.Load();
+        FunctionPeriodic.Create(() => data.Save(), 10);
     }
 
     private void OnApplicationQuit()
     {
-        player_data.Save();
+        data.Save();
     }
     private void Update()
     {
-        player_data.CurPosition = transform.position;
-        player_data.CurRotation = transform.rotation.eulerAngles;
+        data.Position = transform.position;
+        data.Rotation = transform.rotation.eulerAngles;
     }
 }

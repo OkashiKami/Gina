@@ -54,16 +54,16 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         {
             if (item.IsStackable)
             {
-                if (item.Get<int>(paramname.curStack) > 1)
-                    count.text = item.Get<int>(paramname.curStack).ToString();
+                if (item.Get<int>(pname.curStack) > 1)
+                    count.text = item.Get<int>(pname.curStack).ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(paramname.icon)))
+            if(!string.IsNullOrEmpty(item.Get<string>(pname.icon)))
             {
-                icon.sprite = item.Get<Sprite>(paramname.icon);
+                icon.sprite = item.Get<Sprite>(pname.icon);
                 icon.enabled = true;
                 decal.enabled = false;
             }
@@ -87,14 +87,14 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         var _item = item == null || !item.IsValid ? null : item.Copy;
 
         if (eventData.pointerDrag != null)
         {
             if (eventData.pointerDrag.GetComponent<InventorySlot>())
             {
-                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<InventorySlot>().item.Get<int>(paramname.equipmentType))
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<InventorySlot>().item.Get<int>(pname.equipmentType))
                 {
                     Set(eventData.pointerDrag.GetComponent<InventorySlot>().item);
                     eventData.pointerDrag.GetComponent<InventorySlot>().Set(_item);
@@ -102,7 +102,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             }
             else if (eventData.pointerDrag.GetComponent<ActionbarSlot>())
             {
-                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<ActionbarSlot>().item.Get<int>(paramname.equipmentType))
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<ActionbarSlot>().item.Get<int>(pname.equipmentType))
                 {
                     Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
                     eventData.pointerDrag.GetComponent<ActionbarSlot>().Set(_item);
@@ -110,7 +110,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             }
             else if (eventData.pointerDrag.GetComponent<CharacterSlot>())
             {
-                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<CharacterSlot>().item.Get<int>(paramname.equipmentType))
+                if (requireType == EquiptmentType.None || requireType == (EquiptmentType)eventData.pointerDrag.GetComponent<CharacterSlot>().item.Get<int>(pname.equipmentType))
                 {
                     Set(eventData.pointerDrag.GetComponent<CharacterSlot>().item);
                     eventData.pointerDrag.GetComponent<CharacterSlot>().Set(_item);
@@ -164,7 +164,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void Set(Item value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<CharacterSlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().player_data;
+        var player = FindObjectOfType<Player>().data;
         player.SetCharacter(myindex, value != null ? value.data : null);
     }
 }

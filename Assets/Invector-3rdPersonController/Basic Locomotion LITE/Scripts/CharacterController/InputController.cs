@@ -48,8 +48,8 @@ public class InputController : MonoBehaviour
         {
             var uiInventory = FindObjectOfType<InventoryUI>() ? FindObjectOfType<InventoryUI>().GetComponent<CanvasGroup>().alpha == 1 : false;
             var uicharacter = FindObjectOfType<CharacterUI>() ? FindObjectOfType<CharacterUI>().GetComponent<CanvasGroup>().alpha == 1 : false;
-
-            return uiInventory || uicharacter;
+            var uinpcwindow = FindObjectOfType<NPCWindowUI>() ? FindObjectOfType<NPCWindowUI>().GetComponent<CanvasGroup>().alpha == 1 : false;
+            return uiInventory || uicharacter || uinpcwindow;
         }
     }
 
@@ -93,11 +93,8 @@ public class InputController : MonoBehaviour
         Cursor.lockState = !IsCursorLocked || IsWindowOpen? CursorLockMode.None : CursorLockMode.Locked;
 
         ExitGameInput();
-        if (IsCursorLocked && !IsWindowOpen)
-        {
-            InputHandle();                      // update input methods
-            UpdateCameraStates();               // update camera states
-        }
+        InputHandle();                      // update input methods
+        UpdateCameraStates();               // update camera states
     }
 
     protected virtual void FixedUpdate()
@@ -176,15 +173,18 @@ public class InputController : MonoBehaviour
     {
         if (tpCamera == null)
             return;
-        var Y = Input.GetAxis(rotateCameraYInput);
-        var X = Input.GetAxis(rotateCameraXInput);
+        if (IsCursorLocked && !IsWindowOpen)
+        {
+            var Y = Input.GetAxis(rotateCameraYInput);
+            var X = Input.GetAxis(rotateCameraXInput);
 
-        tpCamera.RotateCamera(X, Y);
+            tpCamera.RotateCamera(X, Y);
+        }
 
         // tranform Character direction from camera if not KeepDirection
         if (!keepDirection && cc)
             cc.UpdateTargetDirection(tpCamera != null ? tpCamera.transform : null);
-        // rotate the character with the camera while strafing        
+        // rotate the character with the camera while strafing  
         RotateWithCamera(tpCamera != null ? tpCamera.transform : null);
     }
 
