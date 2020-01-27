@@ -35,7 +35,7 @@ public class Item
     public Item() { }
     public Item(Item value = null)
     {
-        if(value != null)
+        if(value == null)
         {
 
         }
