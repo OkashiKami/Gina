@@ -30,11 +30,11 @@ public class ActionbarUI : MonoBehaviour
             player.data.actionbar.onChanged += Actionbar_onChanged;
     }
 
-    private void Actionbar_onChanged(Dictionary<string, object>[] value)
+    private void Actionbar_onChanged(Item[] value)
     {
         for (int i = 0; i < value.Length; i++)
         {
-            slots[i].item = new Item(value[i]);
+            slots[i].item = value[i] != null ?  value[i].Copy : null;
         }
     }
 }

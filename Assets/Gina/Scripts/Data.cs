@@ -49,7 +49,7 @@ public class Data
     public delegate void OnExperianceChagned(float[] value); public event OnExperianceChagned onExperianceChagned;
     public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
     public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
-    public delegate void OnLootTableChanged(Item vlue); public event OnLootTableChanged onLootTableChanged;
+    public delegate void OnLootTableChanged(LootTable vlue); public event OnLootTableChanged onLootTableChanged;
 
     public Data() { }
 
@@ -62,10 +62,10 @@ public class Data
     [JsonIgnore] public float[] Exp { get { return exp; } set { exp = value; onExperianceChagned?.Invoke(value); } }
     [JsonIgnore] public Vector3 Position { get { return new Vector3(position[0], position[1], position[2]); } set { position = new float[] { value.x, value.y, value.z }; onPositionChanged?.Invoke(value); } }
     [JsonIgnore] public Vector3 Rotation { get { return new Vector3(rotation[0], rotation[1], rotation[2]); } set { rotation = new float[] { value.x, value.y, value.z }; onRotationChanged?.Invoke(value); } }
-    [JsonIgnore] public Item LootTable { get { return Database.GetLootTableByID(loottable);  } set { loottable = value != null ? value.GetID : null; onLootTableChanged?.Invoke(value); } }
-    public void SetInventory(int index = -1, Dictionary<string, object> value = null) => inventory.Set(index, value);
-    public void SetActionbar(int index = -1, Dictionary<string, object> value = null) => actionbar.Set(index, value);
-    public void SetCharacter(int index = -1, Dictionary<string, object> value = null) => character.Set(index, value);
+    [JsonIgnore] public LootTable LootTable { get { return Database.Get<LootTable>(loottable);  } set { loottable = value != null ? value.GetID : null; onLootTableChanged?.Invoke(value); } }
+    public void SetInventory(int index = -1, Item value = null) => inventory.Set(index, value);
+    public void SetActionbar(int index = -1, Item value = null) => actionbar.Set(index, value);
+    public void SetCharacter(int index = -1, Item value = null) => character.Set(index, value);
 
 
     public void Save(string savename = default)
@@ -109,19 +109,25 @@ public class Data
 [Serializable]
 public class Inventory
 {
-    public Dictionary<string, object>[] data = new Dictionary<string, object>[30];
+    public Item[] data = new Item[30];
     public bool isFull
     {
         get
         {
-            var used = data.Select(x => new Item(x)).ToList().FindAll(x => x != null && x.IsValid);
+            var used = data.ToList().FindAll(x => x != null && x.IsValid);
             return used.ToArray().Length >= data.Length;
         }
     }
-    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
-    public Inventory() { }
-    public void Set(int index = -1, Dictionary<string, object> value = null)
+    public Inventory() 
+    {
+        for (int i = 0; i < data.Length; i++)
+        {
+            data[i] = null;
+        }
+    }
+    public void Set(int index = -1, Item value = null)
     {
         
         if (index >= 0) data[index] = value;
@@ -135,13 +141,13 @@ public class Inventory
                 var _itemdata = data[i];
                 if (_itemdata != null)
                 {
-                    var _item = new Item(_itemdata);
-                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    var _item = _itemdata;
+                    if (_item.IsValid && _item.GetID == value.GetID)
                     {
-                        if(_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
+                        if(_item.isStackable && _item.curStack < _item.maxStack)
                         {
-                            _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
-                            data[i] = _item.data;
+                            _item.curStack = _item.curStack + value.curStack;
+                            data[i] = _item;
                             alreadyAdded = true;
                             break;
                         }
@@ -155,21 +161,21 @@ public class Inventory
                 // Add the item to the first empty slot
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if(data[i] == null || !new Item(data[i]).IsValid)
+                    if(data[i] == null || !data[i].IsValid)
                     {
                         data[i] = value;
                         break;
                     }
 
-                    var slot = new Item(data[i]);
-                    var item = new Item(value);
+                    var slot = data[i];
+                    var item = value;
                     if(item.GetID == slot.GetID)
                     {
-                        if (slot.IsStackable)
+                        if (slot.isStackable)
                         {
-                            if (slot.Get<int>(pname.curStack) < slot.Get<int>(pname.maxStack))
+                            if (slot.curStack < slot.maxStack)
                             {
-                                slot.Set(pname.curStack, slot.Get<int>(pname.curStack) + 1);
+                                slot.curStack++;
                                 break;
                             }
                         }
@@ -191,12 +197,18 @@ public class Inventory
 [Serializable]
 public class Actionbar
 {
-    public Dictionary<string, object>[] data = new Dictionary<string, object>[12];
-    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public Item[] data = new Item[12];
+    public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
 
-    public Actionbar() { }
-    public void Set(int index = -1, Dictionary<string, object> value = null)
+    public Actionbar()
+    {
+        for (int i = 0; i < data.Length; i++)
+        {
+            data[i] = null;
+        }
+    }
+    public void Set(int index = -1, Item value = null)
     {
 
         if (index >= 0) data[index] = value;
@@ -210,13 +222,13 @@ public class Actionbar
                 var _itemdata = data[i];
                 if (_itemdata != null)
                 {
-                    var _item = new Item(_itemdata);
-                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    var _item = _itemdata;
+                    if (_item.IsValid && _item.GetID == value.GetID)
                     {
-                        if (_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
+                        if (_item.isStackable && _item.curStack < _item.maxStack)
                         {
-                            _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
-                            data[i] = _item.data;
+                            _item.curStack = _item.curStack + value.curStack;
+                            data[i] = _item;
                             alreadyAdded = true;
                             break;
                         }
@@ -230,21 +242,21 @@ public class Actionbar
                 // Add the item to the first empty slot
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if (data[i] == null || !new Item(data[i]).IsValid)
+                    if (data[i] == null || !data[i].IsValid)
                     {
                         data[i] = value;
                         break;
                     }
 
-                    var slot = new Item(data[i]);
-                    var item = new Item(value);
+                    var slot = data[i];
+                    var item = value;
                     if (item.GetID == slot.GetID)
                     {
-                        if (slot.IsStackable)
+                        if (slot.isStackable)
                         {
-                            if (slot.Get<int>(pname.curStack) < slot.Get<int>(pname.maxStack))
+                            if (slot.curStack < slot.maxStack)
                             {
-                                slot.Set(pname.curStack, slot.Get<int>(pname.curStack) + 1);
+                                slot.curStack++;
                                 break;
                             }
                         }
@@ -265,11 +277,17 @@ public class Actionbar
 [Serializable]
 public class Character
 {
-    public Dictionary<string, object>[] data = new Dictionary<string, object>[15];
-    public delegate void OnChanged(Dictionary<string, object>[] value);
+    public Item[] data = new Item[15];
+    public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
-    public Character() { }
-    public void Set(int index = -1, Dictionary<string, object> value = null)
+    public Character()
+    {
+        for (int i = 0; i < data.Length; i++)
+        {
+            data[i] = null;
+        }
+    }
+    public void Set(int index = -1, Item value = null)
     {
 
         if (index >= 0) data[index] = value;
@@ -283,13 +301,13 @@ public class Character
                 var _itemdata = data[i];
                 if (_itemdata != null)
                 {
-                    var _item = new Item(_itemdata);
-                    if (_item.IsValid && _item.GetID == new Item(value).GetID)
+                    var _item = _itemdata;
+                    if (_item.IsValid && _item.GetID == value.GetID)
                     {
-                        if (_item.IsStackable && _item.Get<int>(pname.curStack) < _item.Get<int>(pname.maxStack))
+                        if (_item.isStackable && _item.curStack < _item.maxStack)
                         {
-                            _item.Set(pname.curStack, _item.Get<int>(pname.curStack) + new Item(value).Get<int>(pname.curStack));
-                            data[i] = _item.data;
+                            _item.curStack = _item.curStack + value.curStack;
+                            data[i] = _item;
                             alreadyAdded = true;
                             break;
                         }
@@ -303,21 +321,21 @@ public class Character
                 // Add the item to the first empty slot
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if (data[i] == null || !new Item(data[i]).IsValid)
+                    if (data[i] == null || !data[i].IsValid)
                     {
                         data[i] = value;
                         break;
                     }
 
-                    var slot = new Item(data[i]);
-                    var item = new Item(value);
+                    var slot = data[i];
+                    var item = value;
                     if (item.GetID == slot.GetID)
                     {
-                        if (slot.IsStackable)
+                        if (slot.isStackable)
                         {
-                            if (slot.Get<int>(pname.curStack) < slot.Get<int>(pname.maxStack))
+                            if (slot.curStack < slot.maxStack)
                             {
-                                slot.Set(pname.curStack, slot.Get<int>(pname.curStack) + 1);
+                                slot.curStack++;
                                 break;
                             }
                         }

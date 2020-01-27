@@ -1,0 +1,19 @@
+﻿{
+  "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
+  "name": "Sword",
+  "desc": null,
+  "isEquipment": true,
+  "equipmentType": 8,
+  "isStackable": false,
+  "curStack": 1,
+  "maxStack": 16,
+  "healthBonus": 0.0,
+  "staminaBonus": 0.0,
+  "manaBonus": 0.0,
+  "expBonus": 0.0,
+  "strengthBonus": 0.0,
+  "agilityBonus": 0.0,
+  "dexterityBonus": 0.0,
+  "worth": 128.8,
+  "prefab": "Assets/Gina/Resources/Prefabs/Weapons/BroadSword.prefab"
+}

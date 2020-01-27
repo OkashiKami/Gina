@@ -5,9 +5,7 @@ using UnityEngine;
 using Invector.CharacterController;
 using System.Collections.Generic;
 using System.Linq;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+
 internal class WorldItem : MonoBehaviour
 {
     private SpriteRenderer icon;
@@ -18,46 +16,44 @@ internal class WorldItem : MonoBehaviour
     /// <summary>
     /// Create a item in the world that can be picked up.
     /// </summary>
-    /// <param name="item">The item that can be droped</param>
+    /// <param name="value">The item that can be droped</param>
     /// <param name="position">The position where to drop the item</param>
     /// <param name="amount">The amout of the item to be dropped</param>
     /// <param name="despawn">How long it will take to despan the item</param>
     /// <param name="atPoint">Indicate to spane item at the position or a radious aroun the position</param>
-    internal static void Create(Item item = null, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
+    internal static void Create<T>(T value, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
     {
-        if (item == null) return;
         var wip = Resources.Load("Prefabs/World_Item") as GameObject;
-        if(!item.loottable)
+        if(typeof(T).Equals(typeof(Item)))
         {
+            var item = (Item)(object)value;
             for (int i = 0; i < amount; i++)
             {
                 var x = position.x + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
                 var z = position.z + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
 
                 var wi = Instantiate(wip, new Vector3(x, position.y, z), Quaternion.identity).GetComponent<WorldItem>();
-                wi.name = $"[WORLD ITEM]: {item.Get<string>(pname.name)}";
+                wi.name = $"[WORLD ITEM]: {item.name}";
                 wi.item = item;
                 wi.despan = despawn;
                 wi.transform.SetAsLastSibling();
             }
         }
-        else
+        else if(typeof(T).Equals(typeof(LootTable)))
         {
+            var loot = (LootTable)(object)value;
             Dictionary<int, Item> tabledata = new Dictionary<int, Item>();
-            var curentry = item.data.Keys.ToList().FindAll(x => x.StartsWith("loot_entry"));
+            var curentry = loot.items;
             for (int i = 0; i < curentry.Count; i++)
             {
                 var entry = curentry[i];
-
-                var e = item.Get<string>(entry).Split(',')[0];
-                var d = item.Get<string>(entry).Split(',')[1];
-                tabledata.Add(int.Parse(d), Database.GetItemByID(e));
+                tabledata.Add(entry.dropPercentage, Database.Get<Item>(entry.item));
             }
 
             foreach (var key in tabledata.Keys)
             {
                 var roll = UnityEngine.Random.Range(0, 100);
-                if(roll <= key)
+                if (roll <= key)
                 {
                     WorldItem.Create(tabledata[key], position, atPoint: true);
                 }
@@ -87,7 +83,7 @@ internal class WorldItem : MonoBehaviour
         var dis = Vector3.Distance(player.transform.position, transform.position);
         if (dis < 1.03f)
         {
-            player.data.SetInventory(value: item.data);
+            player.data.SetInventory(value: item);
             FindObjectOfType<InputController>().onInteract -= OnInteract;
             Destroy(gameObject);
         }
@@ -108,7 +104,7 @@ internal class WorldItem : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-            name = $"[WI][{despan.ToString("n0")}s]: {item.Get<string>(pname.name)}";
+            name = $"[WI][{despan.ToString("n0")}s]: {item.name}";
         }
 
         if(icon)
@@ -116,7 +112,7 @@ internal class WorldItem : MonoBehaviour
             icon.transform.Rotate(Vector3.up, 3, Space.World);
 
             if (item != null && item.IsValid)
-                icon.sprite = item.Get<Sprite>(pname.icon);
+                icon.sprite = item.Sprite;
             else
                 icon.sprite = null;
             icon.enabled = icon.sprite != null;
@@ -124,8 +120,8 @@ internal class WorldItem : MonoBehaviour
         if (amount)
         {
             amount.transform.LookAt(Camera.main.transform, Vector3.up);
-            if (item != null && item.IsValid)
-                amount.text = item.Has(pname.curStack) ? item.Get<int>(pname.curStack) > 1 ? item.Get<int>(pname.curStack).ToString() : string.Empty : string.Empty;
+            if (item != null && item.IsValid && item.isStackable)
+                amount.text = item.curStack > 1 ? item.curStack.ToString() : string.Empty;
             else
                 amount.text = string.Empty;
             amount.enabled = !string.IsNullOrEmpty(amount.text);
@@ -134,27 +130,3 @@ internal class WorldItem : MonoBehaviour
 
     }
 }
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(WorldItem))]
-public class WorldItemEdtir : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        Repaint();
-        var tar = (WorldItem)target;
-        if(tar.item.IsValid)
-        {
-            foreach (var item in tar.item.data)
-            {
-                EditorGUILayout.LabelField(new GUIContent(item.Key.ToString()),  new GUIContent(item.Value.ToString()));
-            }
-        }
-        else
-        {
-            EditorGUILayout.HelpBox("No Item has be set!", MessageType.Warning);
-        }
-        base.OnInspectorGUI();
-    }
-}
-#endif

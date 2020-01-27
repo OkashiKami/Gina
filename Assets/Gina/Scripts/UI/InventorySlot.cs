@@ -22,18 +22,18 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {
         if(item != null &&  item.IsValid)
         {
-            if (item.IsStackable)
+            if (item.isStackable)
             {
-                if (item.Get<int>(pname.curStack) > 1)
-                    count.text = item.Get<int>(pname.curStack).ToString();
+                if (item.curStack > 1)
+                    count.text = item.curStack.ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if(!string.IsNullOrEmpty(item.Get<string>(pname.icon)))
+            if(!string.IsNullOrEmpty(item.icon))
             {
-                icon.sprite = item.Get<Sprite>(pname.icon);
+                icon.sprite = item.Sprite;
                 icon.enabled = true;
             }
             else
@@ -59,24 +59,24 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         Debug.Log("OnDrop");
         if (locked) return;
         var player = FindObjectOfType<Player>().data;
-        var _item = item == null || !item.IsValid ? null : item. Copy;
+        var temp = item == null || !item.IsValid ? null : item. Copy;
 
         if (eventData.pointerDrag != null)
         {
             if (eventData.pointerDrag.GetComponent<InventorySlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<InventorySlot>().item);
-                eventData.pointerDrag.GetComponent<InventorySlot>().Set(_item);
+                eventData.pointerDrag.GetComponent<InventorySlot>().Set(temp);
             }
             else if (eventData.pointerDrag.GetComponent<ActionbarSlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<ActionbarSlot>().item);
-                eventData.pointerDrag.GetComponent<ActionbarSlot>().Set(_item);
+                eventData.pointerDrag.GetComponent<ActionbarSlot>().Set(temp);
             }
             else if (eventData.pointerDrag.GetComponent<CharacterSlot>())
             {
                 Set(eventData.pointerDrag.GetComponent<CharacterSlot>().item);
-                eventData.pointerDrag.GetComponent<CharacterSlot>().Set(_item);
+                eventData.pointerDrag.GetComponent<CharacterSlot>().Set(temp);
             }
         }
     }
@@ -126,6 +126,6 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {
         var myindex = transform.parent.GetComponentsInChildren<InventorySlot>().ToList().IndexOf(this);
         var player = FindObjectOfType<Player>().data;
-        player.SetInventory(myindex, value != null ? value.data : null);
+        player.SetInventory(myindex, value != null ? value : null);
     }
 }

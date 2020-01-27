@@ -25,18 +25,18 @@ class PlaceholderSlot : MonoBehaviour
 
         if (item != null && item.IsValid)
         {
-            if (item.IsStackable)
+            if (item.isStackable)
             {
-                if (item.Get<int>(pname.curStack) > 1)
-                    count.text = item.Get<int>(pname.curStack).ToString();
+                if (item.curStack > 1)
+                    count.text = item.curStack.ToString();
                 else
                     count.text = string.Empty;
             }
             else count.text = string.Empty;
 
-            if (!string.IsNullOrEmpty(item.Get<string>(pname.icon)))
+            if (!string.IsNullOrEmpty(item.icon))
             {
-                icon.sprite = item.Get<Sprite>(pname.icon);
+                icon.sprite = item.Sprite;
                 icon.enabled = true;
             }
             else

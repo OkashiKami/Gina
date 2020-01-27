@@ -20,6 +20,12 @@ public class Player : MonoBehaviour
         data.onNameChaged += (n) => { player_name = n; gameObject.name = n; };
         data.onPositionChanged += (p) => transform.position = p;
         data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
+        data.character.onChanged += Character_onChanged;
+    }
+
+    private void Character_onChanged(Item[] value)
+    {
+        
     }
 
     private void Start()

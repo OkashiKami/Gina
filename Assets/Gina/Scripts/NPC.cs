@@ -15,7 +15,7 @@ public class NPC : MonoBehaviour
     {
         FindObjectOfType<InputController>().onInteract += OnInteract;
         data.Name = npc_name;
-        data.LootTable = Database.GetLootTableByID($"gina:{npc_name.ToLower()}");
+        data.LootTable = Database.Get<LootTable>($"gina:{npc_name.ToLower()}");
         data.onNameChaged += (n) => { npc_name = n;  gameObject.name = n; };
         data.onPositionChanged += (p) => transform.position = p;
         data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);

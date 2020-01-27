@@ -60,11 +60,11 @@ public class InventoryUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void Inventory_onChanged(Dictionary<string, object>[] items)
+    private void Inventory_onChanged(Item[] value)
     {
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < value.Length; i++)
         {
-            slots[i].item = new Item(items[i]);
+            slots[i].item = value[i] != null ? value[i].Copy : null;
         }
     }
 }

@@ -72,11 +72,11 @@ public class CharacterUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void Character_onChanged(Dictionary<string, object>[] value)
+    private void Character_onChanged(Item[] value)
     {
         for (int i = 0; i < value.Length; i++)
         {
-            slots[i].item = new Item(value[i]);
+            slots[i].item = value[i] != null ? value[i].Copy : null;
         }
     }
 }

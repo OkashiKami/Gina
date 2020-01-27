@@ -10,10 +10,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WorldItem.Create(Database.GetLootTableByID("gina:basic_chest"), atPoint: true);
+        WorldItem.Create(Database.Get<LootTable>("gina:basic"));
     }
 
-    // Update is called once per frame
+    // Update is called once per frame  
     void Update()
     {
         if(actions.Count > 0)

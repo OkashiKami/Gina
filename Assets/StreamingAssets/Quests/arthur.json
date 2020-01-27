@@ -1,0 +1,19 @@
+﻿{
+  "title": "Arthur",
+  "background": null,
+  "objectives": [
+    {
+      "verb": "Hunt",
+      "amount": 5,
+      "what": "Spider Skulls",
+      "isComplete": false
+    }
+  ],
+  "reward": [
+    {
+      "item": "gina:double_exp",
+      "amount": 5
+    }
+  ],
+  "isComplete": false
+}

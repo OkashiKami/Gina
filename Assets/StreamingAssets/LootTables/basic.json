@@ -1,0 +1,13 @@
+﻿{
+  "name": "Basic",
+  "items": [
+    {
+      "item": "gina:sword",
+      "dropPercentage": 90
+    },
+    {
+      "item": "gina:double_exp",
+      "dropPercentage": 30
+    }
+  ]
+}
