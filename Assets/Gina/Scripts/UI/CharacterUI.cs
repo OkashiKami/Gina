@@ -23,10 +23,7 @@ public class CharacterUI : MonoBehaviour
     private void Awake()
     {
         if (slots == null || slots.Length <= 0) Reset();
-        var player = FindObjectOfType<Player>();
-        if (player)
-            player.data.character.onChanged += Character_onChanged;
-
+        StartCoroutine(Connect());
         FindObjectOfType<InputController>().onCharacter += () =>
         {
             var cg = GetComponent<CanvasGroup>();
@@ -38,17 +35,18 @@ public class CharacterUI : MonoBehaviour
         };
     }
 
-    private void Start()
+    private IEnumerator Connect()
     {
-        FindObjectOfType<InputController>().onCharacter += () =>
+        Player player = null;
+        Debug.Log("Waiting for player");
+        yield return new WaitUntil(() =>
         {
-            var cg = GetComponent<CanvasGroup>();
-            if (cg.alpha >= 1)
-                StartCoroutine(Hide());
-            if (cg.alpha <= 0)
-                StartCoroutine(Show());
-
-        };
+            player = FindObjectOfType<Player>();
+            return player;
+        });
+        Debug.Log("Player Found!");
+        OnChanged(player.data.character.data);
+        player.data.character.onChanged += OnChanged;
     }
 
     private IEnumerator Show()
@@ -72,11 +70,17 @@ public class CharacterUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void Character_onChanged(Item[] value)
+    private void OnChanged(Item[] values)
     {
-        for (int i = 0; i < value.Length; i++)
+        for (int i = 0; i < values.Length; i++)
         {
-            slots[i].item = value[i] != null ? value[i].Copy : null;
+            var slot = slots[i];
+            var value = values[i];
+
+            if (value != null && value.IsValid)
+                slot.item = value;
+            else
+                slot.item = null;
         }
     }
 }

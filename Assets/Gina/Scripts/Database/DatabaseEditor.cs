@@ -363,7 +363,7 @@ public class DatabaseEditor : EditorWindow
             case MenuItems.Items:
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
                 EditorGUILayout.BeginHorizontal();
-                EditorGUI.BeginDisabledGroup(!_item.IsValid || _itemErrors);
+
                 if (GUILayout.Button("Save"))
                 {
                     _edit = false;

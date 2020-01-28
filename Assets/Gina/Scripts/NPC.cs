@@ -14,11 +14,11 @@ public class NPC : MonoBehaviour
     private void Awake()
     {
         FindObjectOfType<InputController>().onInteract += OnInteract;
-        data.Name = npc_name;
+        data.player.Set(PlayerData.Field.name, npc_name);
         data.LootTable = Database.Get<LootTable>($"gina:{npc_name.ToLower()}");
-        data.onNameChaged += (n) => { npc_name = n;  gameObject.name = n; };
-        data.onPositionChanged += (p) => transform.position = p;
-        data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
+        data.player.onNameChaged += (n) => { npc_name = n;  gameObject.name = n; };
+        data.player.onPositionChanged += (p) => transform.position = p;
+        data.player.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
     }
     private void Start()
     {
@@ -31,8 +31,8 @@ public class NPC : MonoBehaviour
     }
     private void Update()
     {
-        data.Position = transform.position;
-        data.Rotation = transform.rotation.eulerAngles;
+        data.player.Set(PlayerData.Field.position, transform.position);
+        data.player.Set(PlayerData.Field.rotation, transform.rotation.eulerAngles);
     }
     private void OnInteract(Player player)
     {

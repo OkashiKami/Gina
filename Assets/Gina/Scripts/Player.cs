@@ -16,12 +16,15 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        data.Name = player_name;
-        data.onNameChaged += (n) => { player_name = n; gameObject.name = n; };
-        data.onPositionChanged += (p) => transform.position = p;
-        data.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
+        data.player.Set(PlayerData.Field.name, player_name);
+        data.player.onNameChaged += (n) => { player_name = n; gameObject.name = n; };
+        data.player.onPositionChanged += (p) => transform.position = p;
+        data.player.onRotationChanged += (r) => transform.rotation = Quaternion.Euler(r);
         data.character.onChanged += Character_onChanged;
     }
+
+    private void OnValidate() => data.OnValidate();
+
 
     private void Character_onChanged(Item[] value)
     {
@@ -40,7 +43,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        data.Position = transform.position;
-        data.Rotation = transform.rotation.eulerAngles;
+        data.player.Set(PlayerData.Field.position, transform.position);
+        data.player.Set(PlayerData.Field.rotation, transform.rotation.eulerAngles);
     }
 }

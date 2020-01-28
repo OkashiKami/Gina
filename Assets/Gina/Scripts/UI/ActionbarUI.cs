@@ -25,16 +25,34 @@ public class ActionbarUI : MonoBehaviour
     private void Awake()
     {
         if (slots == null || slots.Length <= 0) Reset();
-        var player = FindObjectOfType<Player>();
-        if (player)
-            player.data.actionbar.onChanged += Actionbar_onChanged;
+        StartCoroutine(Connect());
     }
 
-    private void Actionbar_onChanged(Item[] value)
+    private IEnumerator Connect()
     {
-        for (int i = 0; i < value.Length; i++)
+        Player player = null;
+        Debug.Log("Waiting for player");
+        yield return new WaitUntil(() =>
         {
-            slots[i].item = value[i] != null ?  value[i].Copy : null;
+            player = FindObjectOfType<Player>();
+            return player;
+        });
+        Debug.Log("Player Found!");
+        OnChanged(player.data.actionbar.data);
+        player.data.actionbar.onChanged += OnChanged;
+    }
+
+    private void OnChanged(Item[] values)
+    {
+        for (int i = 0; i < values.Length; i++)
+        {
+            var slot = slots[i];
+            var value = values[i];
+
+            if (value != null && value.IsValid)
+                slot.item = value;
+            else
+                slot.item = null;
         }
     }
 }

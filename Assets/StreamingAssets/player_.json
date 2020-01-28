@@ -1,41 +1,43 @@
 ﻿{
-  "name": "Player",
-  "level": 1,
-  "health": [
-    100.0,
-    100.0
-  ],
-  "stamina": [
-    100.0,
-    100.0
-  ],
-  "mana": [
-    100.0,
-    100.0
-  ],
-  "exp": [
-    0.0,
-    1000.0
-  ],
-  "position": [
-    -2.47921133,
-    -0.004999995,
-    1.17340147
-  ],
-  "rotation": [
-    0.0,
-    348.254272,
-    0.0
-  ],
-  "loottable": null,
+  "player": {
+    "name": "Player",
+    "level": 32,
+    "health": [
+      100.0,
+      100.0
+    ],
+    "stamina": [
+      100.0,
+      100.0
+    ],
+    "mana": [
+      100.0,
+      100.0
+    ],
+    "exp": [
+      0.0,
+      1000.0
+    ],
+    "position": [
+      -0.232098863,
+      -0.004999995,
+      1.15241337
+    ],
+    "rotation": [
+      0.0,
+      34.3771553,
+      0.0
+    ]
+  },
+  "loottable": "",
   "inventory": {
     "data": [
       {
-        "icon": "",
-        "name": "",
+        "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
+        "name": "Sword",
         "desc": "",
-        "isEquipment": false,
-        "equipmentType": 0,
+        "isEquipment": true,
+        "equipmentType": 8,
         "isStackable": false,
         "curStack": 1,
         "maxStack": 16,
@@ -46,15 +48,15 @@
         "strengthBonus": 0.0,
         "agilityBonus": 0.0,
         "dexterityBonus": 0.0,
-        "worth": 0.0,
-        "prefab": ""
+        "worth": 128.8,
+        "prefab": "Assets/Gina/Resources/Prefabs/Weapons/BroadSword.prefab"
       },
       {
-        "icon": "",
-        "name": "",
+        "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
+        "name": "Sword",
         "desc": "",
-        "isEquipment": false,
-        "equipmentType": 0,
+        "isEquipment": true,
+        "equipmentType": 8,
         "isStackable": false,
         "curStack": 1,
         "maxStack": 16,
@@ -65,26 +67,26 @@
         "strengthBonus": 0.0,
         "agilityBonus": 0.0,
         "dexterityBonus": 0.0,
-        "worth": 0.0,
-        "prefab": ""
+        "worth": 128.8,
+        "prefab": "Assets/Gina/Resources/Prefabs/Weapons/BroadSword.prefab"
       },
       {
-        "icon": "",
-        "name": "",
-        "desc": "",
+        "icon": "Gina/Resources/Textures/SpellBookPreface_png/SpellBookPreface_12.PNG",
+        "name": "Double Exp",
+        "desc": "This is 2x Experiance Boost",
         "isEquipment": false,
         "equipmentType": 0,
-        "isStackable": false,
+        "isStackable": true,
         "curStack": 1,
         "maxStack": 16,
         "healthBonus": 0.0,
         "staminaBonus": 0.0,
         "manaBonus": 0.0,
-        "expBonus": 0.0,
+        "expBonus": 2.0,
         "strengthBonus": 0.0,
         "agilityBonus": 0.0,
         "dexterityBonus": 0.0,
-        "worth": 0.0,
+        "worth": 30.0,
         "prefab": ""
       },
       {
@@ -605,7 +607,6 @@
   },
   "actionbar": {
     "data": [
-      null,
       {
         "icon": "Gina/Resources/Textures/SpellBookPreface_png/SpellBookPreface_12.PNG",
         "name": "Double Exp",
@@ -613,7 +614,7 @@
         "isEquipment": false,
         "equipmentType": 0,
         "isStackable": true,
-        "curStack": 3,
+        "curStack": 1,
         "maxStack": 16,
         "healthBonus": 0.0,
         "staminaBonus": 0.0,
@@ -623,6 +624,25 @@
         "agilityBonus": 0.0,
         "dexterityBonus": 0.0,
         "worth": 30.0,
+        "prefab": ""
+      },
+      {
+        "icon": "",
+        "name": "",
+        "desc": "",
+        "isEquipment": false,
+        "equipmentType": 0,
+        "isStackable": false,
+        "curStack": 1,
+        "maxStack": 16,
+        "healthBonus": 0.0,
+        "staminaBonus": 0.0,
+        "manaBonus": 0.0,
+        "expBonus": 0.0,
+        "strengthBonus": 0.0,
+        "agilityBonus": 0.0,
+        "dexterityBonus": 0.0,
+        "worth": 0.0,
         "prefab": ""
       },
       {
@@ -953,11 +973,11 @@
         "prefab": ""
       },
       {
-        "icon": "Gina/Resources/Textures/Sword-BroadSword.png",
-        "name": "Sword",
+        "icon": "",
+        "name": "",
         "desc": "",
-        "isEquipment": true,
-        "equipmentType": 8,
+        "isEquipment": false,
+        "equipmentType": 0,
         "isStackable": false,
         "curStack": 1,
         "maxStack": 16,
@@ -968,8 +988,8 @@
         "strengthBonus": 0.0,
         "agilityBonus": 0.0,
         "dexterityBonus": 0.0,
-        "worth": 128.8,
-        "prefab": "Assets/Gina/Resources/Prefabs/Weapons/BroadSword.prefab"
+        "worth": 0.0,
+        "prefab": ""
       },
       {
         "icon": "",

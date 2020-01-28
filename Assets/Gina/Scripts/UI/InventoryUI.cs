@@ -23,11 +23,8 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        if (slots == null || slots.Length <= 0) Reset();
-        var player = FindObjectOfType<Player>();
-        if (player)
-            player.data.inventory.onChanged += Inventory_onChanged;
-   
+        if (slots == null || slots.Length <= 0) Reset();  
+        StartCoroutine(Connect());
         FindObjectOfType<InputController>().onInventory += () =>
         {
             var cg = GetComponent<CanvasGroup>();
@@ -37,6 +34,20 @@ public class InventoryUI : MonoBehaviour
                 StartCoroutine(Show());
 
         };
+    }
+
+    private IEnumerator Connect()
+    {
+        Player player = null;
+        Debug.Log("Waiting for player");
+        yield return new WaitUntil(() => 
+        {
+            player = FindObjectOfType<Player>();
+            return player;
+        });
+        Debug.Log("Player Found!");
+        OnChanged(player.data.inventory.data);
+        player.data.inventory.onChanged += OnChanged;
     }
 
     private IEnumerator Show()
@@ -60,11 +71,17 @@ public class InventoryUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void Inventory_onChanged(Item[] value)
+    private void OnChanged(Item[] values)
     {
-        for (int i = 0; i < value.Length; i++)
+        for (int i = 0; i < values.Length; i++)
         {
-            slots[i].item = value[i] != null ? value[i].Copy : null;
+            var slot = slots[i];
+            var value = values[i];
+
+            if (value != null && value.IsValid)
+                slot.item = value;
+            else
+                slot.item = null;
         }
     }
 }

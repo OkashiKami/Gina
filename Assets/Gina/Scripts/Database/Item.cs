@@ -7,7 +7,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Item
+public class Item : IDisposable
 {
     public string icon;
     public string name;
@@ -152,5 +152,13 @@ public class Item
             return default;
         }
     }
-    
+
+    public void Dispose()
+    {
+        _texture = null;
+        _sprite = null;
+        _object = null;
+
+        GC.SuppressFinalize(this);
+    }
 }

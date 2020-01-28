@@ -126,6 +126,6 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {
         var myindex = transform.parent.GetComponentsInChildren<InventorySlot>().ToList().IndexOf(this);
         var player = FindObjectOfType<Player>().data;
-        player.SetInventory(myindex, value != null ? value : null);
+        player.SetInventory(myindex, value != null && value.IsValid ? value : null);
     }
 }

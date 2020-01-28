@@ -10,30 +10,16 @@ using UnityEngine;
 [Serializable]
 public class Data
 {
-    public string name;
-    public int level = 1;
-    public float[] health = new float[] { 100, 100f };
-    public float[] stamina = new float[] { 100f, 100f };
-    public float[] mana = new float[] { 100f, 100f };
-    public float[] exp = new float[] { 0f, 1000f };
-    public float[] position = new float[3] { 0f, 0f, 0f };
-    public float[] rotation = new float[3] { 0f, 0f, 0f };
+    public PlayerData player = new PlayerData();
     public string loottable = null;
-    public Inventory inventory = new Inventory();
-    public Actionbar actionbar = new Actionbar();
-    public Character character = new Character();
+    public InventoryData inventory = new InventoryData();
+    public ActionbarData actionbar = new ActionbarData();
+    public CharacterData character = new CharacterData();
 
     //values
     internal void Init()
     {
-        onNameChaged?.Invoke(Name);
-        onLevelChaged?.Invoke(Level);
-        onHealthChagned?.Invoke(Health);
-        onStaminaChagned?.Invoke(Stamina);
-        onManaChagned?.Invoke(Mana);
-        onExperianceChagned?.Invoke(Exp);
-        onPositionChanged?.Invoke(Position);
-        onRotationChanged?.Invoke(Rotation);
+        player.Init();
         onLootTableChanged?.Invoke(LootTable);
         inventory.Init();
         actionbar.Init();
@@ -41,28 +27,17 @@ public class Data
     }
 
     // Events
-    public delegate void OnNameChaged(string value); public event OnNameChaged onNameChaged;
-    public delegate void OnLevelChaged(int value);  public event OnLevelChaged onLevelChaged;
-    public delegate void OnHealthChagned(float[] value); public event OnHealthChagned onHealthChagned;
-    public delegate void OnStaminaChagned(float[] value); public event OnStaminaChagned onStaminaChagned;
-    public delegate void OnManaChagned(float[] value); public event OnManaChagned onManaChagned;
-    public delegate void OnExperianceChagned(float[] value); public event OnExperianceChagned onExperianceChagned;
-    public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
-    public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
     public delegate void OnLootTableChanged(LootTable vlue); public event OnLootTableChanged onLootTableChanged;
+
+    internal void OnValidate()
+    {
+        Init();
+    }
 
     public Data() { }
 
-    
-    [JsonIgnore] public string Name { get { return name; } set { name = value; onNameChaged?.Invoke(value); } }
-    [JsonIgnore] public int Level { get { return level; } set { level = value; onLevelChaged?.Invoke(value); } }
-    [JsonIgnore] public float[] Health { get { return health; } set { health = value; onHealthChagned?.Invoke(value); } }
-    [JsonIgnore] public float[] Stamina { get { return stamina; } set { stamina = value; onStaminaChagned?.Invoke(value); } }
-    [JsonIgnore] public float[] Mana { get { return mana; } set { mana = value; onManaChagned?.Invoke(value); } }
-    [JsonIgnore] public float[] Exp { get { return exp; } set { exp = value; onExperianceChagned?.Invoke(value); } }
-    [JsonIgnore] public Vector3 Position { get { return new Vector3(position[0], position[1], position[2]); } set { position = new float[] { value.x, value.y, value.z }; onPositionChanged?.Invoke(value); } }
-    [JsonIgnore] public Vector3 Rotation { get { return new Vector3(rotation[0], rotation[1], rotation[2]); } set { rotation = new float[] { value.x, value.y, value.z }; onRotationChanged?.Invoke(value); } }
-    [JsonIgnore] public LootTable LootTable { get { return Database.Get<LootTable>(loottable);  } set { loottable = value != null ? value.GetID : null; onLootTableChanged?.Invoke(value); } }
+    public void SetPlayer<T>(PlayerData.Field field, T value = default) => player.Set(field, value);
+   [JsonIgnore] public LootTable LootTable { get { return Database.Get<LootTable>(loottable);  } set { loottable = value != null ? value.GetID : null; onLootTableChanged?.Invoke(value); } }
     public void SetInventory(int index = -1, Item value = null) => inventory.Set(index, value);
     public void SetActionbar(int index = -1, Item value = null) => actionbar.Set(index, value);
     public void SetCharacter(int index = -1, Item value = null) => character.Set(index, value);
@@ -87,14 +62,7 @@ public class Data
             var d  = JsonConvert.DeserializeObject<Data>(json);
             if(d != null)
             {
-                Name = d.Name;
-                Level = d.Level;
-                Health = d.Health;
-                Stamina = d.Stamina;
-                Mana = d.Mana;
-                Exp = d.Exp;
-                Position = d.Position;
-                Rotation = d.Rotation;
+                player.Set(d.player);
                 LootTable = d.LootTable;
                 inventory.Set(d.inventory);
                 actionbar.Set(d.actionbar);
@@ -107,7 +75,91 @@ public class Data
 }
 
 [Serializable]
-public class Inventory
+public class PlayerData
+{
+    public enum Field { name, level, health, stamina, mama, exp, position, rotation }
+
+    public string name;
+    public int level = 1;
+    public float[] health = new float[] { 100, 100f };
+    public float[] stamina = new float[] { 100f, 100f };
+    public float[] mana = new float[] { 100f, 100f };
+    public float[] exp = new float[] { 0f, 1000f };
+    public float[] position = new float[3] { 0f, 0f, 0f };
+    public float[] rotation = new float[3] { 0f, 0f, 0f };
+
+
+    public delegate void OnNameChaged(string value); public event OnNameChaged onNameChaged;
+    public delegate void OnLevelChaged(int value); public event OnLevelChaged onLevelChaged;
+    public delegate void OnHealthChagned(float[] value); public event OnHealthChagned onHealthChagned;
+    public delegate void OnStaminaChagned(float[] value); public event OnStaminaChagned onStaminaChagned;
+    public delegate void OnManaChagned(float[] value); public event OnManaChagned onManaChagned;
+    public delegate void OnExperianceChagned(float[] value); public event OnExperianceChagned onExperianceChagned;
+    public delegate void OnPositionChanged(Vector3 value); public event OnPositionChanged onPositionChanged;
+    public delegate void OnRotationChanged(Vector3 value); public event OnRotationChanged onRotationChanged;
+
+    [JsonIgnore] public string Name { get { return name; } set { name = value; onNameChaged?.Invoke(value); } }
+    [JsonIgnore] public int Level { get { return level; } set { level = value; onLevelChaged?.Invoke(value); } }
+    [JsonIgnore] public float[] Health { get { return health; } set { health = value; onHealthChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Stamina { get { return stamina; } set { stamina = value; onStaminaChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Mana { get { return mana; } set { mana = value; onManaChagned?.Invoke(value); } }
+    [JsonIgnore] public float[] Exp { get { return exp; } set { exp = value; onExperianceChagned?.Invoke(value); } }
+    [JsonIgnore] public Vector3 Position { get { return new Vector3(position[0], position[1], position[2]); } set { position = new float[] { value.x, value.y, value.z }; onPositionChanged?.Invoke(value); } }
+    [JsonIgnore] public Vector3 Rotation { get { return new Vector3(rotation[0], rotation[1], rotation[2]); } set { rotation = new float[] { value.x, value.y, value.z }; onRotationChanged?.Invoke(value); } }
+    public PlayerData() { }
+
+    public void Set(Field field, object value = default)
+    {
+        if (value == null) return;
+        switch(field)
+        {
+            case Field.name: Name = (string)value; break;
+            case Field.level: Level = (int)value; break;
+            case Field.health: Health = (float[])value; break;
+            case Field.stamina: Stamina = (float[])value; break;
+            case Field.mama: Mana = (float[])value; break;
+            case Field.exp: Exp = (float[])value; break;
+            case Field.position: Position = (Vector3)value; break;
+            case Field.rotation: Rotation = (Vector3)value; break;
+        }
+    }
+    public void Set(PlayerData value)
+    {
+        name = value.name;
+        level = value.level;
+        health = value.health;
+        stamina = value.stamina;
+        mana = value.mana;
+        exp = value.exp;
+        position = value.position;
+        rotation = value.rotation;
+
+
+        onNameChaged?.Invoke(name);
+        onLevelChaged?.Invoke(level);
+        onHealthChagned?.Invoke(health);
+        onStaminaChagned?.Invoke(stamina);
+        onManaChagned?.Invoke(mana);
+        onExperianceChagned?.Invoke(exp);
+        onPositionChanged?.Invoke(new Vector3(position[0], position[1], position[2]));
+        onRotationChanged?.Invoke(new Vector3(rotation[0], rotation[1], rotation[2]));
+    }
+
+    public void Init()
+    {
+        onNameChaged?.Invoke(name);
+        onLevelChaged?.Invoke(level);
+        onHealthChagned?.Invoke(health);
+        onStaminaChagned?.Invoke(stamina);
+        onManaChagned?.Invoke(mana);
+        onExperianceChagned?.Invoke(exp);
+        onPositionChanged?.Invoke(new Vector3(position[0], position[1], position[2]));
+        onRotationChanged?.Invoke(new Vector3(rotation[0], rotation[1], rotation[2]));
+    }
+}
+
+[Serializable]
+public class InventoryData
 {
     public Item[] data = new Item[30];
     public bool isFull
@@ -120,7 +172,7 @@ public class Inventory
     }
     public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
-    public Inventory() 
+    public InventoryData() 
     {
         for (int i = 0; i < data.Length; i++)
         {
@@ -129,8 +181,13 @@ public class Inventory
     }
     public void Set(int index = -1, Item value = null)
     {
-        
-        if (index >= 0) data[index] = value;
+        if (index >= 0)
+        {
+            if (value != null && value.IsValid)
+                data[index] = value;
+            else
+                data[index] = null;
+        }
         else
         {
             bool alreadyAdded = false;
@@ -144,7 +201,7 @@ public class Inventory
                     var _item = _itemdata;
                     if (_item.IsValid && _item.GetID == value.GetID)
                     {
-                        if(_item.isStackable && _item.curStack < _item.maxStack)
+                        if (_item.isStackable && _item.curStack < _item.maxStack)
                         {
                             _item.curStack = _item.curStack + value.curStack;
                             data[i] = _item;
@@ -156,52 +213,56 @@ public class Inventory
             }
 
 
-            if(!alreadyAdded)
+            if (!alreadyAdded)
             {
                 // Add the item to the first empty slot
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if(data[i] == null || !data[i].IsValid)
+                    if (data[i] == null || !data[i].IsValid)
                     {
-                        data[i] = value;
+                        if (value != null && value.IsValid)
+                            data[i] = value;
+                        else
+                            data[i] = null;
                         break;
                     }
 
                     var slot = data[i];
-                    var item = value;
-                    if(item.GetID == slot.GetID)
+                    if(value != null && value.IsValid)
                     {
-                        if (slot.isStackable)
+                        if (value.GetID == slot.GetID)
                         {
-                            if (slot.curStack < slot.maxStack)
+                            if (slot.isStackable)
                             {
-                                slot.curStack++;
-                                break;
+                                if (slot.curStack < slot.maxStack)
+                                {
+                                    slot.curStack++;
+                                    break;
+                                }
                             }
+                            else continue;
                         }
-                        else continue;
                     }
                 }
             }
         }
         onChanged?.Invoke(data);
     }
-    public void Set(Inventory value)
+    public void Set(InventoryData value)
     {
         Array.Copy(value.data, 0, data, 0, value.data.Length);
         onChanged?.Invoke(data);
     }
-
     public void Init() => onChanged?.Invoke(data);
 }
 [Serializable]
-public class Actionbar
+public class ActionbarData
 {
     public Item[] data = new Item[12];
     public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
 
-    public Actionbar()
+    public ActionbarData()
     {
         for (int i = 0; i < data.Length; i++)
         {
@@ -210,8 +271,13 @@ public class Actionbar
     }
     public void Set(int index = -1, Item value = null)
     {
-
-        if (index >= 0) data[index] = value;
+        if (index >= 0)
+        {
+            if (value != null && value.IsValid)
+                data[index] = value;
+            else
+                data[index] = null;
+        }
         else
         {
             bool alreadyAdded = false;
@@ -244,30 +310,35 @@ public class Actionbar
                 {
                     if (data[i] == null || !data[i].IsValid)
                     {
-                        data[i] = value;
+                        if (value != null && value.IsValid)
+                            data[i] = value;
+                        else
+                            data[i] = null;
                         break;
                     }
 
                     var slot = data[i];
-                    var item = value;
-                    if (item.GetID == slot.GetID)
+                    if (value != null && value.IsValid)
                     {
-                        if (slot.isStackable)
+                        if (value.GetID == slot.GetID)
                         {
-                            if (slot.curStack < slot.maxStack)
+                            if (slot.isStackable)
                             {
-                                slot.curStack++;
-                                break;
+                                if (slot.curStack < slot.maxStack)
+                                {
+                                    slot.curStack++;
+                                    break;
+                                }
                             }
+                            else continue;
                         }
-                        else continue;
                     }
                 }
             }
         }
         onChanged?.Invoke(data);
     }
-    public void Set(Actionbar value)
+    public void Set(ActionbarData value)
     {
         Array.Copy(value.data, 0, data, 0, value.data.Length);
         onChanged?.Invoke(data);
@@ -275,12 +346,12 @@ public class Actionbar
     public void Init() => onChanged?.Invoke(data);
 }
 [Serializable]
-public class Character
+public class CharacterData
 {
     public Item[] data = new Item[15];
     public delegate void OnChanged(Item[] value);
     public event OnChanged onChanged;
-    public Character()
+    public CharacterData()
     {
         for (int i = 0; i < data.Length; i++)
         {
@@ -289,8 +360,13 @@ public class Character
     }
     public void Set(int index = -1, Item value = null)
     {
-
-        if (index >= 0) data[index] = value;
+        if (index >= 0)
+        {
+            if (value != null && value.IsValid)
+                data[index] = value;
+            else
+                data[index] = null;
+        }
         else
         {
             bool alreadyAdded = false;
@@ -323,30 +399,35 @@ public class Character
                 {
                     if (data[i] == null || !data[i].IsValid)
                     {
-                        data[i] = value;
+                        if (value != null && value.IsValid)
+                            data[i] = value;
+                        else
+                            data[i] = null;
                         break;
                     }
 
                     var slot = data[i];
-                    var item = value;
-                    if (item.GetID == slot.GetID)
+                    if (value != null && value.IsValid)
                     {
-                        if (slot.isStackable)
+                        if (value.GetID == slot.GetID)
                         {
-                            if (slot.curStack < slot.maxStack)
+                            if (slot.isStackable)
                             {
-                                slot.curStack++;
-                                break;
+                                if (slot.curStack < slot.maxStack)
+                                {
+                                    slot.curStack++;
+                                    break;
+                                }
                             }
+                            else continue;
                         }
-                        else continue;
                     }
                 }
             }
         }
         onChanged?.Invoke(data);
     }
-    public void Set(Character value)
+    public void Set(CharacterData value)
     {
         Array.Copy(value.data, 0, data, 0, value.data.Length);
         onChanged?.Invoke(data);
