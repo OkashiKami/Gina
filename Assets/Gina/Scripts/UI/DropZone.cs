@@ -7,7 +7,7 @@ public class DropZone : MonoBehaviour, IDropHandler
 {
     public void OnDrop(PointerEventData eventData)
     {
-        var player = FindObjectOfType<Player>();
+        var player = FindObjectOfType<PlayerInfo>();
 
         Debug.Log("OnDrop");
         if (eventData.pointerDrag != null)

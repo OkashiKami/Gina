@@ -37,16 +37,16 @@ public class CharacterUI : MonoBehaviour
 
     private IEnumerator Connect()
     {
-        Player player = null;
+        PlayerInfo player = null;
         Debug.Log("Waiting for player");
         yield return new WaitUntil(() =>
         {
-            player = FindObjectOfType<Player>();
+            player = FindObjectOfType<PlayerInfo>();
             return player;
         });
         Debug.Log("Player Found!");
-        OnChanged(player.data.character.data);
-        player.data.character.onChanged += OnChanged;
+        OnChanged(player.data.character);
+        player.data.onCharacterChanged += OnChanged;
     }
 
     private IEnumerator Show()
@@ -70,7 +70,7 @@ public class CharacterUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void OnChanged(Item[] values)
+    private void OnChanged(ItemData[] values)
     {
         for (int i = 0; i < values.Length; i++)
         {

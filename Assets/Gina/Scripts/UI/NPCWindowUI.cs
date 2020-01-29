@@ -6,16 +6,16 @@ using UnityEngine.UI;
 using TMPro;
 public class NPCWindowUI : MonoBehaviour
 {
-    [SerializeField] private NPC npc;
+    [SerializeField] private NPCInfo npc;
     private TextMeshProUGUI title;
 
-    public void SHOW(NPC npc) 
+    public void SHOW(NPCInfo npc) 
     { 
 
         this.npc = npc;  
         StartCoroutine(Show());
     }
-    public void HIDE(NPC npc) 
+    public void HIDE(NPCInfo npc) 
     {
         if(this.npc == npc)
             StartCoroutine(Hide()); 

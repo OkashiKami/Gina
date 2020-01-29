@@ -17,7 +17,11 @@ public class DatabaseEditor : EditorWindow
         win = EditorWindow.GetWindow<DatabaseEditor>();
         win.titleContent = new GUIContent("Database");
         win.menu_item = 0;
-        Database.Refresh();
+
+        win.items = Database.Load<ItemData>();
+        win.quests = Database.Load<QuestData>();
+        win.loots = Database.Load<LootData>();
+
         win.Show();
     }
 
@@ -26,13 +30,18 @@ public class DatabaseEditor : EditorWindow
     public bool _edit = false;
 
     public MenuItems menu_item;
-    private Item _item = null;
-    private LootTable _loot = null;
-    private Quest _quest = null;
+    private MenuItems menu_item_o;
+    private ItemData _item = null;
+    private LootData _loot = null;
+    private QuestData _quest = null;
     private bool _itemErrors;
     private GUIContent _itemContent = new GUIContent();
     private Vector2 sv;
     private Vector2 esv;
+
+    private List<ItemData> items = new List<ItemData>();
+    private List<LootData> loots = new List<LootData>();
+    private List<QuestData> quests = new List<QuestData>();
 
     private void OnGUI()
     {
@@ -45,7 +54,22 @@ public class DatabaseEditor : EditorWindow
             case MenuItems.LootTables: OnGUILoot(_edit); break;
             case MenuItems.Quests: OnGUIQuest(_edit); break;
         }
+        if(menu_item != menu_item_o)
+        {
+            Refresh();
+            menu_item_o = menu_item;
+        }
         OnGUIFooter(_edit);
+    }
+
+    private void Refresh()
+    {
+        switch (menu_item)
+        {
+            case MenuItems.Items: items = Database.Load<ItemData>(); break;
+            case MenuItems.LootTables: loots = Database.Load<LootData>(); break;
+            case MenuItems.Quests: quests = Database.Load<QuestData>(); break;
+        }
     }
 
     private void OnGUIHeader()
@@ -54,12 +78,10 @@ public class DatabaseEditor : EditorWindow
         EditorGUI.BeginDisabledGroup(_edit);
         menu_item = (MenuItems)GUILayout.Toolbar((int)menu_item, Enum.GetNames(typeof(MenuItems)));
         EditorGUI.EndDisabledGroup();
-        EditorGUI.BeginDisabledGroup(Database.refreshing);
         if (GUILayout.Button("R", GUILayout.ExpandWidth(false)))
         {
-            Database.Refresh();
+            Refresh();
         }
-        EditorGUI.EndDisabledGroup();
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Box(menu_item.ToString(), GUILayout.ExpandWidth(true));
@@ -69,17 +91,17 @@ public class DatabaseEditor : EditorWindow
             switch(menu_item)
             {
                 case MenuItems.Items:
-                    _item = new Item();
+                    _item = new ItemData();
                     _itemContent = new GUIContent();
                     _edit = true;
                     break;
                 case MenuItems.LootTables:
-                    _loot = new LootTable();
+                    _loot = new LootData();
                     _itemContent = new GUIContent();
                     _edit = true;
                     break;
                 case MenuItems.Quests:
-                    _quest = new Quest();
+                    _quest = new QuestData();
                     _itemContent = new GUIContent();
                     _edit = true;
                     break;
@@ -95,12 +117,12 @@ public class DatabaseEditor : EditorWindow
         if (!edit)
         {
             sv = EditorGUILayout.BeginScrollView(sv, GUILayout.Height(position.height - 60));
-            foreach (var item in Database.GetAll<Item>(auto:false))
+            foreach (var item in items)
             {
                 EditorGUILayout.BeginHorizontal();
                 var context = new GUIContent();
                 context.image = item.Texture;
-                context.text = item.name + "\n" + item.GetID;
+                context.text = item.name + "\n" + item.id;
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
                 GUI.skin.box.alignment = TextAnchor.MiddleCenter;
@@ -113,13 +135,16 @@ public class DatabaseEditor : EditorWindow
                 GUI.color = Color.yellow;
                 if (GUILayout.Button("Duplicate", GUILayout.Height(40), GUILayout.Width(70)))
                 {
-                    _item = Database.Duplicate(item);
+                    _item = item.Copy;
                     _itemContent = new GUIContent();
                     _edit = true;
                 }
                 GUI.color = Color.red;
                 if (GUILayout.Button("Delete", GUILayout.Height(40), GUILayout.Width(50)))
+                {
                     Database.Delete(item);
+                    Refresh();
+                }
                 GUI.color = Color.white;
                 EditorGUILayout.EndHorizontal();
             }
@@ -181,12 +206,12 @@ public class DatabaseEditor : EditorWindow
         if(!edit)
         {
             sv = EditorGUILayout.BeginScrollView(sv, GUILayout.Height(position.height - 60));
-            foreach (var loot in Database.GetAll<LootTable>(auto: false))
+            foreach (var loot in loots)
             {
                 EditorGUILayout.BeginHorizontal();
                 var context = new GUIContent();
                 context.image = Resources.Load<Texture2D>("Textures/gina");
-                context.text = loot.name + "\n" + loot.GetID;
+                context.text = loot.name + "\n" + loot.id;
                 GUI.skin.box.alignment = TextAnchor.MiddleLeft;
                 GUILayout.Box(context, GUILayout.Height(40), GUILayout.Width(position.width - 190));
                 GUI.skin.box.alignment = TextAnchor.MiddleCenter;
@@ -199,13 +224,16 @@ public class DatabaseEditor : EditorWindow
                 GUI.color = Color.yellow;
                 if (GUILayout.Button("Duplicate", GUILayout.Height(40), GUILayout.Width(70)))
                 {
-                    _loot = Database.Duplicate(loot);
+                    _loot = loot.Copy;
                     _itemContent = new GUIContent();
                     _edit = true;
                 }
                 GUI.color = Color.red;
                 if (GUILayout.Button("Delete", GUILayout.Height(40), GUILayout.Width(50)))
+                {
                     Database.Delete(loot);
+                    Refresh();
+                }
                 GUI.color = Color.white;
                 EditorGUILayout.EndHorizontal();
             }
@@ -222,15 +250,15 @@ public class DatabaseEditor : EditorWindow
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Box("Loot Items", GUILayout.ExpandWidth(true));
                 if(GUILayout.Button("+", GUILayout.ExpandWidth(false)))
-                    _loot.items.Add(new LootEntry());
+                    _loot.items.Add(new LootData.LootEntry());
                 EditorGUILayout.EndHorizontal();
                 for (int i = 0; i < _loot.items.Count; i++)
                 {
                     var entry = _loot.items[i];
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.PrefixLabel("Item / Drop %");
-                    GUI.color = Database.Get<Item>(entry.item) != null ? Color.green : Color.white;
-                    entry.item = EditorGUILayout.TextField(entry.item);
+                    GUI.color = items.Find(x => x.id == entry.item_indicator || x.name == entry.item_indicator) != null ? Color.green : Color.white;
+                    entry.item_indicator = EditorGUILayout.TextField(entry.item_indicator);
                     GUI.color = Color.white;
                     entry.dropPercentage = EditorGUILayout.IntField(entry.dropPercentage, GUILayout.Width(50));
                     GUI.color = Color.red;
@@ -255,7 +283,7 @@ public class DatabaseEditor : EditorWindow
         if (!edit)
         {
             sv = EditorGUILayout.BeginScrollView(sv, GUILayout.Height(position.height - 60));
-            foreach (var quest in Database.GetAll<Quest>(auto: false))
+            foreach (var quest in quests)
             {
                 EditorGUILayout.BeginHorizontal();
                 var context = new GUIContent();
@@ -273,13 +301,16 @@ public class DatabaseEditor : EditorWindow
                 GUI.color = Color.yellow;
                 if (GUILayout.Button("Duplicate", GUILayout.Height(40), GUILayout.Width(70)))
                 {
-                    _quest = Database.Duplicate(quest);
+                    _quest = quest.Copy;
                     _itemContent = new GUIContent();
                     _edit = true;
                 }
                 GUI.color = Color.red;
                 if (GUILayout.Button("Delete", GUILayout.Height(40), GUILayout.Width(50)))
+                {
                     Database.Delete(quest);
+                    Refresh();
+                }
                 GUI.color = Color.white;
                 EditorGUILayout.EndHorizontal();
             }
@@ -332,7 +363,7 @@ public class DatabaseEditor : EditorWindow
                     var entry = _quest.reward[i];
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.BeginVertical();
-                    GUI.color = Database.Get<Item>(entry.item) != null ? Color.green : Color.white;
+                    GUI.color = Database.Load<ItemData>(entry.item) != null ? Color.green : Color.white;
                     entry.item = EditorGUILayout.TextField("Item", entry.item);
                     GUI.color = Color.white;
                     entry.amount = EditorGUILayout.IntSlider("Amount", entry.amount, 1, 64);
@@ -354,7 +385,6 @@ public class DatabaseEditor : EditorWindow
             EditorGUILayout.EndScrollView();
         }
     }
-
     private void OnGUIFooter(bool edit = false)
     {
         if (!edit) return;
@@ -363,12 +393,13 @@ public class DatabaseEditor : EditorWindow
             case MenuItems.Items:
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
                 EditorGUILayout.BeginHorizontal();
-
+                EditorGUI.BeginDisabledGroup(_item == null || _itemErrors);
                 if (GUILayout.Button("Save"))
                 {
                     _edit = false;
                     Database.Save(_item);
                     _item = null;
+                    Refresh();
                 }
                 EditorGUI.EndDisabledGroup();
                 GUI.color = Color.red;
@@ -390,6 +421,7 @@ public class DatabaseEditor : EditorWindow
                     _edit = false;
                     Database.Save(_loot);
                     _loot = null;
+                    Refresh();
                 }
                 EditorGUI.EndDisabledGroup();
                 GUI.color = Color.red;
@@ -405,12 +437,13 @@ public class DatabaseEditor : EditorWindow
             case MenuItems.Quests:
                 GUILayout.BeginArea(new Rect(new Rect(5, position.height - 25, position.width - 10, 20)));
                 EditorGUILayout.BeginHorizontal();
-                EditorGUI.BeginDisabledGroup(_loot == null || _itemErrors);
+                EditorGUI.BeginDisabledGroup(_quest == null || _itemErrors);
                 if (GUILayout.Button("Save"))
                 {
                     _edit = false;
                     Database.Save(_quest);
                     _quest = null;
+                    Refresh();
                 }
                 EditorGUI.EndDisabledGroup();
                 GUI.color = Color.red;

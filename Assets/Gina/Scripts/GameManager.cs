@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeMonkey.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,16 @@ public class GameManager : MonoBehaviour
     internal static int maxLevel = 80;
     public static List<Action> actions = new List<Action>();
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        //FunctionPeriodic.Create(() => Database.SaveAll(), 5000);
+    }
+
     void Start()
     {
-        WorldItem.Create(Database.Get<LootTable>("gina:basic"));
+        //World.Create(Database.GetByID<LootTable>("gina:basic"));
+        //World.Create(Database.GetByID<Player>("gina:player"));
     }
 
     // Update is called once per frame  

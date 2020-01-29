@@ -30,19 +30,19 @@ public class ActionbarUI : MonoBehaviour
 
     private IEnumerator Connect()
     {
-        Player player = null;
+        PlayerInfo player = null;
         Debug.Log("Waiting for player");
         yield return new WaitUntil(() =>
         {
-            player = FindObjectOfType<Player>();
+            player = FindObjectOfType<PlayerInfo>();
             return player;
         });
         Debug.Log("Player Found!");
-        OnChanged(player.data.actionbar.data);
-        player.data.actionbar.onChanged += OnChanged;
+        OnChanged(player.data.actionbar);
+        player.data.onActionbarChanged += OnChanged;
     }
 
-    private void OnChanged(Item[] values)
+    private void OnChanged(ItemData[] values)
     {
         for (int i = 0; i < values.Length; i++)
         {

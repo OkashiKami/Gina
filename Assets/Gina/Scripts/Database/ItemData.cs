@@ -7,7 +7,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 [Serializable]
-public class Item : IDisposable
+public class ItemData : IDisposable
 {
     public string icon;
     public string name;
@@ -26,19 +26,16 @@ public class Item : IDisposable
     public float worth;
     public string prefab;
 
-
     [JsonIgnore] public string file;
     [JsonIgnore] public Texture2D _texture = null;
     [JsonIgnore] public Sprite _sprite = null;
     [JsonIgnore] public Object _object = null;
 
-    public Item() { }
-    public Item(Item value = null)
+    public ItemData() { }
+    public ItemData(ItemData value = null)
     {
-        if(value == null)
-        {
-
-        }
+        if (value == null)
+            return;
         this.icon = value.icon;
         this.name = value.name;
         this.desc = value.desc;
@@ -58,9 +55,32 @@ public class Item : IDisposable
         this.prefab = value.prefab;
         this.file = value.file;
     }
-    
-    [JsonIgnore] public Item Copy => new Item(this);
-    [JsonIgnore] public string GetID
+
+    public void Set (ItemData value = null)
+    {
+        if (value == null)
+            return;
+        this.icon = value.icon;
+        this.name = value.name;
+        this.desc = value.desc;
+        this.isEquipment = value.isEquipment;
+        this.equipmentType = value.equipmentType;
+        this.isStackable = value.isStackable;
+        this.curStack = value.curStack;
+        this.maxStack = value.maxStack;
+        this.healthBonus = value.healthBonus;
+        this.staminaBonus = value.staminaBonus;
+        this.manaBonus = value.manaBonus;
+        this.expBonus = value.expBonus;
+        this.strengthBonus = value.strengthBonus;
+        this.agilityBonus = value.agilityBonus;
+        this.dexterityBonus = value.dexterityBonus;
+        this.worth = value.worth;
+        this.prefab = value.prefab;
+        this.file = value.file;
+    }
+    [JsonIgnore] public ItemData Copy => new ItemData(this);
+    [JsonIgnore] public string id
     {
         get
         {

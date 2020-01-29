@@ -27,7 +27,7 @@ public class Chest : MonoBehaviour
         }
         foreach (var item in table)
         {
-            WorldItem.Create(Database.Get<Item>(item), transform.Find("spawnpoint").position, -1, atPoint: true);
+            //WorldItem.Create(Database.Get<ItemData>(item), transform.Find("spawnpoint").position, -1, atPoint: true);
         }
     }
 

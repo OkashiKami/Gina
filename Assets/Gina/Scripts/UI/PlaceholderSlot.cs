@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 class PlaceholderSlot : MonoBehaviour
 {
-    public Item item;
+    public ItemData item;
     private Image icon;
     private TextMeshProUGUI count;
 

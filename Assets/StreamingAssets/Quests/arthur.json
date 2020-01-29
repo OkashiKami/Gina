@@ -1,18 +1,18 @@
-﻿{
+{
   "title": "Arthur",
-  "background": null,
+  "background": "can you do this one task for me i will give you an item for your trouble?",
   "objectives": [
     {
-      "verb": "Hunt",
-      "amount": 5,
-      "what": "Spider Skulls",
+      "verb": "Kill",
+      "amount": 3,
+      "what": "Hogs",
       "isComplete": false
     }
   ],
   "reward": [
     {
-      "item": "gina:double_exp",
-      "amount": 5
+      "item": "gina:sword",
+      "amount": 1
     }
   ],
   "isComplete": false

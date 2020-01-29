@@ -8,25 +8,15 @@ using System.Linq;
 
 internal class WorldItem : MonoBehaviour
 {
-    private SpriteRenderer icon;
-    private TextMeshPro amount;
-    public  Item item = null;
-    private float despan;
-
-    /// <summary>
-    /// Create a item in the world that can be picked up.
-    /// </summary>
-    /// <param name="value">The item that can be droped</param>
-    /// <param name="position">The position where to drop the item</param>
-    /// <param name="amount">The amout of the item to be dropped</param>
-    /// <param name="despawn">How long it will take to despan the item</param>
-    /// <param name="atPoint">Indicate to spane item at the position or a radious aroun the position</param>
-    internal static void Create<T>(T value, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
+    public static void Create<T>(T value = default, Vector3 position = default, int amount = 1, float despawn = 300, bool atPoint = false)
     {
+        if (value == null) return;
         var wip = Resources.Load("Prefabs/World_Item") as GameObject;
-        if(typeof(T).Equals(typeof(Item)))
+
+        if (typeof(T).Equals(typeof(ItemData)))
         {
-            var item = (Item)(object)value;
+            var item = (ItemData)(object)value; 
+
             for (int i = 0; i < amount; i++)
             {
                 var x = position.x + (atPoint ? UnityEngine.Random.Range(-.5f, .5f) : UnityEngine.Random.Range(-3, 3));
@@ -39,15 +29,15 @@ internal class WorldItem : MonoBehaviour
                 wi.transform.SetAsLastSibling();
             }
         }
-        else if(typeof(T).Equals(typeof(LootTable)))
+        else if(typeof(T).Equals(typeof(LootData)))
         {
-            var loot = (LootTable)(object)value;
-            Dictionary<int, Item> tabledata = new Dictionary<int, Item>();
-            var curentry = loot.items;
-            for (int i = 0; i < curentry.Count; i++)
+            var lootT = (LootData)(object)value;
+
+            Dictionary<int, ItemData> tabledata = new Dictionary<int, ItemData>();
+            for (int i = 0; i < lootT.items.Count; i++)
             {
-                var entry = curentry[i];
-                tabledata.Add(entry.dropPercentage, Database.Get<Item>(entry.item));
+                var entry = lootT.items[i];
+                tabledata.Add(entry.dropPercentage, Database.Load<ItemData>(entry.item_indicator));
             }
 
             foreach (var key in tabledata.Keys)
@@ -62,28 +52,28 @@ internal class WorldItem : MonoBehaviour
         }
     }
 
+
+    private SpriteRenderer icon;
+    private TextMeshPro amount;
+    public  ItemData item = null;
+    public float despan;
+
     private void Awake()
     {
         icon = transform.Find("Icon").GetComponent<SpriteRenderer>();
         amount = transform.Find("Amount").GetComponent<TextMeshPro>();
-
-        FunctionPeriodic.Create(() =>
-        {
-            Destroy(this.gameObject);
-        }, 300);
-
         FindObjectOfType<InputController>().onInteract += OnInteract;
     }
 
     
 
-    private void OnInteract(Player player)
+    private void OnInteract(PlayerInfo player)
     {
         if (player == null) return;
         var dis = Vector3.Distance(player.transform.position, transform.position);
         if (dis < 1.03f)
         {
-            player.data.SetInventory(value: item);
+            player.data.ModifyInvintory(value: item);
             FindObjectOfType<InputController>().onInteract -= OnInteract;
             Destroy(gameObject);
         }

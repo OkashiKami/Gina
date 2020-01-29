@@ -38,16 +38,16 @@ public class InventoryUI : MonoBehaviour
 
     private IEnumerator Connect()
     {
-        Player player = null;
+        PlayerInfo player = null;
         Debug.Log("Waiting for player");
         yield return new WaitUntil(() => 
         {
-            player = FindObjectOfType<Player>();
+            player = FindObjectOfType<PlayerInfo>();
             return player;
         });
         Debug.Log("Player Found!");
-        OnChanged(player.data.inventory.data);
-        player.data.inventory.onChanged += OnChanged;
+        OnChanged(player.data.inventory);
+        player.data.onInventoryChanged += OnChanged;
     }
 
     private IEnumerator Show()
@@ -71,7 +71,7 @@ public class InventoryUI : MonoBehaviour
         cg.blocksRaycasts = false;
     }
 
-    private void OnChanged(Item[] values)
+    private void OnChanged(ItemData[] values)
     {
         for (int i = 0; i < values.Length; i++)
         {

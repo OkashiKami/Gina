@@ -11,7 +11,7 @@ public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
 {
     
     public EquiptmentType requireType;
-    public Item item = null;
+    public ItemData item = null;
 
     public Image icon;
     private Image cooldown;
@@ -65,7 +65,7 @@ public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().data;
+        var player = FindObjectOfType<PlayerInfo>().data;
         var _item = item == null || !item.IsValid ? null : item.Copy;
 
         if (eventData.pointerDrag != null)
@@ -138,10 +138,10 @@ public class ActionbarSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
 
     }
 
-    public void Set(Item value = null)
+    public void Set(ItemData value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<ActionbarSlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().data;
-        player.SetActionbar(myindex, value != null ? value : null);
+        var player = FindObjectOfType<PlayerInfo>().data;
+        player.ModifyActionbar(myindex, value != null ? value : null);
     }
 }

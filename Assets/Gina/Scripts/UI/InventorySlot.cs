@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
-    public Item item = null;
+    public ItemData item = null;
     public bool locked = false;
 
     private Image icon;
@@ -58,7 +58,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     {
         Debug.Log("OnDrop");
         if (locked) return;
-        var player = FindObjectOfType<Player>().data;
+        var player = FindObjectOfType<PlayerInfo>().data;
         var temp = item == null || !item.IsValid ? null : item. Copy;
 
         if (eventData.pointerDrag != null)
@@ -122,10 +122,10 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
         Debug.Log("OnPointerClick");
     }
 
-    public void Set(Item value = null)
+    public void Set(ItemData value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<InventorySlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().data;
-        player.SetInventory(myindex, value != null && value.IsValid ? value : null);
+        var player = FindObjectOfType<PlayerInfo>().data;
+        player.ModifyInvintory(myindex, value != null && value.IsValid ? value : null);
     }
 }

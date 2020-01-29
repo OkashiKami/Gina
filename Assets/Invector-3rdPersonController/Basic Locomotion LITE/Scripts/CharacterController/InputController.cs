@@ -53,7 +53,7 @@ public class InputController : MonoBehaviour
         }
     }
 
-    public delegate void OnInteract(Player player); public event OnInteract onInteract;
+    public delegate void OnInteract(PlayerInfo player); public event OnInteract onInteract;
     public delegate void OnInventory(); public event OnInventory onInventory;
     public delegate void OnCharacter(); public event OnCharacter onCharacter;
 
@@ -80,7 +80,7 @@ public class InputController : MonoBehaviour
     protected virtual void LateUpdate()
     {
         if (Input.GetKeyDown(interact))
-            onInteract?.Invoke(cc.GetComponent<Player>());
+            onInteract?.Invoke(cc.GetComponent<PlayerInfo>());
         if (Input.GetKeyDown(inventory))
             onInventory?.Invoke();
         if (Input.GetKeyDown(character))

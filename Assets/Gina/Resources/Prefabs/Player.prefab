@@ -1393,7 +1393,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6412683318643178759}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
+  m_LocalRotation: {x: 0, y: 1, z: -0, w: -0.0000001872535}
   m_LocalPosition: {x: -0.17, y: 0, z: 10.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6412683318643178759}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e24a01c31c85a4ea7828de1118ddcc, type: 3}
+  m_Script: {fileID: 11500000, guid: b63fd84fab3e06a46ab692d57cc1422e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player_name: Player
@@ -1438,7 +1438,1206 @@ MonoBehaviour:
     - 0
     - 0
     - 0
-    loottable: 
+    inventory:
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    actionbar:
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    character:
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
+    - icon: 
+      name: 
+      desc: 
+      isEquipment: 0
+      equipmentType: 0
+      isStackable: 0
+      curStack: 1
+      maxStack: 16
+      healthBonus: 0
+      staminaBonus: 0
+      manaBonus: 0
+      expBonus: 0
+      strengthBonus: 0
+      agilityBonus: 0
+      dexterityBonus: 0
+      worth: 0
+      prefab: 
+      file: 
+      _texture: {fileID: 0}
+      _sprite: {fileID: 0}
+      _object: {fileID: 0}
 --- !u!95 &6412683318643178760
 Animator:
   serializedVersion: 3

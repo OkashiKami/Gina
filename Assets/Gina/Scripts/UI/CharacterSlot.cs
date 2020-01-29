@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public EquiptmentType requireType;
-    public Item item = null;
+    public ItemData item = null;
 
     private Image icon;
     private TextMeshProUGUI count;
@@ -87,7 +87,7 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log("OnDrop");
-        var player = FindObjectOfType<Player>().data;
+        var player = FindObjectOfType<PlayerInfo>().data;
         var _item = item == null || !item.IsValid ? null : item.Copy;
 
         if (eventData.pointerDrag != null)
@@ -161,10 +161,10 @@ public class CharacterSlot : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     }
 
 
-    public void Set(Item value = null)
+    public void Set(ItemData value = null)
     {
         var myindex = transform.parent.GetComponentsInChildren<CharacterSlot>().ToList().IndexOf(this);
-        var player = FindObjectOfType<Player>().data;
-        player.SetCharacter(myindex, value != null ? value : null);
+        var player = FindObjectOfType<PlayerInfo>().data;
+        player.ModifyCharacter(myindex, value != null ? value : null);
     }
 }
