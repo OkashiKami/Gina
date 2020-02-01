@@ -18,9 +18,9 @@
     1000.0
   ],
   "position": [
-    -0.1700134,
+    -0.170043916,
     -0.004999995,
-    10.1600037
+    10.1704712
   ],
   "rotation": [
     0.0,
@@ -887,12 +887,7 @@
     }
   ],
   "lootTable": {
-    "name": "Arthur",
-    "items": [
-      {
-        "item_indicator": "gina:sword",
-        "dropPercentage": 80
-      }
-    ]
+    "name": "",
+    "items": []
   }
 }
